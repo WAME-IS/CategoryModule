@@ -1,0 +1,18 @@
+services:
+	category.module: Wame\CategoryModule
+
+	- Wame\CategoryModule\Forms\CategoryForm
+
+	# Entities
+	- Wame\CategoryModule\Entities\CategoryEntity
+	- Wame\CategoryModule\Entities\CategoryLangEntity
+
+	# Repositories
+	- Wame\CategoryModule\Repositories\CategoryRepository
+	- Wame\CategoryModule\Repositories\CategoryLangRepository
+
+
+doctrine:
+	metadata:
+		Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
+		Wame\CategoryModule\Repositories: %appDir%/../vendor/wame/CategoryModule/repositories
