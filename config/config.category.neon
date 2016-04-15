@@ -16,3 +16,6 @@ doctrine:
 	metadata:
 		Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
 		Wame\CategoryModule\Repositories: %appDir%/../vendor/wame/CategoryModule/repositories
+
+extensions:
+	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension

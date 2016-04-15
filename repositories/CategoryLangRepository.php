@@ -13,6 +13,9 @@ class CategoryLangRepository extends \Wame\Core\Repositories\BaseRepository
 	/** @var UserEntity */
 	private $userEntity;
 	
+	/** @var CategoryLangEntity */
+	private $categoryLangEntity;
+	
 	public function __construct(
 		\Nette\DI\Container $container, 
 		\Kdyby\Doctrine\EntityManager $entityManager,
@@ -21,6 +24,7 @@ class CategoryLangRepository extends \Wame\Core\Repositories\BaseRepository
 		parent::__construct($container, $entityManager, self::TABLE_NAME);
 
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
+		$this->categoryLangEntity = $this->entityManager->getRepository(CategoryLangEntity::class);
 	}
 	
 	public function create($category, $values)
@@ -37,9 +41,17 @@ class CategoryLangRepository extends \Wame\Core\Repositories\BaseRepository
 		$this->entityManager->persist($categoryLangEntity);
 	}
 	
-	public function read($id)
+	/**
+	 * Get all and parse to key/value array
+	 * 
+	 * @param type $criteria	criteria
+	 * @param type $value		value column
+	 * @param type $orderBy		order by array
+	 * @param type $key			key column
+	 */
+	public function getPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
 	{
-		
+		return $this->categoryLangEntity->findPairs($criteria, $value, $orderBy, $key);
 	}
 	
 	public function update($id, $values)

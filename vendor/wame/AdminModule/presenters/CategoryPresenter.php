@@ -42,6 +42,11 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 			$defaults = $this->categoryEntity->findOneBy(['id' => $this->id]);
 
 			$form['title']->setDefaultValue($defaults->lang->title);
+			$form['slug']->setDefaultValue($defaults->lang->slug);
+			
+			if($defaults->parent) {
+				$form['parent']->setDefaultValue($defaults->parent->id);
+			}
 		}
 		
 		$form->onSuccess[] = [$this, 'categoryFormSucceeded'];
@@ -52,12 +57,11 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public function categoryFormSucceeded(Form $form, $values)
 	{
 		if ($this->id) {
-			$this->categoryRepository->update($this->id, $values);
+			$this->categoryRepository->edit($this->id, $values);
 
 			$this->flashMessage(_('The category was successfully update'), 'success');
 		} else {
-			$category = $this->categoryRepository->create($values);
-			
+			$category = $this->categoryRepository->add($values);
 
 			$this->flashMessage(_('The category was created successfully'), 'success');
 		}
@@ -74,10 +78,18 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->template->categories = $categories;
 	}
 	
+	/**
+	 * Create
+	 * 
+	 * Render page for create
+	 */
 	public function renderCreate()
 	{
+		$categories = $this->categoryRepository->getAll();
+		
 		$this->template->setFile(__DIR__ . '/templates/Category/edit.latte');
 		$this->template->siteTitle = _('Create category');
+		$this->template->categories = $categories;
 	}
 	
 	public function renderEdit($id)
@@ -103,8 +115,43 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->template->siteTitle = _($this->category->lang->title);
 	}
 	
-	public function renderDelete($id)
+	public function actionDelete()
+	{
+		$this->category = $this->categoryRepository->get(['id' => $this->id]);
+	}
+	
+	public function renderDelete()
 	{
 		$this->template->siteTitle = _('Delete category');
+		
+		$this->template->category = $this->category;
+	}
+	
+	public function handleDelete()
+	{
+		$this->categoryRepository->remove($this->category->id);
+		
+		$this->redirectToDefault();
+	}
+	
+	public function handleBack()
+	{
+		// TODO: lepsie by bolo redirect back, backurl musi mat BasePrezenter
+		$this->redirectToDefault();
+	}
+	
+	/**
+	 * Redirect to list
+	 */
+	private function redirectToDefault()
+	{
+		$this->redirect(':Admin:Category:default', ['id' => null]);
 	}
 }
+
+/**
+ * TODO:
+ * 
+ * forward pre presmerovanie spat
+ * - https://doc.nette.org/en/2.3/presenters#toc-redirection
+ */

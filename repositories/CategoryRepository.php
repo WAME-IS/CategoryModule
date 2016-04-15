@@ -7,6 +7,7 @@ use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\UserModule\Entities\UserEntity;
 use Wame\CategoryModule\Entities\ItemCategoryEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
+use Nette\Utils\Strings;
 
 class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 {
@@ -21,6 +22,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	/** @var CategoryEntity */
 	private $categoryEntity;
 	
+	
 	public function __construct(
 		\Nette\DI\Container $container, 
 		\Kdyby\Doctrine\EntityManager $entityManager,
@@ -32,11 +34,20 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
 	}
 	
-	public function create($values)
+	
+	/** CREATE ****************************************************************/
+	
+	/**
+	 * Add category
+	 * 
+	 * @param Array $values		values
+	 * @return CategoryEntity	category
+	 */
+	public function add($values)
 	{
 		$category = new CategoryEntity();
 		
-		$category->createDate = new \DateTime('now'); // TODO: je to nutne? neni lepsie to riesit na urovni DB default?
+		$category->createDate = new \DateTime('now');
 		$category->createUser = $this->userEntity;
 		$category->status = self::STATUS_ACTIVE;
 		
@@ -45,7 +56,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$categoryLangEntity->category = $category;
 		$categoryLangEntity->lang = 'sk';
 		$categoryLangEntity->title = $values['title'];
-		$categoryLangEntity->slug = $values['slug'];
+		$categoryLangEntity->slug = $values['slug']?:(Strings::webalize($categoryLangEntity->title));
 		$categoryLangEntity->editDate = new \DateTime('now');
 		$categoryLangEntity->editUser = $this->userEntity;
 		
@@ -57,31 +68,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		return $c;
 	}
 	
-	/**
-	 * Attach categories to item
-	 * 
-	 * @param type $itemId
-	 * @param type $categoriesId
-	 * @param type $type
-	 */
-	public function attach($itemId, $categoriesId, $type)
-	{
-		$itemCategory = new ItemCategoryEntity();
-		$itemCategory->category_id = $itemId;
-		$itemCategory->item_id = $categoriesId;
-		$itemCategory->type = $type;
-	}
+	
+	/** READ ******************************************************************/
 	
 	public function get($criteria)
 	{
-		$category = $this->categoryEntity->findOneBy($criteria);
-		
-//		dump($category->lang);
-//		exit;
-//		$return = new \stdClass();
-//		$return->
-		
-		return $category;
+		return $category = $this->categoryEntity->findOneBy($criteria);
 	}
 	
 	public function getByItemId($id, $type, $parent = NULL)
@@ -100,42 +92,59 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		return $categories;
 	}
 	
-	public function update($id, $values)
+	public function getPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
+	{
+		return $this->categoryEntity->findPairs($criteria, $value);
+	}
+	
+	
+	/** UPDATE ****************************************************************/
+	
+	/**
+	 * Edit category
+	 * 
+	 * @param Integer $id		id
+	 * @param Array $values		values
+	 */
+	public function edit($id, $values)
 	{
 		$category = $this->categoryEntity->findOneBy(['id' => $id]);
 		
-		try {
-			$category->title = $values->title;
-			$category->parent = $values->parent;
-		} catch(\Exception $e) {
-			Log.d(TAG, $e->getMessage());
-		}
+		$category->title = $values['title'];
+		$category->slug = $values['slug']?:(Strings::webalize($category->title));
+		$category->parent = $values->parent;
 	}
 	
-	public function delete($id)
+	/**
+	 * Attach categories to item
+	 * 
+	 * @param Integer $itemId			item ID
+	 * @param Integer $categoriesId		category ID
+	 * @param String $type				type
+	 */
+	public function attach($itemId, $categoriesId, $type)
+	{
+		$itemCategory = new ItemCategoryEntity();
+		$itemCategory->category_id = $itemId;
+		$itemCategory->item_id = $categoriesId;
+		$itemCategory->type = $type;
+	}
+	
+	
+	/** DELETE ****************************************************************/
+	
+	/**
+	 * Remove category
+	 * 
+	 * @param type $id
+	 */
+	public function remove($id)
 	{
 		$category = $this->categoryEntity->findOneBy(['id' => $id]);
+		
 		if($category) {
 			$category->status = self::STATUS_REMOVE;
 		}
 	}
 	
 }
-
-/**
- * entries/items
- * - id
- * - title
- * - ...
- * 
- * categories
- * - id
- * - title
- * - parent
- * - ...
- * 
- * items_categories
- * - item_id (integer)
- * - categories_id (integer)
- * - type (string) // <module_name>
- */

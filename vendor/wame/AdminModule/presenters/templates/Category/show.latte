@@ -1,4 +1,10 @@
 {block content}
 	<h1>{$siteTitle}</h1>
 	
-	sadkakjsd
+	<p><strong>Title:</strong> {$category->title}</p>
+	<p><strong>Slug:</strong> {$category->slug}</p>
+	
+	
+	<h2>Parent</h2>
+	
+	<p><strong>Title:</strong> {*$category->parent->title*}</p>
