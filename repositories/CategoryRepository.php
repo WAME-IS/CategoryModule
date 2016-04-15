@@ -23,17 +23,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	private $categoryEntity;
 	
 	
-	public function __construct(
-		\Nette\DI\Container $container, 
-		\Kdyby\Doctrine\EntityManager $entityManager,
-		User $user
-	) {
-		parent::__construct($container, $entityManager, self::TABLE_NAME); // zistit ci potrebujeme posuvat table_name
+	public function __construct(\Nette\DI\Container $container, \Kdyby\Doctrine\EntityManager $entityManager, \h4kuna\Gettext\GettextSetup $translator, User $user) {
+		parent::__construct($container, $entityManager, $translator, $user);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
 	}
-	
 	
 	/** CREATE ****************************************************************/
 	

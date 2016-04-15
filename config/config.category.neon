@@ -1,5 +1,15 @@
 services:
-	category.module: Wame\CategoryModule
+	PermissionObject:
+		setup:
+			- addResource('category')
+			- addResourceAction('category', 'view')
+			- allow('guest', 'category', 'view')
+			- addResourceAction('category', 'add')
+			- allow('moderator', 'category', 'add')
+			- addResourceAction('category', 'edit')
+			- allow('moderator', 'category', 'edit')
+			- addResourceAction('category', 'delete')
+			- allow('moderator', 'category', 'delete')
 
 	- Wame\CategoryModule\Forms\CategoryForm
 
