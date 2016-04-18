@@ -54,9 +54,6 @@ class CategoryForm extends Object
 		$form->addSelect('parent', _('Parent'), $categories)
 				->setPrompt(_('-Top rank-'));
 		
-//		dump($categories);
-//		exit();
-		
 //		$form->addTreePicker('categories', 'asdasd', $categories, 8);
 
 		$form->addSubmit('submit', _('Submit'));

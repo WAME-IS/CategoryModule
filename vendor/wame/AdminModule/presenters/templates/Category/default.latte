@@ -1,22 +1,32 @@
 {block content}
 	<h1>{$siteTitle}</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>#</th>
-				<th>Title</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-		<tr n:foreach="$categories as $category">
-			<td>{$category->id}</td>
-			<td><a n:href=":Admin:Category:show, 'id' => $category->id">{$category->lang->title}</a></td>
-			<td>
-				<a n:href=":Admin:Category:edit, 'id' => $category->id" class="btn btn-default btn-xs">{_'Edit'}</a>
-				<a n:href=":Admin:Category:delete, 'id' => $category->id" class="btn btn-danger btn-xs">{_'Delete'}</a>
-			</td>
-		</tr>
-		</tbody>
-	</table>
+	<a n:if="count($categories) > 0" class="btn btn-success ajax-modal pull-right" n:href=":Admin:Category:create, 'id' => null">
+		<span class="fa fa-plus"></span>
+		{_'Crate category'}
+	</a>
+	
+	{if count($categories) == 0}
+		<div class="lead text-muted">{_'You do not have crate any categories.'}</div>
+		<a class="btn btn-success" n:href=":Admin:Category:create, 'id' => null">{_'Create first category'}</a>
+	{else}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Title</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$categories as $category">
+					<td>{$category->id}</td>
+					<td><a n:href=":Admin:Category:show, 'id' => $category->id">{$category->lang->title}</a></td>
+					<td>
+						<a n:href=":Admin:Category:edit, 'id' => $category->id" class="btn btn-default btn-xs">{_'Edit'}</a>
+						<a n:href=":Admin:Category:delete, 'id' => $category->id" class="btn btn-danger btn-xs">{_'Delete'}</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	{/if}
