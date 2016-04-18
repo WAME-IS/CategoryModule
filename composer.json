@@ -1,7 +1,7 @@
 {
-	"name": "wame/categoryModule",
+	"name": "wame/CategoryModule",
 	"version": "0.0.1",
-	"description": "CMS WAME admin Category",
+	"description": "CMS WAME admin",
 	"homepage": "http://wame.sk/cms-wame-admin",
 	"authors": [
 		{
@@ -10,8 +10,10 @@
 		}
 	],
 	"require": {
-		"wame/core": "*",
-        "wame/menuModule": "*"
+		"wame/Core": "*",
+        "wame/MenuModule": "*",
+		"wame/PermissionModule": "*",
+        "wame/UserModule": "*"
 	},
 	"autoload": {
 		"classmap": ["."]
