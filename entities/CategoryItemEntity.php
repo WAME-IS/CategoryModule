@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CategoryItemEntity extends \Wame\Core\Entities\BaseEntity 
 {
+	use \Wame\Core\Entities\Columns\Identifier;
 	
 	/**
 	 * @ORM\Column(name="item_id", type="integer", length=10, nullable=false)

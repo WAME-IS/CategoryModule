@@ -5,7 +5,7 @@ namespace Wame\CategoryModule\Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="wame_category_lang", indexes={@ORM\Index(name="category_id", columns={"category"})})
+ * @ORM\Table(name="wame_category_lang")
  * @ORM\Entity
  */
 class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity 
