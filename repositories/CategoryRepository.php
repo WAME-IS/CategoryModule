@@ -10,6 +10,7 @@ use Kappa\DoctrineMPTT\Configurator;
 use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
 use	Kappa\DoctrineMPTT\TraversableManager;
 
+use Wame\Tree\ComplexTreeSorter;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\UserModule\Entities\UserEntity;
 use Wame\CategoryModule\Entities\ItemCategoryEntity;
@@ -51,6 +52,9 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		
 //		$container->callInjects($this);
 		
+//		dump(CategoryEntity::class);
+//		exit;
+		
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
 		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class /*$this->getClass()*/);
@@ -79,6 +83,20 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$category->createDate = new \DateTime('now');
 		$category->createUser = $this->userEntity;
 		$category->status = self::STATUS_ACTIVE;
+		
+//		dump($values->parent);
+		
+		$parent = $this->categoryEntity->findOneBy(['id' => $values->parent]);
+//		$parent = parent::find($values->parent);
+		
+//		dump($parent);
+		
+//		$parent = $values->category;
+		
+//		dump($values);
+//		exit;
+		
+		$this->traversableManager->insertItem($category, $parent);
 		
 		$categoryLangEntity = new CategoryLangEntity();
 		
@@ -137,17 +155,18 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 */
 	public function getAll($criteria = [])
 	{
-		// TODO: spojazdnit
 		$query = new GetAll($this->treeConfigurator);
 		
 //		dump($this->treeConfigurator);
 //		exit;
 		
-//		$fetch = $query->fetch($this);
+//		$fetch = $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'));
 		
-//		return $query->fetch($this)->toArray();
+		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
 		
-		return $this->categoryEntity->findAll($criteria);
+//		return $this->categoryEntity->findAll($criteria);
+		
+//		return parent::findBy($criteria);
 	}
 	
 	/**
@@ -169,9 +188,9 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 * 
 	 * @return type
 	 */
-	public function getTree()
+	public function getTree($criteria = [])
 	{
-		$items = $this->getAll();
+		$items = $this->getAll($criteria);
 		$sorter = new ComplexTreeSorter($items);
 		return $sorter->sortTree();
 	}

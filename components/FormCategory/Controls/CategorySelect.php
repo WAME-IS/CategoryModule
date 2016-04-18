@@ -9,18 +9,16 @@ use Nette\Utils;
 use Nette\Utils\Html;
 
 use Wame\CategoryModule\FormCategory\Controls\BaseControl;
-use Wame\CategoryModule\Repositories\CategoryRepository;
 
-class CategoryList extends BaseControl
+class CategorySelect extends BaseControl
 {
 	/**
 	 * @var bool
 	 */
 	private static $registered = FALSE;
 	
-	public function __construct($label = NULL, $items = [], $depth = 1) {
+	public function __construct($items = [], $depth = 1, $label = NULL) {
 		parent::__construct($label);
-		
 	}
 	
 	public function setItems($items)
@@ -30,34 +28,25 @@ class CategoryList extends BaseControl
 	
 	public function getControl()
 	{
-		return $this->generate($this->items);
+		return Html::el('select')->setHtml($this->generate($this->items));
 	}
 	
 	public function generate($category)
 	{
-		$ul = Html::el('ul');
-		
-			$li = Html::el('li');
+		$body = null;
 
-				$body = null;
+		$body .= Html::el('option', ['value' => $category->item->id])->setHtml(str_repeat('-', $category->item->depth) . $category->item->title);
 
-				$body .= Html::el('input', ['value' => $category->item->id, 'type' => 'checkbox']);
-				$body .= Html::el('span')->setText($category->item->title);
+		if(sizeof($category->child_nodes) > 0) {
+			foreach($category->child_nodes as $child) {
+				$body .= $this->generate($child);
+			}
+		}
 
-				if(sizeof($category->child_nodes) > 0) {
-					foreach($category->child_nodes as $child) {
-						$body .= Html::el('li')->setHtml($this->generate($child));
-					}
-				}
-
-			$li->setHtml($body);
-		
-		$ul->setHtml($li);
-		
-		return $ul;
+		return $body;
 	}
 	
-	public static function register($items = [], $depth = 1, $method = 'addCategoryPicker')
+	public static function register($items = [], $depth = 1, $method = 'addCategorySelect')
 	{
 		// Check for multiple registration
 		if (static::$registered) {
@@ -69,7 +58,7 @@ class CategoryList extends BaseControl
 		$class = function_exists('get_called_class')?get_called_class():__CLASS__;
 		Forms\Container::extensionMethod(
 			$method, function (Forms\Container $form, $name, $label = NULL) use ($class, $items, $depth) {
-				$component = new $class($label, $items, $depth);
+				$component = new $class($items, $depth, $label);
 				$form->addComponent($component, $name);
 				return $component;
 			}

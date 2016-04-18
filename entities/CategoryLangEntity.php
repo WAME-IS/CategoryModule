@@ -14,6 +14,11 @@ class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity
 	use \Wame\Core\Entities\Columns\EditDate;
 
 	/**
+	 * @ORM\Column(name="category_id", type="integer", length=10, nullable=false)
+	 */
+	protected $category_id;
+	
+	/**
      * @ORM\ManyToOne(targetEntity="CategoryEntity", inversedBy="lang")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */

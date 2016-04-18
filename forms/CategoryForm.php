@@ -49,12 +49,19 @@ class CategoryForm extends Object
 			'lang' => 'sk'
 		];
 		
-		$categories = $this->categoryLangRepository->getPairs($criteria, 'title');
+		$cat = $this->categoryRepository->getTree();
+		
+//		dump(gettype ($cat));
+//		exit;
+		
+		$categories = $this->categoryLangRepository->getPairs($criteria, 'title', [], 'category_id');
 		
 		$form->addSelect('parent', _('Parent'), $categories)
 				->setPrompt(_('-Top rank-'));
 		
-//		$form->addTreePicker('categories', 'asdasd', $categories, 8);
+		$form->addCategoryPicker('categories', _('Categories'))->setItems($cat);
+		
+		$form->addCategorySelect('categories2', _('Categories2'))->setItems($cat);
 
 		$form->addSubmit('submit', _('Submit'));
 		
