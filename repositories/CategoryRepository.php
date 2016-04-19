@@ -7,8 +7,10 @@ use Nette\Utils\Strings;
 use Nette\DI\Container;
 
 use Kappa\DoctrineMPTT\Configurator;
-use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
 use	Kappa\DoctrineMPTT\TraversableManager;
+use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
 use Wame\Tree\ComplexTreeSorter;
 use Wame\CategoryModule\Entities\CategoryEntity;
@@ -78,30 +80,18 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 */
 	public function add($values)
 	{
+		// category
 		$category = new CategoryEntity();
-		
 		$category->createDate = new \DateTime('now');
 		$category->createUser = $this->userEntity;
 		$category->status = self::STATUS_ACTIVE;
-		
-//		dump($values->parent);
-		
 		$parent = $this->categoryEntity->findOneBy(['id' => $values->parent]);
-//		$parent = parent::find($values->parent);
-		
-//		dump($parent);
-		
-//		$parent = $values->category;
-		
-//		dump($values);
-//		exit;
-		
 		$this->traversableManager->insertItem($category, $parent);
 		
+		// categoryLang
 		$categoryLangEntity = new CategoryLangEntity();
-		
 		$categoryLangEntity->category = $category;
-		$categoryLangEntity->lang = 'sk';
+		$categoryLangEntity->lang = $this->lang;
 		$categoryLangEntity->title = $values['title'];
 		$categoryLangEntity->slug = $values['slug']?:(Strings::webalize($categoryLangEntity->title));
 		$categoryLangEntity->editDate = new \DateTime('now');
@@ -109,27 +99,14 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$this->entityManager->persist($categoryLangEntity);
 		
-		$c = $this->entityManager->persist($category);
+		$this->entityManager->persist($category);
 //		$this->entityManager->persist($itemCategory);
 		
-		return $c;
+		return $category;
 	}
 	
 	
 	/** READ ******************************************************************/
-	
-	/**
-	 * Get category
-	 * 
-	 * @param type $criteria	criteria
-	 * @return type				category
-	 */
-	public function get($criteria)
-	{
-//		return $this->categoryEntity->findOneBy($criteria);
-		
-		return parent::find(1);
-	}
 	
 	/**
 	 * Get category by item ID
@@ -156,17 +133,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	public function getAll($criteria = [])
 	{
 		$query = new GetAll($this->treeConfigurator);
-		
-//		dump($this->treeConfigurator);
-//		exit;
-		
-//		$fetch = $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'));
-		
 		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
-		
-//		return $this->categoryEntity->findAll($criteria);
-		
-//		return parent::findBy($criteria);
 	}
 	
 	/**
@@ -195,6 +162,23 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		return $sorter->sortTree();
 	}
 	
+	public function getParent($actual)
+	{
+		$query = new GetParent($this->treeConfigurator, $actual);
+		
+		try {
+			return $query->fetchOne($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'));
+		} catch(\Exception $e) {
+			return null;
+		}
+	}
+	
+	public function getChildren($actual)
+	{
+		$query = new GetChildren($this->treeConfigurator, $actual);
+		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
+	}
+	
 	
 	/** UPDATE ****************************************************************/
 	
@@ -210,7 +194,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$category->title = $values['title'];
 		$category->slug = $values['slug']?:(Strings::webalize($category->title));
-		$category->parent = $values->parent;
+		
+		$parent = $this->find($values->parent);
+		
+		if($parent) {
+			$this->traversableManager->moveItem($category, $parent, TraversableManager::DESCENDANT);
+		}
 	}
 	
 	/**
@@ -238,10 +227,17 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 */
 	public function remove($id)
 	{
-		$category = $this->categoryEntity->findOneBy(['id' => $id]);
+		$category = $this->find($id);
 		
 		if($category) {
 			$category->status = self::STATUS_REMOVE;
+			
+			$children = $this->getChildren($category);
+			
+			foreach($children as $child)
+			{
+				$child->status = self::STATUS_REMOVE;
+			}
 		}
 	}
 

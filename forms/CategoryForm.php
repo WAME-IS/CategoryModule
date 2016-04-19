@@ -59,9 +59,12 @@ class CategoryForm extends Object
 		$form->addSelect('parent', _('Parent'), $categories)
 				->setPrompt(_('-Top rank-'));
 		
-		$form->addCategoryPicker('categories', _('Categories'))->setItems($cat);
+		$form->addCategoryPicker('categories', _('Categories'))
+				->setRepository($this->categoryRepository);
 		
-		$form->addCategorySelect('categories2', _('Categories2'))->setItems($cat);
+//				->setItems($cat);
+		
+//		$form->addCategorySelect('categories2', _('Categories2'))->setItems($cat);
 
 		$form->addSubmit('submit', _('Submit'));
 		

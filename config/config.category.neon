@@ -21,6 +21,13 @@ services:
 	- Wame\CategoryModule\Repositories\CategoryRepository
 	- Wame\CategoryModule\Repositories\CategoryLangRepository
 
+#	CategoryList:
+#		class: Wame\CategoryModule\FormCategory\Controls\CategoryList
+#		setup:
+#			- addRepository(Wame\CategoryModule\Repositories\CategoryRepository) # TODO: rename method to logic one
+
+	# Events
+	- {class: Wame\CategoryModule\Events\CategoryListener, tags: [run]}
 
 doctrine:
 	metadata:

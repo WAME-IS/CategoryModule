@@ -27,11 +27,12 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
      */
     protected $langs;
 	
-	public function getLang()
-	{
-		$langs = parent::sortLangs($this->langs);
-		return $langs['sk'];
-	}
+//	public function getLang()
+//	{
+//		$langs = parent::sortLangs($this->langs);
+//		
+//		return $langs['sk'];
+//	}
 	
 	public function getTitle()
 	{

@@ -4,8 +4,6 @@ namespace Wame\CategoryModule\FormCategory\Controls;
 
 use Nette;
 use Nette\Forms;
-use Nette\Forms\Container;
-use Nette\Utils;
 use Nette\Utils\Html;
 
 use Wame\CategoryModule\FormCategory\Controls\BaseControl;
@@ -13,14 +11,39 @@ use Wame\CategoryModule\Repositories\CategoryRepository;
 
 class CategoryList extends BaseControl
 {
-	/**
-	 * @var bool
-	 */
+	/** @var CategoryRepository */
+	private $categoryRepository;
+	
+	/** @var bool */
 	private static $registered = FALSE;
 	
 	public function __construct($label = NULL, $items = [], $depth = 1) {
 		parent::__construct($label);
-		
+	}
+	
+	public function addRepository($categoryRepository)
+	{
+		$this->categoryRepository = $categoryRepository;
+	}
+	
+	/**
+	 * Set type
+	 * 
+	 * @param string $type	type
+	 */
+	public function setType($type)
+	{
+		$this->type = $type;
+	}
+	
+	public function setDepth($depth)
+	{
+		$this->depth;
+	}
+	
+	public function setRepository($categoryRepository)
+	{
+		$this->categoryRepository = $categoryRepository;
 	}
 	
 	public function setItems($items)
@@ -30,29 +53,29 @@ class CategoryList extends BaseControl
 	
 	public function getControl()
 	{
-		return $this->generate($this->items);
+		$items = $this->categoryRepository->getTree(['status' => 1]);
+		
+		return $this->generate($items);
 	}
 	
 	public function generate($category)
 	{
 		$ul = Html::el('ul');
 		
+		if($category) {
 			$li = Html::el('li');
-
 				$body = null;
-
 				$body .= Html::el('input', ['value' => $category->item->id, 'type' => 'checkbox']);
-				$body .= Html::el('span')->setText($category->item->title);
+				$body .= Html::el('span')->setText($category->item->langs[$this->categoryRepository->lang]->title);
 
 				if(sizeof($category->child_nodes) > 0) {
 					foreach($category->child_nodes as $child) {
-						$body .= Html::el('li')->setHtml($this->generate($child));
+						if($child->status == 1) $body .= Html::el('li')->setHtml($this->generate($child));
 					}
 				}
-
 			$li->setHtml($body);
-		
-		$ul->setHtml($li);
+			$ul->setHtml($li);
+		}
 		
 		return $ul;
 	}

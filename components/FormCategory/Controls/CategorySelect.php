@@ -35,7 +35,7 @@ class CategorySelect extends BaseControl
 	{
 		$body = null;
 
-		$body .= Html::el('option', ['value' => $category->item->id])->setHtml(str_repeat('-', $category->item->depth) . $category->item->title);
+		$body .= Html::el('option', ['value' => $category->item->id])->setHtml(str_repeat('-', $category->item->depth) . $category->item->title); // TODO: neziska title pretoze na urovni entity nevie jazyk
 
 		if(sizeof($category->child_nodes) > 0) {
 			foreach($category->child_nodes as $child) {

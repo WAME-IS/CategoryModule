@@ -21,7 +21,7 @@
 			<tbody>
 				<tr n:foreach="$categories as $category">
 					<td>{$category->id}</td>
-					<td><a n:href=":Admin:Category:show, 'id' => $category->id">{$category->lang->title}</a></td>
+					<td><a n:href=":Admin:Category:show, 'id' => $category->id">{$category->langs[$lang]->title}</a></td>
 					<td>
 						<a n:href=":Admin:Category:edit, 'id' => $category->id" class="btn btn-default btn-xs">{_'Edit'}</a>
 						<a n:href=":Admin:Category:delete, 'id' => $category->id" class="btn btn-danger btn-xs">{_'Delete'}</a>

@@ -22,7 +22,6 @@ class AdminMenuItem
 		$item->setName('articles');
 		
 		$item->addNode($this->categoriesDefault(), 'categories');
-		$item->addNode($this->categoryCreate(), 'addCategory');
 		
 		return $item->getItem();
 	}
@@ -31,16 +30,7 @@ class AdminMenuItem
 	{
 		$item = new Item();
 		$item->setTitle(_('Categories'));
-		$item->setLink($this->linkGenerator->link('Admin:Category:', ['id' => null]));
-		
-		return $item->getItem();
-	}
-	
-	private function categoryCreate()
-	{
-		$item = new Item();
-		$item->setTitle(_('Add category'));
-		$item->setLink($this->linkGenerator->link('Admin:Category:create', ['type' => 'article']));
+		$item->setLink($this->linkGenerator->link('Admin:Category:', ['id' => null, 'type' => 'articles']));
 		
 		return $item->getItem();
 	}
