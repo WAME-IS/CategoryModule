@@ -62,6 +62,8 @@ class CategoryForm extends Object
 		$form->addCategoryPicker('categories', _('Categories'))
 				->setRepository($this->categoryRepository);
 		
+		$form->addMetaEditor('seo');
+		
 //				->setItems($cat);
 		
 //		$form->addCategorySelect('categories2', _('Categories2'))->setItems($cat);

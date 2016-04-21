@@ -65,7 +65,8 @@ class CategoryList extends BaseControl
 		if($category) {
 			$li = Html::el('li');
 				$body = null;
-				$body .= Html::el('input', ['value' => $category->item->id, 'type' => 'checkbox']);
+				$body .= Html::el('input', ['name' => 'categories[]', 'value' => $category->item->id])
+							->type('checkbox');
 				$body .= Html::el('span')->setText($category->item->langs[$this->categoryRepository->lang]->title);
 
 				if(sizeof($category->child_nodes) > 0) {

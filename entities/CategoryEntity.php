@@ -27,12 +27,17 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
      */
     protected $langs;
 	
+	/** @ORM\OneToMany(targetEntity="CategoryItemEntity", mappedBy="category") */
+	protected $categoryItems;
+	
 //	public function getLang()
 //	{
 //		$langs = parent::sortLangs($this->langs);
 //		
 //		return $langs['sk'];
 //	}
+	
+	
 	
 	public function getTitle()
 	{

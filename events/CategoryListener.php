@@ -16,12 +16,15 @@ class CategoryListener extends Object
 		$this->categoryRepository = $categoryRepository;
 		
 		$categoryRepository->onCreate[] = [$this, 'onCreate'];
-//		$categoryRepository->onEdit[] = [$this, 'onEdit'];
+		$categoryRepository->onEdit[] = [$this, 'onEdit'];
 //		$categoryRepository->onDelete[] = [$this, 'onDelete'];
 	}
 
-	public function onCreate($type, $entity, $values) 
+	public function onCreate($form, $type, $entity, $values) 
 	{
+		$values['categories'] = $form->getHttpData($form::DATA_TEXT, 'categories[]');
+		
+		$this->categoryRepository->attachAll($entity, $type, $values->categories);
 	}
 	
 	public function onEdit()

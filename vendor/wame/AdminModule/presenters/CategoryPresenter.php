@@ -53,7 +53,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 			case 'create':
 				$category = $this->categoryRepository->add($values);
 				// TODO: len pre testovanie
-				$this->categoryRepository->onCreate('articles', $category, $values);
+				$this->categoryRepository->onCreate($form, 'articles', $category, $values);
 				$this->flashMessage(_('The category was successfully created'), 'success');
 				break;
 		}

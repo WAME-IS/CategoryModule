@@ -13,10 +13,10 @@ use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
 use Wame\Tree\ComplexTreeSorter;
-use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\UserModule\Entities\UserEntity;
-use Wame\CategoryModule\Entities\ItemCategoryEntity;
+use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
+use Wame\CategoryModule\Entities\CategoryItemEntity;
 
 class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 {
@@ -54,9 +54,6 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		
 //		$container->callInjects($this);
 		
-//		dump(CategoryEntity::class);
-//		exit;
-		
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
 		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class /*$this->getClass()*/);
@@ -85,8 +82,6 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$category->createDate = new \DateTime('now');
 		$category->createUser = $this->userEntity;
 		$category->status = self::STATUS_ACTIVE;
-		$parent = $this->categoryEntity->findOneBy(['id' => $values->parent]);
-		$this->traversableManager->insertItem($category, $parent);
 		
 		// categoryLang
 		$categoryLangEntity = new CategoryLangEntity();
@@ -97,10 +92,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$categoryLangEntity->editDate = new \DateTime('now');
 		$categoryLangEntity->editUser = $this->userEntity;
 		
-		$this->entityManager->persist($categoryLangEntity);
+		// category tree
+		$parent = $this->categoryEntity->findOneBy(['id' => $values->parent]);
+		$this->traversableManager->insertItem($category, $parent);
 		
+		$this->entityManager->persist($categoryLangEntity);
 		$this->entityManager->persist($category);
-//		$this->entityManager->persist($itemCategory);
 		
 		return $category;
 	}
@@ -206,15 +203,25 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 * Attach categories to item
 	 * 
 	 * @param Integer $itemId			item ID
-	 * @param Integer $categoriesId		category ID
 	 * @param String $type				type
+	 * @param Integer $categoryId		category ID
 	 */
-	public function attach($itemId, $categoriesId, $type)
+	public function attach($item, $type, $categoryId)
 	{
-		$itemCategory = new ItemCategoryEntity();
-		$itemCategory->category_id = $itemId;
-		$itemCategory->item_id = $categoriesId;
+		// TODO: priamo pripojit ako relaciu a nie samostatne vytvarat
+		$itemCategory = new CategoryItemEntity();
+		$itemCategory->category_id = (int)$categoryId;
+		$itemCategory->item_id = $item->id;
 		$itemCategory->type = $type;
+		
+		$this->entityManager->persist($itemCategory);
+	}
+	
+	public function attachAll($item, $type, $categories)
+	{
+		foreach($categories as $category) {
+			$this->attach($item, $type, $category);
+		}
 	}
 	
 	

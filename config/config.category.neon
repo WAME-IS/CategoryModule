@@ -13,13 +13,27 @@ services:
 
 	- Wame\CategoryModule\Forms\CategoryForm
 
+#	- Wame\CategoryModule\Controls\ArticleList
+
 	# Entities
 	- Wame\CategoryModule\Entities\CategoryEntity
 	- Wame\CategoryModule\Entities\CategoryLangEntity
+	- Wame\CategoryModule\Entities\CategoryItemEntity
 
 	# Repositories
 	- Wame\CategoryModule\Repositories\CategoryRepository
 	- Wame\CategoryModule\Repositories\CategoryLangRepository
+	- Wame\CategoryModule\Repositories\CategoryItemRepository
+
+	CategoryTreeMenu:
+		class: Wame\CategoryModule\Controls\CategoryTreeMenu
+		setup:
+			- injectRepository
+
+#	ArticleList:
+#		class: Wame\CategoryModule\Controls\ArticleList
+#		setup:
+#			- injectRepository
 
 #	CategoryList:
 #		class: Wame\CategoryModule\FormCategory\Controls\CategoryList
@@ -36,3 +50,4 @@ doctrine:
 
 extensions:
 	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
+	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension

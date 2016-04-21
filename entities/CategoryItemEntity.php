@@ -2,13 +2,14 @@
 
 namespace Wame\CategoryModule\Entities;
 
+use \Wame\Core\Entities\BaseEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="wame_item_category")
+ * @ORM\Table(name="wame_category_item")
  * @ORM\Entity
  */
-class CategoryItemEntity extends \Wame\Core\Entities\BaseEntity 
+class CategoryItemEntity extends BaseEntity 
 {
 	use \Wame\Core\Entities\Columns\Identifier;
 	
@@ -18,14 +19,29 @@ class CategoryItemEntity extends \Wame\Core\Entities\BaseEntity
 	protected $item_id;
 	
 	/**
-	 * @ORM\Column(name="lang", type="integer", length=10, nullable=false)
+	 * @ORM\Column(name="category_id", type="integer", length=10, nullable=false)
+	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
 	 */
 	protected $category_id;
 	
 	/**
-	 * @ORM\Column(name="type", type="integer", length=10, nullable=false)
+	 * @ORM\Column(name="type", type="string", length=250, nullable=false)
 	 */
 	protected $type;
+	
+	
+	public function getItem()
+	{
+//		switch($this->type) {
+//			case 'articles':
+//				$entity = new \Wame\ArticleModule\Entities\{$type}Entity;
+//				$this->entityManager($type)->find($this->item_id);
+//				break;
+//		}
+		
+		
+//		dump($this->type); exit;
+	}
 
 }
 
