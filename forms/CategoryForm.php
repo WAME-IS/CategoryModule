@@ -3,16 +3,12 @@
 namespace Wame\CategoryModule\Forms;
 
 use Nette\Application\UI\Form;
-use Nette\Object;
 use Wame\Core\Forms\FormFactory;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
 
-class CategoryForm extends Object
+class CategoryForm extends FormFactory
 {	
-	/** @var FormFactory */
-	private $formFactory;
-	
 	/** @var CategoryRepository */
 	public $categoryRepository;
 	
@@ -20,18 +16,16 @@ class CategoryForm extends Object
 	public $categoryLangRepository;
 	
 	public function __construct(
-		FormFactory $formFactory,
 		CategoryRepository $categoryRepository,
 		CategoryLangRepository $categoryLangRepository
 	) {
-		$this->formFactory = $formFactory;
 		$this->categoryRepository = $categoryRepository;
 		$this->categoryLangRepository = $categoryLangRepository;
 	}
 
 	public function create()
 	{
-		$form = $this->formFactory->createForm();
+		$form = $this->createForm();
 		
 		$form->addGroup(_('Basic info'));
 		
