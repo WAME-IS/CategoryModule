@@ -29,7 +29,7 @@ class CategoryEntity extends BaseEntity /*implements TraversableInterface */
 	protected $parent;
 
 	/**
-     * @ORM\OneToMany(targetEntity="CategoryLangEntity", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="CategoryLangEntity", mappedBy="id")
      */
     protected $langs;
 	
