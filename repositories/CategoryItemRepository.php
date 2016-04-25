@@ -12,8 +12,6 @@ use Wame\CategoryModule\Entities\CategoryItemEntity;
 
 class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 {
-	const TABLE_NAME = 'category_item';
-	
 	const FROM_CATEGORY = 0;
 	const FROM_ITEM = 1;
 	
@@ -31,7 +29,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		\h4kuna\Gettext\GettextSetup $translator,
 		User $user
 	) {
-		parent::__construct($container, $entityManager, $translator, $user, self::TABLE_NAME);
+		parent::__construct($container, $entityManager, $translator, $user);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryItemEntity = $this->entityManager->getRepository(CategoryItemEntity::class);

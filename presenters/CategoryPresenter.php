@@ -4,7 +4,7 @@ namespace App\CategoryModule\Presenters;
 
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
-use Wame\CategoryModule\Repositories\CategoryItemRepository;
+//use Wame\CategoryModule\Repositories\CategoryItemRepository;
 
 use Wame\ArticleCategoryPlugin\Controls\ArticlesOfCategory;
 
@@ -16,8 +16,8 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
 	/** @var CategoryLangRepository @inject */
 	public $categoryLangRepository;
 	
-	/** @var CategoryItemRepository @inject */
-	public $categoryItemRepository;
+//	/** @var CategoryItemRepository @inject */
+//	public $categoryItemRepository;
 	
 	/** @var ArticlesOfCategory @inject */
 	public $articlesOfCategory;

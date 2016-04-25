@@ -20,7 +20,7 @@ use Wame\CategoryModule\Entities\CategoryItemEntity;
 
 class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 {
-	const TABLE_NAME = 'category';
+//	const TABLE_NAME = 'category';
 	
 	const STATUS_REMOVE = 0;
 	const STATUS_ACTIVE = 1;
@@ -47,7 +47,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		User $user
 		
 	) {
-		parent::__construct($container, $entityManager, $translator, $user, self::TABLE_NAME);
+		parent::__construct($container, $entityManager, $translator, $user/*, self::TABLE_NAME*/);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
