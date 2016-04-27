@@ -30,6 +30,26 @@ services:
 		setup:
 			- injectRepository
 
+
+
+
+	# Factories
+	- Wame\CategoryModule\Forms\ITitleFormContainerFactory
+	- Wame\CategoryModule\Forms\IUrlFormContainerFactory
+	- Wame\CategoryModule\Forms\IParentFormContainerFactory
+
+	# Create article in administration form
+	CreateCategoryForm:
+		class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm
+		setup:
+			- addFormContainer(Wame\CategoryModule\Forms\TitleFormContainer(), 'TitleFormContainer', 99)
+			- addFormContainer(Wame\CategoryModule\Forms\UrlFormContainer(), 'UrlFormContainer', 98)
+			- addFormContainer(Wame\CategoryModule\Forms\ParentFormContainer(), 'ParentFormContainer', 97)
+
+
+
+
+
 #	ArticleList:
 #		class: Wame\CategoryModule\Controls\ArticleList
 #		setup:
@@ -39,6 +59,11 @@ services:
 #		class: Wame\CategoryModule\FormCategory\Controls\CategoryList
 #		setup:
 #			- addRepository(Wame\CategoryModule\Repositories\CategoryRepository) # TODO: rename method to logic one
+
+
+
+
+
 
 	# Events
 	- {class: Wame\CategoryModule\Events\CategoryListener, tags: [run]}

@@ -55,14 +55,17 @@ class CategoryList extends BaseControl
 	{
 		$items = $this->categoryRepository->getTree(['status' => 1]);
 		
+//		dump($items); exit;
+		
 		return $this->generate($items);
 	}
 	
 	public function generate($category)
 	{
-		$ul = Html::el('ul');
-		
 		if($category) {
+			$ul = Html::el('ul');
+		
+		
 			$li = Html::el('li');
 				$body = null;
 				$body .= Html::el('input', ['name' => 'categories[]', 'value' => $category->item->id])
@@ -76,9 +79,13 @@ class CategoryList extends BaseControl
 				}
 			$li->setHtml($body);
 			$ul->setHtml($li);
+			
+			return $ul;
+		} else {
+			return Html::el('div')->setText(_('Category doesnt exists'));
 		}
 		
-		return $ul;
+		
 	}
 	
 	public static function register($items = [], $depth = 1, $method = 'addCategoryPicker')

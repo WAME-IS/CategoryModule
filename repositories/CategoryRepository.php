@@ -12,7 +12,7 @@ use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
-use Wame\Tree\ComplexTreeSorter;
+use Wame\Utils\Tree\ComplexTreeSorter;
 use Wame\UserModule\Entities\UserEntity;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
@@ -47,7 +47,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		User $user
 		
 	) {
-		parent::__construct($container, $entityManager, $translator, $user/*, self::TABLE_NAME*/);
+		parent::__construct($container, $entityManager, $translator, $user, CategoryEntity::class);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);

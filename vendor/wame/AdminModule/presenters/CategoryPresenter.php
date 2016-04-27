@@ -4,11 +4,15 @@ namespace App\AdminModule\Presenters;
 
 use Nette\Application\UI\Form;
 use Wame\CategoryModule\Forms\CategoryForm;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
 
 class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 {	
+	/** @var CreateCategoryForm @inject */
+	public $createCategoryForm;
+	
 	/** @var CategoryForm @inject */
 	public $categoryForm;
 
@@ -38,6 +42,15 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 			}
 		}
 		
+		$form->onSuccess[] = [$this, 'formSucceeded'];
+		
+		return $form;
+	}
+	
+	protected function createComponentCreateCategoryForm() 
+	{
+		$form = $this->createCategoryForm->create();
+
 		$form->onSuccess[] = [$this, 'formSucceeded'];
 		
 		return $form;

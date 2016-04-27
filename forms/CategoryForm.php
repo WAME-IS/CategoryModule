@@ -43,24 +43,10 @@ class CategoryForm extends FormFactory
 			'lang' => 'sk'
 		];
 		
-		$cat = $this->categoryRepository->getTree();
-		
-//		dump(gettype ($cat));
-//		exit;
-		
 		$categories = $this->categoryLangRepository->getPairs($criteria, 'title', [], 'category_id');
 		
 		$form->addSelect('parent', _('Parent'), $categories)
 				->setPrompt(_('-Top rank-'));
-		
-		$form->addCategoryPicker('categories', _('Categories'))
-				->setRepository($this->categoryRepository);
-		
-		$form->addMetaEditor('seo');
-		
-//				->setItems($cat);
-		
-//		$form->addCategorySelect('categories2', _('Categories2'))->setItems($cat);
 
 		$form->addSubmit('submit', _('Submit'));
 		
