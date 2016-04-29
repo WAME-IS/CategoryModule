@@ -75,4 +75,4 @@ doctrine:
 
 extensions:
 	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
-	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension
+#	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension

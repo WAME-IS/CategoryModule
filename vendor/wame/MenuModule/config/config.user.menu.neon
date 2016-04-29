@@ -1,4 +1,0 @@
-services:
-	AdminMenu:
-		setup:
-			- setService(Wame\CategoryModule\Vendor\Wame\MenuModule\Components\MenuControl\AdminMenu\AdminMenuItemFactory())

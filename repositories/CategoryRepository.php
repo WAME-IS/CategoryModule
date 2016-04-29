@@ -202,13 +202,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	/**
 	 * Attach categories to item
 	 * 
-	 * @param Integer $itemId			item ID
-	 * @param String $type				type
-	 * @param Integer $categoryId		category ID
+	 * @param type $item		entity
+	 * @param type $type		type
+	 * @param type $categoryId	category ID	
 	 */
 	public function attach($item, $type, $categoryId)
 	{
-		// TODO: priamo pripojit ako relaciu a nie samostatne vytvarat
 		$itemCategory = new CategoryItemEntity();
 		$itemCategory->category_id = (int)$categoryId;
 		$itemCategory->item_id = $item->id;
@@ -217,6 +216,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$this->entityManager->persist($itemCategory);
 	}
 	
+	/**
+	 * Attach all 
+	 * @param type $item
+	 * @param type $type
+	 * @param type $categories
+	 */
 	public function attachAll($item, $type, $categories)
 	{
 		foreach($categories as $category) {
