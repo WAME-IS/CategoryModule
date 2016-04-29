@@ -16,7 +16,7 @@ class CategoryListener extends Object
 		$this->categoryRepository = $categoryRepository;
 		
 		$categoryRepository->onCreate[] = [$this, 'onCreate'];
-		$categoryRepository->onEdit[] = [$this, 'onEdit'];
+		$categoryRepository->onUpdate[] = [$this, 'onUpdate'];
 //		$categoryRepository->onDelete[] = [$this, 'onDelete'];
 	}
 
@@ -29,7 +29,7 @@ class CategoryListener extends Object
 		$this->categoryRepository->attachAll($entity, $type, $values->categories);
 	}
 	
-	public function onEdit()
+	public function onUpdate()
 	{
 		
 	}
