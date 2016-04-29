@@ -27,4 +27,10 @@ class UrlFormContainer extends BaseFormContainer
 				->setType('text');
     }
 	
+	public function setDefaultValues($object)
+	{
+		$form = $this->getForm();
+		
+		$form['slug']->setDefaultValue($object->categoryEntity->langs[$object->lang]->slug);
+	}
 }

@@ -3,8 +3,9 @@
 namespace App\AdminModule\Presenters;
 
 use Nette\Application\UI\Form;
-use Wame\CategoryModule\Forms\CategoryForm;
+//use Wame\CategoryModule\Forms\CategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
 
@@ -13,8 +14,11 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	/** @var CreateCategoryForm @inject */
 	public $createCategoryForm;
 	
-	/** @var CategoryForm @inject */
-	public $categoryForm;
+	/** @var EditCategoryForm @inject */
+	public $editCategoryForm;
+	
+//	/** @var CategoryForm @inject */
+//	public $categoryForm;
 
 	/** @var CategoryRepository @inject */
 	public $categoryRepository;
@@ -24,54 +28,41 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	private $category;
 
-	protected function createComponentCategoryForm()
-	{
-		$form = $this->categoryForm->create();
-		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
-		
-		if ($this->id) {
-			$category = $this->categoryRepository->find($this->id);
-
-			$form['title']->setDefaultValue($category->lang->title);
-			$form['slug']->setDefaultValue($category->lang->slug);
-			
-			$parent = $this->categoryRepository->getParent($category);
-			
-			if($parent) {
-				$form['parent']->setDefaultValue($parent->id);
-			}
-		}
-		
-		$form->onSuccess[] = [$this, 'formSucceeded'];
-		
-		return $form;
-	}
+//	protected function createComponentCategoryForm()
+//	{
+//		$form = $this->categoryForm->create();
+//		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
+//		
+//		if ($this->id) {
+//			$category = $this->categoryRepository->find($this->id);
+//
+//			$form['title']->setDefaultValue($category->lang->title);
+//			$form['slug']->setDefaultValue($category->lang->slug);
+//			
+//			$parent = $this->categoryRepository->getParent($category);
+//			
+//			if($parent) {
+//				$form['parent']->setDefaultValue($parent->id);
+//			}
+//		}
+//		
+//		$form->onSuccess[] = [$this, 'formSucceeded'];
+//		
+//		return $form;
+//	}
 	
 	protected function createComponentCreateCategoryForm() 
 	{
-		$form = $this->createCategoryForm->create();
-
-		$form->onSuccess[] = [$this, 'formSucceeded'];
+		$form = $this->createCategoryForm->build();
 		
 		return $form;
 	}
 	
-	public function formSucceeded(Form $form, $values)
+	protected function createComponentEditCategoryForm() 
 	{
-		switch($this->action) {
-			case 'edit':
-				$this->categoryRepository->edit($this->id, $values);
-				$this->flashMessage(_('The category was successfully updated'), 'success');
-				break;
-			case 'create':
-				$category = $this->categoryRepository->add($values);
-				// TODO: len pre testovanie
-				$this->categoryRepository->onCreate($form, 'articles', $category, $values);
-				$this->flashMessage(_('The category was successfully created'), 'success');
-				break;
-		}
+		$form = $this->editCategoryForm->setId($this->id)->build();
 		
-		$this->redirect('this');
+		return $form;
 	}
 	
 	/**
@@ -80,7 +71,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public function renderDefault()
 	{
 		$this->template->siteTitle = _('Categories');
-		$this->template->categories = $this->categoryRepository->getAll(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+		$this->template->categories = $this->categoryRepository->find(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
 	}
 	
 	/**
@@ -90,9 +81,8 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	 */
 	public function renderCreate()
 	{
-		$categories = $this->categoryRepository->getAll();
+		$categories = $this->categoryRepository->find();
 		
-		$this->template->setFile(__DIR__ . '/templates/Category/edit.latte');
 		$this->template->siteTitle = _('Create category');
 		$this->template->categories = $categories;
 	}
@@ -109,7 +99,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function actionShow()
 	{
-		$this->category = $this->categoryRepository->find($this->id);
+		$this->category = $this->categoryRepository->find(['id' => $this->id]);
 		
 		if($this->category->status == CategoryRepository::STATUS_REMOVE) {
 			$this->flashMessage(_('Category is removed'), 'danger');

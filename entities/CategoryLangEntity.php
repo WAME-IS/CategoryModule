@@ -19,7 +19,7 @@ class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity
 	protected $category_id;
 	
 	/**
-     * @ORM\ManyToOne(targetEntity="CategoryEntity", inversedBy="lang")
+     * @ORM\ManyToOne(targetEntity="CategoryEntity", inversedBy="langs")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
 	protected $category;

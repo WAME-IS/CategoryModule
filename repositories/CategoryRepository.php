@@ -70,36 +70,24 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	/** CREATE ****************************************************************/
 	
 	/**
-	 * Add category
+	 * Create category
 	 * 
-	 * @param Array $values		values
-	 * @return CategoryEntity	category
+	 * @param CategoryLangEntity $categoryLangEntity		CategoryLangEntity
+	 * @return CategoryEntity								CategoryEntity
+	 * @throws \Wame\Core\Exception\RepositoryException		Exception
 	 */
-	public function add($values)
+	public function create($categoryLangEntity)
 	{
-		// category
-		$category = new CategoryEntity();
-		$category->createDate = new \DateTime('now');
-		$category->createUser = $this->userEntity;
-		$category->status = self::STATUS_ACTIVE;
-		
-		// categoryLang
-		$categoryLangEntity = new CategoryLangEntity();
-		$categoryLangEntity->category = $category;
-		$categoryLangEntity->lang = $this->lang;
-		$categoryLangEntity->title = $values['title'];
-		$categoryLangEntity->slug = $values['slug']?:(Strings::webalize($categoryLangEntity->title));
-		$categoryLangEntity->editDate = new \DateTime('now');
-		$categoryLangEntity->editUser = $this->userEntity;
-		
-		// category tree
-		$parent = $this->categoryEntity->findOneBy(['id' => $values->parent]);
-		$this->traversableManager->insertItem($category, $parent);
-		
+//		dump($categoryLangEntity); exit;
+		$create = $this->entityManager->persist($categoryLangEntity->category);
 		$this->entityManager->persist($categoryLangEntity);
-		$this->entityManager->persist($category);
+		$this->entityManager->flush();
 		
-		return $category;
+		if (!$create) {
+			throw new \Wame\Core\Exception\RepositoryException(_('Could not create the category'));
+		}
+		
+		return $categoryLangEntity->category;
 	}
 	
 	
@@ -122,16 +110,16 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		return $category;
 	}
 	
-	/**
-	 * Get all categories
-	 * 
-	 * @return Array	categories
-	 */
-	public function getAll($criteria = [])
-	{
-		$query = new GetAll($this->treeConfigurator);
-		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
-	}
+//	/**
+//	 * Get all categories
+//	 * 
+//	 * @return Array	categories
+//	 */
+//	public function getAll($criteria = [])
+//	{
+//		$query = new GetAll($this->treeConfigurator);
+//		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
+//	}
 	
 	/**
 	 * Get all categories in pairs
@@ -154,7 +142,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 */
 	public function getTree($criteria = [])
 	{
-		$items = $this->getAll($criteria);
+		$items = $this->find($criteria);
 		$sorter = new ComplexTreeSorter($items);
 		return $sorter->sortTree();
 	}

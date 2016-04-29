@@ -1,0 +1,29 @@
+services:
+	- Wame\CategoryModule\Forms\CategoryForm
+
+#	- Wame\CategoryModule\Controls\ArticleList
+
+	# Factories
+	- Wame\CategoryModule\Forms\ITitleFormContainerFactory
+	- Wame\CategoryModule\Forms\IUrlFormContainerFactory
+	- Wame\CategoryModule\Forms\IParentFormContainerFactory
+
+	# Create category in administration form
+	CreateCategoryForm:
+		class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm
+		setup:
+			- addFormContainer(Wame\CategoryModule\Forms\TitleFormContainer(), 'TitleFormContainer', 99)
+			- addFormContainer(Wame\CategoryModule\Forms\UrlFormContainer(), 'UrlFormContainer', 98)
+			- addFormContainer(Wame\CategoryModule\Forms\ParentFormContainer(), 'ParentFormContainer', 97)
+
+	# Edit category in administration form
+	EditCategoryForm:
+		class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm
+		setup:
+			- addFormContainer(Wame\CategoryModule\Forms\TitleFormContainer(), 'TitleFormContainer', 99)
+			- addFormContainer(Wame\CategoryModule\Forms\UrlFormContainer(), 'UrlFormContainer', 98)
+			- addFormContainer(Wame\CategoryModule\Forms\ParentFormContainer(), 'ParentFormContainer', 97)
+
+extensions:
+	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
+#	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension
