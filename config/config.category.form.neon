@@ -1,5 +1,5 @@
 services:
-	- Wame\CategoryModule\Forms\CategoryForm
+#	- Wame\CategoryModule\Forms\CategoryForm
 
 #	- Wame\CategoryModule\Controls\ArticleList
 

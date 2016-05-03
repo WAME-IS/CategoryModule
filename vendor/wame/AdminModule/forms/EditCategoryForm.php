@@ -4,11 +4,8 @@ namespace Wame\CategoryModule\Vendor\Wame\AdminModule\Forms;
 
 use Nette\Security\User;
 use Nette\Application\UI\Form;
-use Wame\Core\Forms\FormFactory;
-use Wame\CategoryModule\Entities\CategoryEntity;
-use Wame\CategoryModule\Entities\CategoryLangEntity;
-use Wame\UserModule\Repositories\UserRepository;
-use Wame\CategoryModule\Repositories\CategoryRepository;
+
+use Kdyby\Doctrine\EntityManager;
 
 use Kappa\DoctrineMPTT\Configurator;
 use	Kappa\DoctrineMPTT\TraversableManager;
@@ -16,8 +13,19 @@ use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
+use Wame\Core\Forms\FormFactory;
+use Wame\CategoryModule\Entities\CategoryEntity;
+use Wame\CategoryModule\Entities\CategoryLangEntity;
+use Wame\UserModule\Repositories\UserRepository;
+use Wame\CategoryModule\Repositories\CategoryRepository;
+
+
+
 class EditCategoryForm extends FormFactory
 {	
+	/** @var EntityManager */
+	private $entityManager;
+	
 	/** @var CategoryRepository */
 	private $categoryRepository;
 	
@@ -40,6 +48,8 @@ class EditCategoryForm extends FormFactory
 		$this->categoryRepository = $categoryRepository;
 		$this->userEntity = $userRepository->get(['id' => $user->id]);
 		$this->lang = $categoryRepository->lang;
+		
+		$this->entityManager = $entityManager;
 		
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
@@ -68,9 +78,9 @@ class EditCategoryForm extends FormFactory
 		$presenter = $form->getPresenter();
 		
 		try {
-			$userEntity = $this->update($presenter->id, $values);
+			$categoryEntity = $this->update($presenter->id, $values);
 		
-			$this->categoryRepository->onUpdate($form, $values, $userEntity);
+			$this->categoryRepository->onUpdate($form, $values, $categoryEntity);
 
 			$presenter->flashMessage(_('The category was successfully updated.'), 'success');
 			
@@ -87,15 +97,20 @@ class EditCategoryForm extends FormFactory
 	
 	public function update($categoryId, $values)
 	{
-		$category = $this->categoryEntity->get(['id' => $categoryId]);
+		$category = $this->categoryRepository->get(['id' => $categoryId]);
 		
-		$category->title = $values['title'];
-		$category->slug = $values['slug']?:(Strings::webalize($category->title));
+		$categoryLangEntity = $this->entityManager->getRepository(CategoryLangEntity::class)->findOneBy(['category' => $category, 'lang' => $this->lang]);
+		$categoryLangEntity->title = $values['title'];
+		$categoryLangEntity->slug = $values['slug'];
 		
-		$parent = $this->find($values->parent);
+		$parent = $this->categoryRepository->get(['id' => $values->parent]);
+//		$parent = $this->categoryRepository->getParent($category);// get($values->parent);
 		
-		if($parent) {
-			$this->traversableManager->moveItem($category, $parent, TraversableManager::DESCENDANT);
+		if($category && $parent) {
+			// TODO: exception -> The EntityManager is closed.
+			$this->traversableManager->moveItem($category, $parent, TraversableManager::DESCENDANT, FALSE);
 		}
+		
+		return $this->categoryRepository->update($categoryLangEntity);
 	}
 }

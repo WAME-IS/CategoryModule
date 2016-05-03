@@ -78,8 +78,23 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 */
 	public function create($categoryLangEntity)
 	{
+		
+		
 //		dump($categoryLangEntity); exit;
 		$create = $this->entityManager->persist($categoryLangEntity->category);
+		
+		
+		
+//		$create = null;
+		
+//		dump($categoryLangEntity->category); exit;
+		
+//		$parent = $this->getParent($categoryLangEntity->category);
+//		$parent = $this->get($categoryLang)
+//		
+//		dump($parent); exit;
+//		$this->traversableManager->insertItem($categoryLangEntity->category, $parent);
+		
 		$this->entityManager->persist($categoryLangEntity);
 		$this->entityManager->flush();
 		
@@ -105,7 +120,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	{
 		// TODO: tiez tam vyuzit GetAll na stromove vyhladavanie
 		
-		$category = $this->categoryEntity->findOneBy(['id' => $id, 'type' => $type]);
+		$category = $this->entity->find(['id' => $id, 'type' => $type]);
 		
 		return $category;
 	}
@@ -132,7 +147,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 */
 	public function getPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
 	{
-		return $this->categoryEntity->findPairs($criteria, $value);
+		return $this->entity->findPairs($criteria, $value);
 	}
 	
 	/**
@@ -167,24 +182,29 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	
 	/** UPDATE ****************************************************************/
 	
-	/**
-	 * Edit category
-	 * 
-	 * @param Integer $id		id
-	 * @param Array $values		values
-	 */
-	public function edit($id, $values)
+//	/**
+//	 * Edit category
+//	 * 
+//	 * @param Integer $id		id
+//	 * @param Array $values		values
+//	 */
+//	public function edit($id, $values)
+//	{
+//		$category = $this->categoryEntity->findOneBy(['id' => $id]);
+//		
+//		$category->title = $values['title'];
+//		$category->slug = $values['slug']?:(Strings::webalize($category->title));
+//		
+//		$parent = $this->find($values->parent);
+//		
+//		if($parent) {
+//			$this->traversableManager->moveItem($category, $parent, TraversableManager::DESCENDANT);
+//		}
+//	}
+	
+	public function update($categoryLangEntity)
 	{
-		$category = $this->categoryEntity->findOneBy(['id' => $id]);
-		
-		$category->title = $values['title'];
-		$category->slug = $values['slug']?:(Strings::webalize($category->title));
-		
-		$parent = $this->find($values->parent);
-		
-		if($parent) {
-			$this->traversableManager->moveItem($category, $parent, TraversableManager::DESCENDANT);
-		}
+		return $categoryLangEntity->category;
 	}
 	
 	/**
@@ -225,9 +245,9 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 * 
 	 * @param type $id
 	 */
-	public function remove($id)
+	public function delete($id)
 	{
-		$category = $this->find($id);
+		$category = $this->get(['id' => $id]);
 		
 		if($category) {
 			$category->status = self::STATUS_REMOVE;

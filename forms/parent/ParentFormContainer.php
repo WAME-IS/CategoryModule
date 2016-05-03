@@ -4,6 +4,7 @@ namespace Wame\CategoryModule\Forms;
 
 use Nette\Application\UI\Form;
 use Wame\DynamicObject\Forms\BaseFormContainer;
+use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
 

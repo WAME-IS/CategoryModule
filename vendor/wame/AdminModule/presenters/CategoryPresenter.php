@@ -120,7 +120,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function actionDelete()
 	{
-		$this->category = $this->categoryRepository->find($this->id);
+		$this->category = $this->categoryRepository->get(['id' => $this->id]);
 	}
 	
 	/**
@@ -134,7 +134,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function handleDelete()
 	{
-		$this->categoryRepository->remove($this->category->id);
+		$this->categoryRepository->delete($this->category->id);
 		
 		$this->redirectToDefault();
 	}
