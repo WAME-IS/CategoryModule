@@ -3,12 +3,10 @@
 namespace Wame\CategoryModule\Repositories;
 
 use Nette\Security\User;
-use Nette\Utils\Strings;
 use Nette\DI\Container;
 
 use Kappa\DoctrineMPTT\Configurator;
 use	Kappa\DoctrineMPTT\TraversableManager;
-use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
@@ -20,8 +18,6 @@ use Wame\CategoryModule\Entities\CategoryItemEntity;
 
 class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 {
-//	const TABLE_NAME = 'category';
-	
 	const STATUS_REMOVE = 0;
 	const STATUS_ACTIVE = 1;
 	
@@ -43,29 +39,18 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		\Kdyby\Doctrine\EntityManager $entityManager, 
 		\h4kuna\Gettext\GettextSetup $translator, 
 		TraversableManager $traversableManager,
-			
 		User $user
-		
 	) {
 		parent::__construct($container, $entityManager, $translator, $user, CategoryEntity::class);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
 		
-//		$container->callInjects($this);
-		
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
-		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class /*$this->getClass()*/);
+		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
-	
-//	public function injectTree(\Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager) {
-//		$this->traversableManager = clone $traversableManager;
-//		$this->treeConfigurator = new Configurator($entityManager);
-//		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, $this->getClass());
-//		$this->traversableManager->setConfigurator($this->treeConfigurator);
-//	}
 	
 	/** CREATE ****************************************************************/
 	
@@ -78,22 +63,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 */
 	public function create($categoryLangEntity)
 	{
-		
-		
-//		dump($categoryLangEntity); exit;
 		$create = $this->entityManager->persist($categoryLangEntity->category);
-		
-		
-		
-//		$create = null;
-		
-//		dump($categoryLangEntity->category); exit;
-		
-//		$parent = $this->getParent($categoryLangEntity->category);
-//		$parent = $this->get($categoryLang)
-//		
-//		dump($parent); exit;
-//		$this->traversableManager->insertItem($categoryLangEntity->category, $parent);
 		
 		$this->entityManager->persist($categoryLangEntity);
 		$this->entityManager->flush();
@@ -123,31 +93,6 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$category = $this->entity->find(['id' => $id, 'type' => $type]);
 		
 		return $category;
-	}
-	
-//	/**
-//	 * Get all categories
-//	 * 
-//	 * @return Array	categories
-//	 */
-//	public function getAll($criteria = [])
-//	{
-//		$query = new GetAll($this->treeConfigurator);
-//		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
-//	}
-	
-	/**
-	 * Get all categories in pairs
-	 * 
-	 * @param Array $criteria	criteria
-	 * @param String $value		value
-	 * @param Array $orderBy	order by
-	 * @param String $key		key
-	 * @return Array			categories
-	 */
-	public function getPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
-	{
-		return $this->entity->findPairs($criteria, $value);
 	}
 	
 	/**
@@ -181,26 +126,6 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	
 	
 	/** UPDATE ****************************************************************/
-	
-//	/**
-//	 * Edit category
-//	 * 
-//	 * @param Integer $id		id
-//	 * @param Array $values		values
-//	 */
-//	public function edit($id, $values)
-//	{
-//		$category = $this->categoryEntity->findOneBy(['id' => $id]);
-//		
-//		$category->title = $values['title'];
-//		$category->slug = $values['slug']?:(Strings::webalize($category->title));
-//		
-//		$parent = $this->find($values->parent);
-//		
-//		if($parent) {
-//			$this->traversableManager->moveItem($category, $parent, TraversableManager::DESCENDANT);
-//		}
-//	}
 	
 	public function update($categoryLangEntity)
 	{
@@ -262,23 +187,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	}
 
 	/** implements **/
-	
-//	public function select($alias = NULL) {
-//		if($alias) {
-//			return $alias;
-//		}
-//		
-////		$em = $this->container->get('doctrine')->getEntityManager(); 
-//		$className = $this->entityManager->getClassMetadata(get_class($this->categoryEntity))->getName();
-//		
-//		return $className;
-//		
-////		dump(CategoryEntity::class);
-////		exit(); 
-////		return CategoryEntity::class;
-////		parent::select($alias);
-//	}
-	
+
 	/**
 	 * Flush
 	 * 
