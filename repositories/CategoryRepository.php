@@ -191,11 +191,16 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$attached = [];
 		
 		foreach($attachedCategories as $ai) {
-			$attached[] = $ai->id;
+			$attached[] = $ai->category_id;
 		}
 		
-		$this->attachAll($item, $type, array_diff($categories, $attached));
-		$this->detachAll($item, $type, array_diff($attached, $categories));
+		$toAttach = array_diff($categories, $attached);
+		$toDetach = array_diff($attached, $categories);
+		
+//		dump($toAttach, $toDetach); exit;
+		
+		$this->attachAll($item, $type, $toAttach);
+		$this->detachAll($item, $type, $toDetach);
 	}
 	
 	

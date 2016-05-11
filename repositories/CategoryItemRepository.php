@@ -29,7 +29,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		\h4kuna\Gettext\GettextSetup $translator,
 		User $user
 	) {
-		parent::__construct($container, $entityManager, $translator, $user);
+		parent::__construct($container, $entityManager, $translator, $user, CategoryItemEntity::class);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryItemEntity = $this->entityManager->getRepository(CategoryItemEntity::class);
