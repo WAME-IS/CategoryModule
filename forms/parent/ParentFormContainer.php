@@ -79,6 +79,8 @@ class ParentFormContainer extends BaseFormContainer
 		
 		$parent = $this->categoryRepository->getParent($object->categoryEntity);
 		
-		$form['parent']->setDefaultValue($parent->langs[$object->lang]->category_id );
+		if($parent) {
+			$form['parent']->setDefaultValue($parent->langs[$object->lang]->category_id );
+		}
 	}
 }
