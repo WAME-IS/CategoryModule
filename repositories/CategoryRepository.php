@@ -33,18 +33,24 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	/** @var TraversableManager */
 	private $traversableManager;
 	
+	/** @var CategoryItemRepository */
+	private $categoryItemRepository;
+	
 	
 	public function __construct(
 		Container $container, 
 		\Kdyby\Doctrine\EntityManager $entityManager, 
 		\h4kuna\Gettext\GettextSetup $translator, 
 		TraversableManager $traversableManager,
+		CategoryItemRepository $categoryItemRepository,
 		User $user
 	) {
 		parent::__construct($container, $entityManager, $translator, $user, CategoryEntity::class);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
+		
+		$this->categoryItemRepository = $categoryItemRepository;
 		
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
@@ -160,6 +166,36 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		foreach($categories as $category) {
 			$this->attach($item, $type, $category);
 		}
+	}
+	
+	public function detach($item, $type, $categoryId)
+	{
+		$this->categoryItemRepository->remove([
+			'item_id' => $item->id, 
+			'category_id' => $categoryId, 
+			'type' => $type
+		]);
+	}
+	
+	public function detachAll($item, $type, $categories)
+	{
+		foreach($categories as $category) {
+			$this->detach($item, $type, $category);
+		}
+	}
+	
+	public function sync($item, $type, $categories)
+	{
+		$attachedCategories = $this->categoryItemRepository->find(['item_id' => $item->id]);
+		
+		$attached = [];
+		
+		foreach($attachedCategories as $ai) {
+			$attached[] = $ai->id;
+		}
+		
+		$this->attachAll($item, $type, array_diff($categories, $attached));
+		$this->detachAll($item, $type, array_diff($attached, $categories));
 	}
 	
 	
