@@ -8,6 +8,8 @@ use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
+use Wame\DataGridControl\DataGridControl;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
 
 class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 {	
@@ -25,6 +27,12 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 
 	/** @var CategoryLangRepository @inject */
 	public $categoryLangRepository;
+	
+	/** @var DataGridControl @inject */
+	public $gridControl;
+	
+	/** @var CategoryGrid @inject */
+	public $categoryGrid;
 	
 	private $category;
 
@@ -63,6 +71,31 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$form = $this->editCategoryForm->setId($this->id)->build();
 		
 		return $form;
+	}
+	
+	public function createComponentCategoryGrid()
+	{
+		$grid = $this->gridControl;
+
+		$categories = $this->categoryRepository->find(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+		
+//		$dummy = [
+//			[
+//				'id' => 1,
+//				'children' => ['id' => 2]
+//			],
+//			[
+//				'id' => 1,
+//				'children' => ['id' => 2]
+//			]
+//		];
+		
+//		$grid->setDataSource($dummy);
+		$grid->setDataSource($categories);
+		
+		$grid->setProvider($this->categoryGrid);
+		
+		return $grid;
 	}
 	
 	/**
