@@ -24,8 +24,6 @@ class CategoryListener extends Object
 	{
 		$values['categories'] = $form->getHttpData($form::DATA_TEXT, 'categories[]');
 		
-//		dump('onCreate'); exit;
-		
 		$this->categoryRepository->attachAll($entity, $type, $values->categories);
 	}
 	
