@@ -15,16 +15,14 @@ use Wame\CategoryModule\Repositories\CategoryRepository;
 
 abstract class BaseControl extends Forms\Controls\BaseControl
 {
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $items;
 	
-	/**
-	 *
-	 * @var integer
-	 */
+	/** @var integer */
 	protected $depth;
+	
+	/** @var integer */
+	protected $type;
 	
 	/**
 	 * This method will be called when the component becomes attached to Form

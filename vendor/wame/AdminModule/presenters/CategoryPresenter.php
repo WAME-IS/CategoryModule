@@ -3,79 +3,108 @@
 namespace App\AdminModule\Presenters;
 
 use Nette\Application\UI\Form;
-use Wame\CategoryModule\Forms\CategoryForm;
+//use Wame\CategoryModule\Forms\CategoryForm;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
-use Wame\CategoryModule\Entities\CategoryEntity;
+use Wame\DataGridControl\DataGridControl;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
 
 class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 {	
-	/** @var CategoryForm @inject */
-	public $categoryForm;
+	/** @var CreateCategoryForm @inject */
+	public $createCategoryForm;
+	
+	/** @var EditCategoryForm @inject */
+	public $editCategoryForm;
+	
+//	/** @var CategoryForm @inject */
+//	public $categoryForm;
 
 	/** @var CategoryRepository @inject */
 	public $categoryRepository;
 
 	/** @var CategoryLangRepository @inject */
 	public $categoryLangRepository;
-
-	/** @var CategoryEntity */
-	private $categoryEntity;
+	
+	/** @var DataGridControl @inject */
+	public $gridControl;
+	
+	/** @var CategoryGrid @inject */
+	public $categoryGrid;
 	
 	private $category;
 
-	public function startup() 
-	{
-		parent::startup();
-		
-		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
-		
-		$this->categoryRepository->get(['id' => 2]);
-	}
+//	protected function createComponentCategoryForm()
+//	{
+//		$form = $this->categoryForm->create();
+//		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
+//		
+//		if ($this->id) {
+//			$category = $this->categoryRepository->find($this->id);
+//
+//			$form['title']->setDefaultValue($category->lang->title);
+//			$form['slug']->setDefaultValue($category->lang->slug);
+//			
+//			$parent = $this->categoryRepository->getParent($category);
+//			
+//			if($parent) {
+//				$form['parent']->setDefaultValue($parent->id);
+//			}
+//		}
+//		
+//		$form->onSuccess[] = [$this, 'formSucceeded'];
+//		
+//		return $form;
+//	}
 	
-	protected function createComponentCategoryForm()
+	protected function createComponentCreateCategoryForm() 
 	{
-		$form = $this->categoryForm->create();
-		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
-		
-		if ($this->id) {
-			$defaults = $this->categoryEntity->findOneBy(['id' => $this->id]);
-
-			$form['title']->setDefaultValue($defaults->lang->title);
-			$form['slug']->setDefaultValue($defaults->lang->slug);
-			
-			if($defaults->parent) {
-				$form['parent']->setDefaultValue($defaults->parent->id);
-			}
-		}
-		
-		$form->onSuccess[] = [$this, 'categoryFormSucceeded'];
+		$form = $this->createCategoryForm->build();
 		
 		return $form;
 	}
 	
-	public function categoryFormSucceeded(Form $form, $values)
+	protected function createComponentEditCategoryForm() 
 	{
-		if ($this->id) {
-			$this->categoryRepository->edit($this->id, $values);
-
-			$this->flashMessage(_('The category was successfully update'), 'success');
-		} else {
-			$category = $this->categoryRepository->add($values);
-
-			$this->flashMessage(_('The category was created successfully'), 'success');
-		}
+		$form = $this->editCategoryForm->setId($this->id)->build();
 		
-		$this->redirect('this');
+		return $form;
 	}
 	
+	public function createComponentCategoryGrid()
+	{
+		$grid = $this->gridControl;
+
+		$categories = $this->categoryRepository->find(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+		
+//		$dummy = [
+//			[
+//				'id' => 1,
+//				'children' => ['id' => 2]
+//			],
+//			[
+//				'id' => 1,
+//				'children' => ['id' => 2]
+//			]
+//		];
+		
+//		$grid->setDataSource($dummy);
+		$grid->setDataSource($categories);
+		
+		$grid->setProvider($this->categoryGrid);
+		
+		return $grid;
+	}
+	
+	/**
+	 * Render list
+	 */
 	public function renderDefault()
 	{
 		$this->template->siteTitle = _('Categories');
-		
-		$categories = $this->categoryRepository->getAll();
-		
-		$this->template->categories = $categories;
+		$this->template->categories = $this->categoryRepository->find(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
 	}
 	
 	/**
@@ -85,13 +114,17 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	 */
 	public function renderCreate()
 	{
-		$categories = $this->categoryRepository->getAll();
+		$categories = $this->categoryRepository->find();
 		
-		$this->template->setFile(__DIR__ . '/templates/Category/edit.latte');
 		$this->template->siteTitle = _('Create category');
 		$this->template->categories = $categories;
 	}
 	
+	/**
+	 * Render edit form
+	 * 
+	 * @param integer $id
+	 */
 	public function renderEdit($id)
 	{
 		$this->template->siteTitle = _('Edit category');
@@ -99,7 +132,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function actionShow()
 	{
-		$this->category = $this->categoryRepository->get(['id' => $this->id]);
+		$this->category = $this->categoryRepository->find(['id' => $this->id]);
 		
 		if($this->category->status == CategoryRepository::STATUS_REMOVE) {
 			$this->flashMessage(_('Category is removed'), 'danger');
@@ -107,12 +140,15 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		}
 	}
 	
+	/**
+	 * Render show
+	 */
 	public function renderShow()
 	{
 		$this->template->category = $this->category;
+		$this->template->siteTitle = _($this->category->langs[$this->lang]->title);
 		
-		
-		$this->template->siteTitle = _($this->category->lang->title);
+		$this->template->parent = $this->categoryRepository->getParent($this->category);
 	}
 	
 	public function actionDelete()
@@ -120,16 +156,18 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->category = $this->categoryRepository->get(['id' => $this->id]);
 	}
 	
+	/**
+	 * Render delete
+	 */
 	public function renderDelete()
 	{
 		$this->template->siteTitle = _('Delete category');
-		
 		$this->template->category = $this->category;
 	}
 	
 	public function handleDelete()
 	{
-		$this->categoryRepository->remove($this->category->id);
+		$this->categoryRepository->delete($this->category->id);
 		
 		$this->redirectToDefault();
 	}

@@ -10,7 +10,7 @@ use Kappa\DoctrineMPTT\Entities\TraversableInterface;
  * @ORM\Table(name="wame_category")
  * @ORM\Entity
  */
-class CategoryEntity extends BaseEntity /*implements TraversableInterface */
+class CategoryEntity extends BaseEntity implements TraversableInterface
 {
 	use \Wame\Core\Entities\Columns\Identifier;
 	use \Wame\Core\Entities\Columns\CreateDate;
@@ -21,23 +21,23 @@ class CategoryEntity extends BaseEntity /*implements TraversableInterface */
 	 * @ORM\Column(name="status", type="integer", length=1, nullable=true)
 	 */
 	protected $status = 1;
-	
-	/**
-	 * @ORM\OneToOne(targetEntity="CategoryEntity")
-	 * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
-	 */
-	protected $parent;
 
 	/**
-     * @ORM\OneToMany(targetEntity="CategoryLangEntity", mappedBy="id")
+     * @ORM\OneToMany(targetEntity="CategoryLangEntity", mappedBy="category")
      */
     protected $langs;
 	
-	public function getLang()
-	{
-		$langs = parent::sortLangs($this->langs);
-		return $langs['sk'];
-	}
+//	/** @ORM\OneToMany(targetEntity="CategoryItemEntity", mappedBy="category") */
+//	protected $categoryItems;
+	
+//	public function getLang()
+//	{
+//		$langs = parent::sortLangs($this->langs);
+//		
+//		return $langs['sk'];
+//	}
+	
+	
 	
 	public function getTitle()
 	{

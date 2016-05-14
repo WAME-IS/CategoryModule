@@ -4,52 +4,89 @@ namespace Wame\CategoryModule\FormCategory\Controls;
 
 use Nette;
 use Nette\Forms;
-use Nette\Forms\Container;
-use Nette\Utils;
 use Nette\Utils\Html;
 
 use Wame\CategoryModule\FormCategory\Controls\BaseControl;
+use Wame\CategoryModule\Repositories\CategoryRepository;
 
 class CategoryList extends BaseControl
 {
-	/**
-	 * @var bool
-	 */
+	/** @var CategoryRepository */
+	private $categoryRepository;
+	
+	/** @var bool */
 	private static $registered = FALSE;
 	
-	public function __construct($items = [], $depth = 1, $label = NULL) {
+	public function __construct($label = NULL, $items = [], $depth = 1) {
 		parent::__construct($label);
-		
-//		$this->items = $items;
-		$this->items = [12 => 'kava'];// $items;
-		$this->depth = $depth;
-		
-		// TODO: remove dump
-//		dump($this);
-//		exit();
+	}
+	
+	public function addRepository($categoryRepository)
+	{
+		$this->categoryRepository = $categoryRepository;
+	}
+	
+	/**
+	 * Set type
+	 * 
+	 * @param string $type	type
+	 */
+	public function setType($type)
+	{
+		$this->type = $type;
+	}
+	
+	public function setDepth($depth)
+	{
+		$this->depth;
+	}
+	
+	public function setRepository($categoryRepository)
+	{
+		$this->categoryRepository = $categoryRepository;
+	}
+	
+	public function setItems($items)
+	{
+		$this->items = $items;
 	}
 	
 	public function getControl()
 	{
-		$rows = null;
+		$items = $this->categoryRepository->getTree(['status' => 1]);
 		
-		foreach($this->items as $id => $name) {
-			$row = null;
-			
-			$row .= Html::el('input', ['value' => $id, 'type' => 'checkbox']);
-			$row .= Html::el('span')->setText($name);
-			
-			$rows .= Html::el('li')->setHtml($row);
-		}
+//		dump($items); exit;
 		
-		return Html::el('ul', ['class' => 'list-unstyled'])->setHtml($rows);
+		return $this->generate($items);
 	}
 	
-//	public function setValue($value)
-//	{
-//		dump($value);
-//		exit();
-//	}
+	public function generate($category)
+	{
+		if($category) {
+			$ul = Html::el('ul');
+		
+		
+			$li = Html::el('li');
+				$body = null;
+				$body .= Html::el('input', ['name' => 'categories[]', 'value' => $category->item->id])
+							->type('checkbox');
+				$body .= Html::el('span')->setText($category->item->langs[$this->categoryRepository->lang]->title);
+
+				if(sizeof($category->child_nodes) > 0) {
+					foreach($category->child_nodes as $child) {
+						if($child->status == 1) $body .= Html::el('li')->setHtml($this->generate($child));
+					}
+				}
+			$li->setHtml($body);
+			$ul->setHtml($li);
+			
+			return $ul;
+		} else {
+			return Html::el('div')->setText(_('Category doesnt exists'));
+		}
+		
+		
+	}
 	
 	public static function register($items = [], $depth = 1, $method = 'addCategoryPicker')
 	{
@@ -63,31 +100,11 @@ class CategoryList extends BaseControl
 		$class = function_exists('get_called_class')?get_called_class():__CLASS__;
 		Forms\Container::extensionMethod(
 			$method, function (Forms\Container $form, $name, $label = NULL) use ($class, $items, $depth) {
-				$component = new $class($items, $depth, $label);
+				$component = new $class($label, $items, $depth);
 				$form->addComponent($component, $name);
 				return $component;
 			}
 		);
 	}
 	
-
-//	/**
-//	 * Adds addRangeSlider() method to \Nette\Forms\Form
-//	 */
-//	public static function register()
-//	{
-//		Container::extensionMethod('addCategoryPicker', callback(__CLASS__, 'addCategoryPicker'));
-//	}
-//	/**
-//	 * @param Container $container
-//	 * @param string $name
-//	 * @param null|string $label
-//	 * @param Range $range
-//	 * @return RangeSlider provides fluent interface
-//	 */
-//	public static function addCategoryPicker(Container $container, $name, $label = NULL, $items, $depth)
-//	{
-//		$container[$name] = new self($label, $items, $depth);
-//		return $container[$name];
-//	}
 }

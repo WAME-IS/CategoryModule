@@ -11,16 +11,23 @@ services:
 			- addResourceAction('category', 'delete')
 			- allow('moderator', 'category', 'delete')
 
-	- Wame\CategoryModule\Forms\CategoryForm
-
 	# Entities
 	- Wame\CategoryModule\Entities\CategoryEntity
 	- Wame\CategoryModule\Entities\CategoryLangEntity
+	- Wame\CategoryModule\Entities\CategoryItemEntity
 
 	# Repositories
 	- Wame\CategoryModule\Repositories\CategoryRepository
 	- Wame\CategoryModule\Repositories\CategoryLangRepository
+	- Wame\CategoryModule\Repositories\CategoryItemRepository
 
+	CategoryTreeMenu:
+		class: Wame\CategoryModule\Controls\CategoryTreeMenu
+		setup:
+			- injectRepository
+
+	# Events
+	- {class: Wame\CategoryModule\Events\CategoryListener, tags: [run]}
 
 doctrine:
 	metadata:
@@ -29,3 +36,4 @@ doctrine:
 
 extensions:
 	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
+#	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension

@@ -1,10 +1,13 @@
 {block content}
 	<h1>{$siteTitle}</h1>
 	
-	<p><strong>Title:</strong> {$category->title}</p>
-	<p><strong>Slug:</strong> {$category->slug}</p>
+	<p><strong>Title:</strong> {$category->langs[$lang]->title}</p>
+	<p><strong>Slug:</strong> {$category->langs[$lang]->slug}</p>
 	
 	
 	<h2>Parent</h2>
 	
-	<p><strong>Title:</strong> {*$category->parent->title*}</p>
+	{if $parent}
+		<p><strong>Title:</strong> {$parent->langs[$lang]->title}</p>
+		<p><strong>Title:</strong> {$parent->langs[$lang]->slug}</p>
+	{/if}

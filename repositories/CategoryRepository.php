@@ -3,16 +3,21 @@
 namespace Wame\CategoryModule\Repositories;
 
 use Nette\Security\User;
-use Wame\CategoryModule\Entities\CategoryEntity;
+use Nette\DI\Container;
+
+use Kappa\DoctrineMPTT\Configurator;
+use	Kappa\DoctrineMPTT\TraversableManager;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
+
+use Wame\Utils\Tree\ComplexTreeSorter;
 use Wame\UserModule\Entities\UserEntity;
-use Wame\CategoryModule\Entities\ItemCategoryEntity;
+use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
-use Nette\Utils\Strings;
+use Wame\CategoryModule\Entities\CategoryItemEntity;
 
 class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 {
-	const TABLE_NAME = 'category';
-	
 	const STATUS_REMOVE = 0;
 	const STATUS_ACTIVE = 1;
 	
@@ -22,107 +27,180 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	/** @var CategoryEntity */
 	private $categoryEntity;
 	
+	/** @var Configurator */
+	private $treeConfigurator;
 	
-	public function __construct(\Nette\DI\Container $container, \Kdyby\Doctrine\EntityManager $entityManager, \h4kuna\Gettext\GettextSetup $translator, User $user) {
-		parent::__construct($container, $entityManager, $translator, $user);
+	/** @var TraversableManager */
+	private $traversableManager;
+	
+	/** @var CategoryItemRepository */
+	private $categoryItemRepository;
+	
+	
+	public function __construct(
+		Container $container, 
+		\Kdyby\Doctrine\EntityManager $entityManager, 
+		\h4kuna\Gettext\GettextSetup $translator, 
+		TraversableManager $traversableManager,
+		CategoryItemRepository $categoryItemRepository,
+		User $user
+	) {
+		parent::__construct($container, $entityManager, $translator, $user, CategoryEntity::class);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
+		
+		$this->categoryItemRepository = $categoryItemRepository;
+		
+		$this->traversableManager = clone $traversableManager;
+		$this->treeConfigurator = new Configurator($entityManager);
+		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
+		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
 	
 	/** CREATE ****************************************************************/
 	
 	/**
-	 * Add category
+	 * Create category
 	 * 
-	 * @param Array $values		values
-	 * @return CategoryEntity	category
+	 * @param CategoryLangEntity $categoryLangEntity		CategoryLangEntity
+	 * @return CategoryEntity								CategoryEntity
+	 * @throws \Wame\Core\Exception\RepositoryException		Exception
 	 */
-	public function add($values)
+	public function create($categoryLangEntity)
 	{
-		$category = new CategoryEntity();
-		
-		$category->createDate = new \DateTime('now');
-		$category->createUser = $this->userEntity;
-		$category->status = self::STATUS_ACTIVE;
-		
-		$categoryLangEntity = new CategoryLangEntity();
-		
-		$categoryLangEntity->category = $category;
-		$categoryLangEntity->lang = 'sk';
-		$categoryLangEntity->title = $values['title'];
-		$categoryLangEntity->slug = $values['slug']?:(Strings::webalize($categoryLangEntity->title));
-		$categoryLangEntity->editDate = new \DateTime('now');
-		$categoryLangEntity->editUser = $this->userEntity;
+		$create = $this->entityManager->persist($categoryLangEntity->category);
 		
 		$this->entityManager->persist($categoryLangEntity);
+		$this->entityManager->flush();
 		
-		$c = $this->entityManager->persist($category);
-//		$this->entityManager->persist($itemCategory);
+		if (!$create) {
+			throw new \Wame\Core\Exception\RepositoryException(_('Could not create the category'));
+		}
 		
-		return $c;
+		return $categoryLangEntity->category;
 	}
 	
 	
 	/** READ ******************************************************************/
 	
-	public function get($criteria)
-	{
-		return $category = $this->categoryEntity->findOneBy($criteria);
-	}
-	
+	/**
+	 * Get category by item ID
+	 * 
+	 * @param type $id		item ID
+	 * @param type $type	type
+	 * @param type $parent	parent
+	 * @return type			category
+	 */
 	public function getByItemId($id, $type, $parent = NULL)
 	{
-		// TODO: implementovat stromove vyhladavanie
+		// TODO: tiez tam vyuzit GetAll na stromove vyhladavanie
 		
-		$category = $this->categoryEntity->findOneBy(['id' => $id, 'type' => $type]);
+		$category = $this->entity->find(['id' => $id, 'type' => $type]);
 		
 		return $category;
 	}
 	
-	public function getAll()
+	/**
+	 * Get categories tree structure
+	 * 
+	 * @return type
+	 */
+	public function getTree($criteria = [])
 	{
-		$categories = $this->categoryEntity->findAll();
-		
-		return $categories;
+		$items = $this->find($criteria);
+		$sorter = new ComplexTreeSorter($items);
+		return $sorter->sortTree();
 	}
 	
-	public function getPairs($criteria = [], $value = null, $orderBy = [], $key = 'id')
+	public function getParent($actual)
 	{
-		return $this->categoryEntity->findPairs($criteria, $value);
+		$query = new GetParent($this->treeConfigurator, $actual);
+		
+		try {
+			return $query->fetchOne($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'));
+		} catch(\Exception $e) {
+			return null;
+		}
+	}
+	
+	public function getChildren($actual)
+	{
+		$query = new GetChildren($this->treeConfigurator, $actual);
+		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
 	}
 	
 	
 	/** UPDATE ****************************************************************/
 	
-	/**
-	 * Edit category
-	 * 
-	 * @param Integer $id		id
-	 * @param Array $values		values
-	 */
-	public function edit($id, $values)
+	public function update($categoryLangEntity)
 	{
-		$category = $this->categoryEntity->findOneBy(['id' => $id]);
-		
-		$category->title = $values['title'];
-		$category->slug = $values['slug']?:(Strings::webalize($category->title));
-		$category->parent = $values->parent;
+		return $categoryLangEntity->category;
 	}
 	
 	/**
 	 * Attach categories to item
 	 * 
-	 * @param Integer $itemId			item ID
-	 * @param Integer $categoriesId		category ID
-	 * @param String $type				type
+	 * @param type $item		entity
+	 * @param type $type		type
+	 * @param type $categoryId	category ID	
 	 */
-	public function attach($itemId, $categoriesId, $type)
+	public function attach($item, $type, $categoryId)
 	{
-		$itemCategory = new ItemCategoryEntity();
-		$itemCategory->category_id = $itemId;
-		$itemCategory->item_id = $categoriesId;
+		$itemCategory = new CategoryItemEntity();
+		$itemCategory->category_id = (int)$categoryId;
+		$itemCategory->item_id = $item->id;
 		$itemCategory->type = $type;
+		
+		$this->entityManager->persist($itemCategory);
+	}
+	
+	/**
+	 * Attach all 
+	 * @param type $item
+	 * @param type $type
+	 * @param type $categories
+	 */
+	public function attachAll($item, $type, $categories)
+	{
+		foreach($categories as $category) {
+			$this->attach($item, $type, $category);
+		}
+	}
+	
+	public function detach($item, $type, $categoryId)
+	{
+		$this->categoryItemRepository->remove([
+			'item_id' => $item->id, 
+			'category_id' => $categoryId, 
+			'type' => $type
+		]);
+	}
+	
+	public function detachAll($item, $type, $categories)
+	{
+		foreach($categories as $category) {
+			$this->detach($item, $type, $category);
+		}
+	}
+	
+	public function sync($item, $type, $categories)
+	{
+		$attachedCategories = $this->categoryItemRepository->find(['item_id' => $item->id]);
+		
+		$attached = [];
+		
+		foreach($attachedCategories as $ai) {
+			$attached[] = $ai->category_id;
+		}
+		
+		$toAttach = array_diff($categories, $attached);
+		$toDetach = array_diff($attached, $categories);
+		
+//		dump($toAttach, $toDetach); exit;
+		
+		$this->attachAll($item, $type, $toAttach);
+		$this->detachAll($item, $type, $toDetach);
 	}
 	
 	
@@ -133,13 +211,35 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 * 
 	 * @param type $id
 	 */
-	public function remove($id)
+	public function delete($id)
 	{
-		$category = $this->categoryEntity->findOneBy(['id' => $id]);
+		$category = $this->get(['id' => $id]);
 		
 		if($category) {
 			$category->status = self::STATUS_REMOVE;
+			
+			$children = $this->getChildren($category);
+			
+			foreach($children as $child)
+			{
+				$child->status = self::STATUS_REMOVE;
+			}
 		}
 	}
-	
+
+	/** implements **/
+
+	/**
+	 * Flush
+	 * 
+	 * @param type $entity
+	 */
+	public function flush($entity = null) {
+		if (!$entity->getLeft()) {
+			$this->traversableManager->insertItem($entity);
+		} else {
+			parent::flush($entity);
+		}
+	}
+
 }
