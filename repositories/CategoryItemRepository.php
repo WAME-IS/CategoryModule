@@ -16,6 +16,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 	const FROM_ITEM = 1;
 	
 	const TABLE_ARTICLES = 'articles';
+	const TABLE_UNITS = 'units';
 	
 	/** @var UserEntity */
 	private $userEntity;
@@ -41,8 +42,11 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('a')
 		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin($this->getEntityNameByAlias(self::FROM_ITEM, $type), 'a', Join::WITH, 'ci.item_id = a.id')
-		   ->where('ci.category_id = ' . $categoryId);
+		   ->leftJoin($this->getEntityNameByAlias(self::FROM_ITEM, $type), 'a', Join::WITH, 'ci.item_id = a.id');
+		
+		if($categoryId) {
+			$qb->where('ci.category_id = ' . $categoryId);
+		}
 		
 		$query = $qb->getQuery();
 		$results = $query->getResult();
@@ -56,13 +60,61 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('a')
 		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'a', Join::WITH, 'ci.category_id = a.id')
-		   ->where('ci.item_id = ' . $itemId);
+		   ->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'a', Join::WITH, 'ci.category_id = a.id');
+		
+		if($itemId) {
+			$qb->where('ci.item_id = ' . $itemId);
+		}
 		
 		$query = $qb->getQuery();
 		$results = $query->getResult();
 
 		return $results;
+	}
+	
+	public function getCategoryItem($type, $itemId = null)
+	{
+		$qb = $this->entityManager->createQueryBuilder();
+		
+		$qb->select('a')
+		   ->from(CategoryItemEntity::class, 'ci')
+		   ->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'a', Join::WITH, 'ci.category_id = a.id');
+		
+		if($itemId) {
+			$qb->where('ci.item_id = ' . $itemId);
+		}
+		
+		$query = $qb->getQuery();
+		$results = $query->getResult();
+
+		return $results;
+	}
+	
+	public function getAssoc($type)
+	{
+		// TODO: spojit do 1 query, ako? treba dbat aj na relacie lang
+		$categoryItem = $this->find(['type' => $type]);
+		$categories = $this->generatePairs($this->getCategories($type));
+		$items = $this->generatePairs($this->getItems($type));
+		
+		$arr = [];
+		
+		foreach($categoryItem as $ci) {
+			$arr[$categories[$ci->category_id]][$ci->item_id] = $items[$ci->item_id];
+		}
+		
+		return $arr;
+	}
+	
+	private function generatePairs($array)
+	{
+		$arr = [];
+		
+		foreach($array as $a) {
+			$arr[$a->id] = $a->langs[$this->lang]->title;
+		}
+		
+		return $arr;
 	}
 	
 	// TODO: neskor nacitavat niekde z DB
@@ -75,6 +127,10 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 			switch($alias) {
 				case self::TABLE_ARTICLES:
 					return '\Wame\ArticleModule\Entities\ArticleEntity';
+				case self::TABLE_UNITS:
+					return '\Wame\UnitModule\Entities\UnitEntity';
+				default:
+					throw new \Exception("Invalid table alias '$alias'");
 			}
 		}
 	}
