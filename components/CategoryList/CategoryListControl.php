@@ -15,7 +15,7 @@ interface ICategoryListControlFactory
 }
 
 
-class CategoryListControl extends \App\Core\Components\BaseControl
+class CategoryListControl extends \Wame\Core\Components\BaseControl
 {
 	/** @var CategoryRepository */
 	public $categoryRepository;
