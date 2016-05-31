@@ -54,21 +54,17 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		return $results;
 	}
 	
-	public function getCategories($type, $itemId = null, $depth = 1)
+	public function getCategories($type, $itemId = null)
 	{
 		$qb = $this->entityManager->createQueryBuilder();
 		
-		$qb->select('c')
+		$qb->select('a')
 		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'c', Join::WITH, 'ci.category_id = c.id');
+		   ->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'a', Join::WITH, 'ci.category_id = a.id');
 		
 		if($itemId) {
 			$qb->where('ci.item_id = ' . $itemId);
 		}
-		
-//		if($depth) {
-//			$qb->andWhere('c.depth = ' . $depth);
-//		}
 		
 		$query = $qb->getQuery();
 		$results = $query->getResult();
