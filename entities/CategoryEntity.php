@@ -14,6 +14,7 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
 {
 	use \Wame\Core\Entities\Columns\Identifier;
 	use \Wame\Core\Entities\Columns\CreateDate;
+	use \Wame\Core\Entities\Columns\CreateUser;
 	
 	use \Kappa\DoctrineMPTT\Entities\Traversable;
 	

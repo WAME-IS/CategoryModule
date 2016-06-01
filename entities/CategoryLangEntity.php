@@ -12,6 +12,7 @@ class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity
 {
 	use \Wame\Core\Entities\Columns\Identifier;
 	use \Wame\Core\Entities\Columns\EditDate;
+	use \Wame\Core\Entities\Columns\EditUser;
 
 	/**
 	 * @ORM\Column(name="category_id", type="integer", length=10, nullable=false)
