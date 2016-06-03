@@ -101,16 +101,16 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		return $category;
 	}
 	
-	/**
-	 * Get categories tree structure
-	 * 
-	 * @return type
-	 */
-	public function getTree($criteria = [])
+	public function getTree($criteria)
 	{
-		$items = $this->find($criteria);
-		$sorter = new ComplexTreeSorter($items);
-		return $sorter->sortTree();
+		$actual = $this->get($criteria);
+		$query = new GetChildren($this->treeConfigurator, $actual);
+		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray();
+		$categories[] = $actual;
+		
+		$sorter = new ComplexTreeSorter($categories);
+		
+		return $sorter->sortTree($actual->id);
 	}
 	
 	public function getParent($actual)
@@ -128,6 +128,37 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	{
 		$query = new GetChildren($this->treeConfigurator, $actual);
 		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
+	}
+	
+	/**
+	 * Get all and parse to key/value array
+	 */
+	public function getPairs($type)
+	{	
+		$qb = $this->entityManager->createQueryBuilder();
+		
+		$qb->select('c')
+				->from(CategoryEntity::class, 'c')
+				->leftJoin(\Wame\CategoryModule\Entities\CategoryLangEntity::class, 'l', \Doctrine\ORM\Query\Expr\Join::WITH, 'l.category_id = c.id')
+				->where($qb->expr()->andX(
+						$qb->expr()->orX(
+							$qb->expr()->eq('c.depth', 0),
+							$qb->expr()->eq('c.type', ':type')
+						),
+						$qb->expr()->eq('l.lang', ':lang')
+				))
+				->setParameter('lang', $this->lang)
+				->setParameter('type', $type);
+		
+		$categories = $qb->getQuery()->getResult();
+		
+		$pairs = [];
+		
+		foreach($categories as $category) {
+			$pairs[$category->id] = $category->langs[$this->lang]->title;
+		}
+		
+		return $pairs;
 	}
 	
 	

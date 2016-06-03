@@ -45,7 +45,9 @@ class CreateCategoryForm extends FormFactory
 	/** @val string */
 	private $lang;
 	
-	public function __construct(CategoryRepository $categoryRepository, UserRepository $userRepository, User $user, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager) {
+	private $type;
+	
+	public function __construct(CategoryRepository $categoryRepository, UserRepository $userRepository, User $user, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager, \Wame\Utils\HttpRequest $httpRequest) {
 		$this->entityManager = $entityManager;
 		
 		$this->categoryRepository = $categoryRepository;
@@ -57,11 +59,15 @@ class CreateCategoryForm extends FormFactory
 		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, \Wame\CategoryModule\Entities\CategoryEntity::class /*$this->getClass()*/);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 //		dump($this->treeConfigurator); exit;
+		
+		$this->type = $httpRequest->getRequest()->getParameter('type');
 	}
 	
 	public function build()
 	{
 		$form = $this->createForm();
+		
+		$form->addHidden('type', $this->type);
 		
 		$form->addSubmit('submit', _('Create category'));
 		
@@ -75,13 +81,14 @@ class CreateCategoryForm extends FormFactory
 		$presenter = $form->getPresenter();
 		
 		try {
-			$category = $this->create($values);
+			$category = $this->create($values, $presenter);
 			// TODO: len pre testovanie
+			// tODO: relacia uz nepotrebuje typ
 			$this->categoryRepository->onCreate($form, 'articles', $category, $values);
 
 			$presenter->flashMessage(_('The category was successfully created'), 'success');
 			
-			$presenter->redirect('this');
+			$presenter->redirect('this', ['type' => $category->type]);
 		} catch (Exception $ex) {
 			throw $ex;
 		}
@@ -99,6 +106,7 @@ class CreateCategoryForm extends FormFactory
 	{
 		// category
 		$category = new CategoryEntity();
+		$category->type = $values->type;
 		$category->createDate = new \DateTime('now');
 		$category->createUser = $this->userEntity;
 		$category->status = CategoryRepository::STATUS_ACTIVE;
@@ -115,8 +123,6 @@ class CreateCategoryForm extends FormFactory
 		$categoryLangEntity->editDate = new \DateTime('now');
 		$categoryLangEntity->editUser = $this->userEntity;
 		
-//		dump($categoryLangEntity); exit;
-		
 		// category tree
 		$parent = $this->categoryRepository->get(['id' => $values->parent]);
 		$this->traversableManager->insertItem($category, $parent);
@@ -124,24 +130,10 @@ class CreateCategoryForm extends FormFactory
 //		
 //		$this->entityManager->persist($categoryLangEntity);
 //		$this->entityManager->persist($category);
-		
-//		exit;
-		
-		
-//		dump($this->traversableManager); exit;
-//		dump(get_class($category)); exit;
-		
-//		dump($this->treeConfigurator); exit;
-		
-		
-		
+//		
 //		$this->entityManager->persist($category);
 //		$this->entityManager->persist($categoryLangEntity);
 //		$this->entityManager->flush();
-		
-		
-		
-		
 		
 		return $this->categoryRepository->create($categoryLangEntity);
 		

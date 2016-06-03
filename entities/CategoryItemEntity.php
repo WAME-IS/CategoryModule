@@ -38,9 +38,6 @@ class CategoryItemEntity extends BaseEntity
 //				$this->entityManager($type)->find($this->item_id);
 //				break;
 //		}
-		
-		
-//		dump($this->type); exit;
 	}
 
 }

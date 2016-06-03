@@ -17,9 +17,15 @@ class CategoryList extends BaseControl
 	/** @var bool */
 	private static $registered = FALSE;
 	
-	public function __construct($label = NULL, $items = [], $depth = 1) {
+//	protected $value = [];
+	
+	
+	public function __construct($label = NULL, $items = [], $type = null, $depth = 1) {
 		parent::__construct($label);
+		
+		$this->type = $type;
 	}
+	
 	
 	public function addRepository($categoryRepository)
 	{
@@ -53,9 +59,7 @@ class CategoryList extends BaseControl
 	
 	public function getControl()
 	{
-		$items = $this->categoryRepository->getTree(['status' => 1]);
-		
-//		dump($items); exit;
+		$items = $this->categoryRepository->getTree(['status' => 1, 'type' => 'shopProduct']);
 		
 		return $this->generate($items);
 	}
@@ -64,17 +68,16 @@ class CategoryList extends BaseControl
 	{
 		if($category) {
 			$ul = Html::el('ul');
-		
-		
+			
 			$li = Html::el('li');
 				$body = null;
 				$body .= Html::el('input', ['name' => 'categories[]', 'value' => $category->item->id])
-							->type('checkbox');
+							->type('checkbox')->addAttributes(['checked' => isset($this->value[$category->item->id])]);
 				$body .= Html::el('span')->setText($category->item->langs[$this->categoryRepository->lang]->title);
 
 				if(sizeof($category->child_nodes) > 0) {
 					foreach($category->child_nodes as $child) {
-						if($child->status == 1) $body .= Html::el('li')->setHtml($this->generate($child));
+						if($child->status == 1) $body .= $this->generate($child);
 					}
 				}
 			$li->setHtml($body);
@@ -84,11 +87,9 @@ class CategoryList extends BaseControl
 		} else {
 			return Html::el('div')->setText(_('Category doesnt exists'));
 		}
-		
-		
 	}
 	
-	public static function register($items = [], $depth = 1, $method = 'addCategoryPicker')
+	public static function register($items = [], $type = null, $depth = 1, $method = 'addCategoryPicker')
 	{
 		// Check for multiple registration
 		if (static::$registered) {
@@ -99,8 +100,8 @@ class CategoryList extends BaseControl
 		
 		$class = function_exists('get_called_class')?get_called_class():__CLASS__;
 		Forms\Container::extensionMethod(
-			$method, function (Forms\Container $form, $name, $label = NULL) use ($class, $items, $depth) {
-				$component = new $class($label, $items, $depth);
+			$method, function (Forms\Container $form, $name, $label = NULL) use ($class, $items, $type, $depth) {
+				$component = new $class($label, $items, $type, $depth);
 				$form->addComponent($component, $name);
 				return $component;
 			}

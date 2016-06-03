@@ -14,7 +14,6 @@ services:
 	- Wame\CategoryModule\Components\ICategoryListControlFactory
 
 	# Entities
-	- Wame\CategoryModule\Entities\CategoryEntity
 	- Wame\CategoryModule\Entities\CategoryLangEntity
 	- Wame\CategoryModule\Entities\CategoryItemEntity
 
@@ -23,6 +22,10 @@ services:
 	- Wame\CategoryModule\Repositories\CategoryLangRepository
 	- Wame\CategoryModule\Repositories\CategoryItemRepository
 
+	# Models
+	CategoryManager:
+		class: Wame\CategoryModule\Managers\CategoryManager
+
 	CategoryTreeMenu:
 		class: Wame\CategoryModule\Controls\CategoryTreeMenu
 		setup:
@@ -30,12 +33,26 @@ services:
 
 	# Events
 	- {class: Wame\CategoryModule\Events\CategoryListener, tags: [run]}
+	- {class: Wame\CategoryModule\Events\CategoryListFormListener, tags: [run]}
 
 doctrine:
 	metadata:
 		Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
 		Wame\CategoryModule\Repositories: %appDir%/../vendor/wame/CategoryModule/repositories
 
+webloader:
+	css:
+		frontend:
+			files:
+				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.css
+
+	js:
+		frontend:
+			files:
+				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.js
+				- %appDir%/../vendor/Wame/CategoryModule/assets/main.js
+
 extensions:
 	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
+	webloader: WebLoader\Nette\Extension
 #	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension

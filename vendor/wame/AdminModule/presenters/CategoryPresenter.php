@@ -7,12 +7,17 @@ use Nette\Application\UI\Form;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Repositories\CategoryRepository;
+use Wame\CategoryModule\Repositories\CategoryItemRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
 use Wame\DataGridControl\DataGridControl;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
+use Nette\Http\Request;
 
 class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 {	
+	/** @var Request @inject */
+	public $request;
+	
 	/** @var CreateCategoryForm @inject */
 	public $createCategoryForm;
 	
@@ -24,6 +29,9 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 
 	/** @var CategoryRepository @inject */
 	public $categoryRepository;
+	
+	/** @var CategoryItemRepository @inject */
+	public $categoryItemRepository;
 
 	/** @var CategoryLangRepository @inject */
 	public $categoryLangRepository;
@@ -61,7 +69,9 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	protected function createComponentCreateCategoryForm() 
 	{
-		$form = $this->createCategoryForm->build();
+		$form = $this->createCategoryForm
+				->setActionForm($this->request->getUrl()->setQueryParameter('do', 'createCategoryForm-submit'))
+				->build();
 		
 		return $form;
 	}
@@ -76,23 +86,9 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public function createComponentCategoryGrid()
 	{
 		$grid = $this->gridControl;
-
-		$categories = $this->categoryRepository->find(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
-		
-//		$dummy = [
-//			[
-//				'id' => 1,
-//				'children' => ['id' => 2]
-//			],
-//			[
-//				'id' => 1,
-//				'children' => ['id' => 2]
-//			]
-//		];
-		
-//		$grid->setDataSource($dummy);
+		$type = $this->getParameter('type');
+		$categories = $this->categoryItemRepository->getCategories($type);
 		$grid->setDataSource($categories);
-		
 		$grid->setProvider($this->categoryGrid);
 		
 		return $grid;
@@ -103,6 +99,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	 */
 	public function renderDefault()
 	{
+		$this->template->type = $this->getParameter('type');
 		$this->template->siteTitle = _('Categories');
 		$this->template->categories = $this->categoryRepository->find(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
 	}

@@ -5,8 +5,11 @@ namespace App\CategoryModule\Presenters;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
 //use Wame\CategoryModule\Repositories\CategoryItemRepository;
-
+use Wame\CategoryModule\Components\ICategoryListControlFactory;
 use Wame\ArticleCategoryPlugin\Controls\ArticlesOfCategory;
+
+use Wame\ArticleCategoryPlugin\Repositories\ArticleCategoryRepository;
+
 
 class CategoryPresenter extends \App\Core\Presenters\BasePresenter
 {
@@ -22,8 +25,22 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
 	/** @var ArticlesOfCategory @inject */
 	public $articlesOfCategory;
 	
+	/** @var ICategoryListControlFactory @inject */
+	public $ICategoryListControlFactory;
+	
+	/** @var ArticleCategoryRepository @inject */
+	public $articleCategoryRepository;
+	
+	
 	public $items = [];
 	
+	
+	public function renderArticleCategories()
+	{
+//		dump($this->articleCategoryRepository); exit;
+		$articleCategories = $this->articleCategoryRepository->find();
+		dump($articleCategories[0]->getArticles()); exit;
+	}
 	
 	public function renderArticles()
 	{
@@ -33,6 +50,13 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
 	public function createComponentArticlesOfCategory()
 	{
 		return $this->articlesOfCategory;
+	}
+	
+	public function createComponentCategoryList()
+	{
+		$component = $this->ICategoryListControlFactory->create();
+		
+		return $component;
 	}
 	
 }

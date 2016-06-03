@@ -36,10 +36,17 @@ class CategoryListControl extends \Wame\Core\Components\BaseControl
 		$this->lang = $categoryRepository->lang;
 	}
 	
-	public function render($depth = null, $type = null)
+	
+	public function render($parameters = [])
 	{
+		$depth = isset($parameters['depth']) ? $parameters['depth'] : 1;
+		$type = isset($parameters['type']) ? $parameters['type'] : null;
+		
+		dump($type);
+		
 		if($type) {
-			$categories = $this->categoryItemRepository->getCategories($type, null);
+			$categories = $this->categoryRepository->find(['type' => $type, 'depth' => $depth]);
+//			$categories = $this->categoryItemRepository->getCategories($type, null);
 		} else {
 			if($depth) {
 				$categories = $this->categoryRepository->find(['depth' => $depth]);

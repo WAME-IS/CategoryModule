@@ -28,6 +28,11 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
      */
     protected $langs;
 	
+	/**
+	 * @ORM\Column(name="type", type="string", nullable=false)
+	 */
+	protected $type;
+	
 //	/** @ORM\OneToMany(targetEntity="CategoryItemEntity", mappedBy="category") */
 //	protected $categoryItems;
 	
@@ -40,24 +45,24 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
 	
 	
 	
-	public function getTitle()
-	{
-		return $this->lang->title;
-	}
-	
-	public function getSlug()
-	{
-		return $this->lang->slug;
-	}
-	
-	public function setTitle($title)
-	{
-		$this->lang->title = $title;
-	}
-	
-	public function setSlug($slug)
-	{
-		$this->lang->slug = $slug;
-	}
+//	public function getTitle()
+//	{
+//		return $this->lang->title;
+//	}
+//	
+//	public function getSlug()
+//	{
+//		return $this->lang->slug;
+//	}
+//	
+//	public function setTitle($title)
+//	{
+//		$this->lang->title = $title;
+//	}
+//	
+//	public function setSlug($slug)
+//	{
+//		$this->lang->slug = $slug;
+//	}
 	
 }

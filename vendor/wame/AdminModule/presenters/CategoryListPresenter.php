@@ -6,6 +6,9 @@ use Wame\ComponentModule\Forms\ComponentForm;
 use Wame\PositionModule\Repositories\PositionRepository;
 //use Wame\ArticleCategoryPlugin\Wame\CategoryModule\Wame\AdminModule\Forms\ICategoryTreeFormContainerFactory;
 use Wame\CategoryModule\Forms\CategoryListForm;
+use Wame\CategoryModule\Forms\IDepthFormContainerFactory;
+use Wame\CategoryModule\Forms\ICategoryFormContainerFactory;
+use Wame\CategoryModule\Forms\ITypeFormContainerFactory;
 
 class CategoryListPresenter extends ComponentPresenter
 {		
@@ -17,8 +20,15 @@ class CategoryListPresenter extends ComponentPresenter
 	
 	/** @var CategoryListForm @inject */
 	public $categoryListForm;
+
+	/** @var IDepthFormContainerFactory @inject */
+	public $IDepthFormContainer;
+
+	/** @var ICategoryFormContainerFactory @inject */
+	public $ICategoryFormContainer;
 	
-	
+	/** @var ITypeFormContainerFactory @inject */
+	public $ITypeFormContainer;
 	
 	
 	public function actionCreate()
@@ -47,7 +57,6 @@ class CategoryListPresenter extends ComponentPresenter
 		}
 	}
 	
-	
 	public function actionEdit()
 	{
 		if (!$this->user->isAllowed('categoryList', 'edit')) {
@@ -55,7 +64,11 @@ class CategoryListPresenter extends ComponentPresenter
 			$this->redirect(':Admin:Dashboard:');
 		}
 	}
-	
+
+	public function renderCreate()
+	{
+		$this->template->siteTitle = _('Create category list');
+	}
 
 	/**
 	 * Menu component form
@@ -72,16 +85,16 @@ class CategoryListPresenter extends ComponentPresenter
 		return $form;
 	}
 	
-	
-	public function renderCreate()
-	{
-		$this->template->siteTitle = _('Create category list');
-	}
-	
-	
 	public function renderEdit()
 	{
 		$this->template->siteTitle = _('Edit category list');
+		
+//						->addFormContainer($this->IDepthFormContainer->create(), 'DepthFormContainer')
+//						->addFormContainer($this->ICategoryFormContainer->create(), 'CategoryFormContainer')
+//						->addFormContainer($this->ITypeFormContainer->create(), 'TypeFormContainer')
+//						->build();
+
+//		return $form;
 	}
 	
 }

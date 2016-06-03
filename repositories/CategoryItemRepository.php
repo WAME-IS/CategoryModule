@@ -17,6 +17,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 	
 	const TABLE_ARTICLES = 'articles';
 	const TABLE_UNITS = 'units';
+	const TABLE_SHOP_PRODUCT = 'shopProduct';
 	
 	/** @var UserEntity */
 	private $userEntity;
@@ -40,12 +41,16 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 	{
 		$qb = $this->entityManager->createQueryBuilder();
 		
-		$qb->select('a')
-		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin($this->getEntityNameByAlias(self::FROM_ITEM, $type), 'a', Join::WITH, 'ci.item_id = a.id');
+		$qb->select('i')
+			->from(CategoryItemEntity::class, 'ci')
+			->leftJoin($this->getEntityNameByAlias(self::FROM_ITEM, $type), 'i', Join::WITH, 'ci.item_id = i.id')
+			->where('i.status != :status')
+			->andWhere('ci.type = :type')
+			->setParameter('status', 0)
+			->setParameter('type', $type);
 		
 		if($categoryId) {
-			$qb->where('ci.category_id = ' . $categoryId);
+			$qb->andWhere('ci.category_id = ' . $categoryId);
 		}
 		
 		$query = $qb->getQuery();
@@ -59,11 +64,14 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		$qb = $this->entityManager->createQueryBuilder();
 		
 		$qb->select('c')
-		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'c', Join::WITH, 'ci.category_id = c.id');
+			->from(CategoryItemEntity::class, 'ci')
+			->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'c', Join::WITH, 'ci.category_id = c.id')
+			->andWhere('c.status != :status')
+			->setParameter('status', 0);
 		
 		if($itemId) {
-			$qb->where('ci.item_id = ' . $itemId);
+			$qb->andWhere('ci.item_id = :itemId');
+			$qb->setParameter('itemId', $itemId);
 		}
 		
 //		if($depth) {
@@ -133,6 +141,8 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 					return '\Wame\ArticleModule\Entities\ArticleEntity';
 				case self::TABLE_UNITS:
 					return '\Wame\UnitModule\Entities\UnitEntity';
+				case self::TABLE_SHOP_PRODUCT:
+					return \Wame\ShopProductModule\Entities\ShopProductEntity::class;// '\Wame\ShopProductModule\Entities\ShopProductEntity';
 				default:
 					throw new \Exception("Invalid table alias '$alias'");
 			}

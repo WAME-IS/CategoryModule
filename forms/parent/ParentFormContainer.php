@@ -34,9 +34,15 @@ class ParentFormContainer extends BaseFormContainer
 	/** @var TraversableManager */
 	private $traversableManager;
 	
-	public function __construct(CategoryRepository $categoryRepository, CategoryLangRepository $categoryLangRepository, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager) 
+	/** @var string */
+	private $type;
+	
+	
+	public function __construct(\Wame\Utils\HttpRequest $httpRequest, CategoryRepository $categoryRepository, CategoryLangRepository $categoryLangRepository, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager) 
 	{
 		parent::__construct();
+		
+		$this->type = $httpRequest->getParameter('type');
 		
 		$this->categoryRepository = $categoryRepository;
 		$this->categoryLangRepository = $categoryLangRepository;
@@ -58,19 +64,29 @@ class ParentFormContainer extends BaseFormContainer
 	{
 		$form = $this->getForm();
 
-		$criteria = [
-			'lang' => 'sk'
-		];
+//		$criteria = [
+//			'lang' => 'sk'
+//		];
+//		
+//		$categories = $this->categoryLangRepository->getPairs($criteria, 'title', [], 'category_id');
 		
-		$categories = $this->categoryLangRepository->getPairs($criteria, 'title', [], 'category_id');
+//		$categories = $this->categoryRepository->find();
+//		
+//		$categories = $this->categoryRepository->getPairs($criteria, 'title', [], 'id');
 		
-		$form->addSelect('parent', _('Parent'), $categories)
+		$form->addSelect('parent', _('Parent'), $this->categoryRepository->getPairs($this->type))
 				->setPrompt(_('-Top rank-'));
+		
+//		$form->addSelect('foo2', _('Parent'), [0 => 'A']);
 		
 //		$form->addSelect('parent', _('Parent'), []);
 		
 //		$form->addText('slug', _('URL'))
 //				->setType('text');
+		
+//		$form->foo = 'ahoj';
+//		
+//		dump($form->foo);
     }
 	
 	public function setDefaultValues($object)

@@ -5,6 +5,10 @@ services:
 	- Wame\CategoryModule\Forms\ITitleFormContainerFactory
 	- Wame\CategoryModule\Forms\IUrlFormContainerFactory
 	- Wame\CategoryModule\Forms\IParentFormContainerFactory
+	- Wame\CategoryModule\Forms\IDepthFormContainerFactory
+	- Wame\CategoryModule\Forms\ICategoryFormContainerFactory
+	- Wame\CategoryModule\Forms\ICategoryTreeFormContainerFactory
+	- Wame\CategoryModule\Forms\ITypeFormContainerFactory
 
 	# Create category in administration form
 	CreateCategoryForm:
