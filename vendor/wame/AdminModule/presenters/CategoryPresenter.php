@@ -43,7 +43,20 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public $categoryGrid;
 	
 	private $category;
+	
+	/** @var array */
+	private $categories;
+	
+	/** @var string */
+	private $type;
 
+	
+	public function actionDefault()
+	{
+		$this->type = $this->getParameter('type');
+		$this->categories = $this->categoryRepository->find(['type' => $this->type, 'status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+	}
+	
 //	protected function createComponentCategoryForm()
 //	{
 //		$form = $this->categoryForm->create();
@@ -86,8 +99,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public function createComponentCategoryGrid()
 	{
 		$grid = $this->gridControl;
-		$type = $this->getParameter('type');
-		$categories = $this->categoryItemRepository->getCategories($type);
+		$categories = $this->categories;
 		$grid->setDataSource($categories);
 		$grid->setProvider($this->categoryGrid);
 		
@@ -99,9 +111,9 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	 */
 	public function renderDefault()
 	{
-		$this->template->type = $this->getParameter('type');
+		$this->template->type = $this->type;
 		$this->template->siteTitle = _('Categories');
-		$this->template->categories = $this->categoryRepository->find(['status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+		$this->template->categories = $this->categories;
 	}
 	
 	/**
