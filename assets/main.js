@@ -1,4 +1,4 @@
 console.log('init tree');
-$('form ul').tree({
+$('.tree').tree({
 	/* specify here your options */
 });

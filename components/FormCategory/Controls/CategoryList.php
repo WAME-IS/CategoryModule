@@ -61,13 +61,17 @@ class CategoryList extends BaseControl
 	{
 		$items = $this->categoryRepository->getTree(['status' => 1, 'type' => 'shopProduct']);
 		
-		return $this->generate($items);
+		return $this->generate($items, true);
 	}
 	
-	public function generate($category)
+	public function generate($category, $isRoot = false)
 	{
 		if($category) {
 			$ul = Html::el('ul');
+			
+			if($isRoot) {
+				$ul->addAttributes(['class' => 'tree']);
+			}
 			
 			$li = Html::el('li');
 				$body = null;

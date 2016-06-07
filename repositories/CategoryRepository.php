@@ -104,13 +104,19 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	public function getTree($criteria)
 	{
 		$actual = $this->get($criteria);
-		$query = new GetChildren($this->treeConfigurator, $actual);
-		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray();
-		$categories[] = $actual;
-		
-		$sorter = new ComplexTreeSorter($categories);
-		
-		return $sorter->sortTree($actual->id);
+	dump($actual);
+	exit;
+		if($actual) {
+			$query = new GetChildren($this->treeConfigurator, $actual);
+			$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray();
+			$categories[] = $actual;
+
+			$sorter = new ComplexTreeSorter($categories);
+
+			return $sorter->sortTree($actual->id);
+		} else {
+			return [];
+		}
 	}
 	
 	public function getParent($actual)
