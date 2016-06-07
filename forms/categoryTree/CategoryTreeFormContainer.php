@@ -21,7 +21,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 	protected $categoryItemRepository;
 	
 	/** @var string */
-	private $type;
+	protected $type;
 	
 	/** @var integer */
 	private $id;
@@ -52,7 +52,8 @@ class CategoryTreeFormContainer extends BaseFormContainer
 		$form->addGroup(_('Category'));
 		
 		$form->addCategoryPicker('categories', _('Categories'))
-				->setRepository($this->categoryRepository);
+				->setRepository($this->categoryRepository)
+				->setType($this->type);
     }
 	
 	public function setDefaultValues($object)

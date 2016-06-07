@@ -27,11 +27,6 @@ class CategoryList extends BaseControl
 	}
 	
 	
-	public function addRepository($categoryRepository)
-	{
-		$this->categoryRepository = $categoryRepository;
-	}
-	
 	/**
 	 * Set type
 	 * 
@@ -40,26 +35,34 @@ class CategoryList extends BaseControl
 	public function setType($type)
 	{
 		$this->type = $type;
+		
+		return $this;
 	}
 	
 	public function setDepth($depth)
 	{
 		$this->depth;
+		
+		return $this;
 	}
 	
 	public function setRepository($categoryRepository)
 	{
 		$this->categoryRepository = $categoryRepository;
+		
+		return $this;
 	}
 	
 	public function setItems($items)
 	{
 		$this->items = $items;
+		
+		return $this;
 	}
 	
 	public function getControl()
 	{
-		$items = $this->categoryRepository->getTree(['status' => 1, 'type' => 'shopProduct']);
+		$items = $this->categoryRepository->getTree(['status' => 1, 'type' => $this->type]);
 		
 		return $this->generate($items, true);
 	}

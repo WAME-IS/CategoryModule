@@ -111,8 +111,8 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 			$categories[] = $actual;
 
 			$sorter = new ComplexTreeSorter($categories);
-
-			return $sorter->sortTree($actual->id);
+			
+			return $sorter->sortTree($actual->getLeft());
 		} else {
 			return [];
 		}
