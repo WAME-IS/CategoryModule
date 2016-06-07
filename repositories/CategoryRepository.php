@@ -104,8 +104,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	public function getTree($criteria)
 	{
 		$actual = $this->get($criteria);
-	dump($actual);
-	exit;
+		
 		if($actual) {
 			$query = new GetChildren($this->treeConfigurator, $actual);
 			$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray();
