@@ -45,11 +45,23 @@ webloader:
 		frontend:
 			files:
 				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.css
+				- %appDir%/../private/components/jqTree/jqtree.css
+				- %appDir%/../private/components/multi-level-push-menu/jquery.multilevelpushmenu.min.css
+		admin:
+			files:
+				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.css
+				- %appDir%/../private/components/jqTree/jqtree.css
 
 	js:
 		frontend:
 			files:
 				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.js
+				- %appDir%/../private/components/jqTree/tree.jquery.js
+				- %appDir%/../private/components/multi-level-push-menu/jquery.multilevelpushmenu.min.js
+				- %appDir%/../vendor/Wame/CategoryModule/assets/main.js
+		admin:
+			files:
+				- %appDir%/../private/components/jqTree/tree.jquery.js
 				- %appDir%/../vendor/Wame/CategoryModule/assets/main.js
 
 extensions:
