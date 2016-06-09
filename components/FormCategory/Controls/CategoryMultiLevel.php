@@ -9,15 +9,13 @@ use Nette\Utils\Html;
 use Wame\CategoryModule\FormCategory\Controls\BaseControl;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 
-class CategoryList extends BaseControl
-{
+class CategoryMultiLevel extends BaseControl
+{	
 	/** @var CategoryRepository */
 	private $categoryRepository;
 	
 	/** @var bool */
 	private static $registered = FALSE;
-	
-//	protected $value = [];
 	
 	
 	public function __construct($label = NULL, $items = [], $type = null, $depth = 1) {
@@ -25,7 +23,6 @@ class CategoryList extends BaseControl
 		
 		$this->type = $type;
 	}
-	
 	
 	/**
 	 * Set type
@@ -63,43 +60,11 @@ class CategoryList extends BaseControl
 	public function getControl()
 	{
 		$input = Html::el('input', ['name' => 'categories', 'type' => "hidden"]);
-		$tree = Html::el('div', ['id' => "tree1", 'data-url' => "/api/v1/category/?type=" . $this->type]);
+		$tree = Html::el('div', ['id' => "menu", 'data-url' => "/api/v1/category/?type=" . $this->type]);
 		return $input.$tree;
-		
-//		$items = $this->categoryRepository->getTree(['status' => 1, 'type' => $this->type]);
-//		return $this->generate($items, true);
 	}
 	
-//	public function generate($category, $isRoot = false)
-//	{
-//		if($category) {
-//			$ul = Html::el('ul');
-//			
-//			if($isRoot) {
-//				$ul->addAttributes(['class' => 'tree']);
-//			}
-//			
-//			$li = Html::el('li');
-//				$body = null;
-//				$body .= Html::el('input', ['name' => 'categories[]', 'value' => $category->item->id])
-//							->type('checkbox')->addAttributes(['checked' => isset($this->value[$category->item->id])]);
-//				$body .= Html::el('span')->setText($category->item->langs[$this->categoryRepository->lang]->title);
-//
-//				if(sizeof($category->child_nodes) > 0) {
-//					foreach($category->child_nodes as $child) {
-//						if($child->status == 1) $body .= $this->generate($child);
-//					}
-//				}
-//			$li->setHtml($body);
-//			$ul->setHtml($li);
-//			
-//			return $ul;
-//		} else {
-//			return Html::el('div')->setText(_('Category doesnt exists'));
-//		}
-//	}
-	
-	public static function register($items = [], $type = null, $depth = 1, $method = 'addCategoryPicker')
+	public static function register($items = [], $type = null, $depth = 1, $method = 'addCategoryMultiLevel')
 	{
 		// Check for multiple registration
 		if (static::$registered) {

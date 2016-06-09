@@ -17,5 +17,6 @@ class FormCategoryExtension extends DI\CompilerExtension
 		$initialize = $class->methods['initialize'];
 		$initialize->addBody('Wame\CategoryModule\FormCategory\Controls\CategoryList::register();');
 		$initialize->addBody('Wame\CategoryModule\FormCategory\Controls\CategorySelect::register();');
+		$initialize->addBody('Wame\CategoryModule\FormCategory\Controls\CategoryMultiLevel::register();');
 	}
 }

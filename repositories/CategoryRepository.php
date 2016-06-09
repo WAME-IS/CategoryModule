@@ -104,13 +104,18 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	public function getTree($criteria)
 	{
 		$actual = $this->get($criteria);
-		$query = new GetChildren($this->treeConfigurator, $actual);
-		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray();
-		$categories[] = $actual;
 		
-		$sorter = new ComplexTreeSorter($categories);
-		
-		return $sorter->sortTree($actual->id);
+		if($actual) {
+			$query = new GetChildren($this->treeConfigurator, $actual);
+			$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray();
+			$categories[] = $actual;
+
+			$sorter = new ComplexTreeSorter($categories);
+			
+			return $sorter->sortTree($actual->getLeft());
+		} else {
+			return [];
+		}
 	}
 	
 	public function getParent($actual)
@@ -273,4 +278,32 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		}
 	}
 
+	
+	/** API *******************************************************************/
+	
+	/**
+	 * @api {get} /category/:type/:node Get article by id
+	 * @param string $type
+	 * @param int $node
+	 */
+	public function categoryDescendant($type, $node = 1)
+	{
+		$actual = $this->get(['id' => $node]);
+		
+		$query = new \Wame\CategoryModule\Queries\GetChildrenWithLang($this->treeConfigurator, $actual, $type, $this->lang);
+		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+		
+		$nodes = [];
+		
+		foreach($categories as $category) {
+			$nodes[] = [
+				'label' => $category['title'],
+				'id' => $category['category_id'],
+				'load_on_demand' => true
+			];
+		}
+		
+		return $nodes;
+	}
+	
 }

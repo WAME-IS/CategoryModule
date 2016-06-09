@@ -10,6 +10,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Wame\UserModule\Entities\UserEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
 
+
 class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 {
 	const FROM_CATEGORY = 0;
