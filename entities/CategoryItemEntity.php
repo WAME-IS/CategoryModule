@@ -25,7 +25,7 @@ class CategoryItemEntity extends BaseEntity
 	protected $category_id;
 	
 	/**
-	 * @ORM\Column(name="type", type="string", length=250, nullable=false)
+	 * @ORM\Column(name="type", type="string", length=250, nullable=true)
 	 */
 	protected $type;
 	
@@ -33,7 +33,7 @@ class CategoryItemEntity extends BaseEntity
 	public function getItem()
 	{
 //		switch($this->type) {
-//			case 'articles':
+//			case 'article':
 //				$entity = new \Wame\ArticleModule\Entities\{$type}Entity;
 //				$this->entityManager($type)->find($this->item_id);
 //				break;

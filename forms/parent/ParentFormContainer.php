@@ -50,7 +50,7 @@ class ParentFormContainer extends BaseFormContainer
 		// Traversable
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
-		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class /*$this->getClass()*/);
+		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
 	
@@ -63,30 +63,13 @@ class ParentFormContainer extends BaseFormContainer
     public function configure() 
 	{
 		$form = $this->getForm();
-
-//		$criteria = [
-//			'lang' => 'sk'
-//		];
-//		
-//		$categories = $this->categoryLangRepository->getPairs($criteria, 'title', [], 'category_id');
 		
-//		$categories = $this->categoryRepository->find();
-//		
-//		$categories = $this->categoryRepository->getPairs($criteria, 'title', [], 'id');
-		
-		$form->addSelect('parent', _('Parent'), $this->categoryRepository->getPairs($this->type))
+		$form->addSelect('parent', _('Parent'))
 				->setPrompt(_('-Top rank-'));
 		
-//		$form->addSelect('foo2', _('Parent'), [0 => 'A']);
-		
-//		$form->addSelect('parent', _('Parent'), []);
-		
-//		$form->addText('slug', _('URL'))
-//				->setType('text');
-		
-//		$form->foo = 'ahoj';
-//		
-//		dump($form->foo);
+		if($this->type) {
+			$form['parent']->setItems($this->categoryRepository->getPairs($this->type));
+		}
     }
 	
 	public function setDefaultValues($object)
@@ -96,7 +79,8 @@ class ParentFormContainer extends BaseFormContainer
 		$parent = $this->categoryRepository->getParent($object->categoryEntity);
 		
 		if($parent) {
-			$form['parent']->setDefaultValue($parent->langs[$object->lang]->category_id );
+			$form['parent']->setItems($this->categoryRepository->getPairs($object->categoryEntity->type))->setDefaultValue($parent->langs[$object->lang]->category_id );
 		}
 	}
+	
 }

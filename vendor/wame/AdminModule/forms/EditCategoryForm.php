@@ -6,12 +6,8 @@ use Nette\Security\User;
 use Nette\Application\UI\Form;
 
 use Kdyby\Doctrine\EntityManager;
-
 use Kappa\DoctrineMPTT\Configurator;
 use	Kappa\DoctrineMPTT\TraversableManager;
-use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
-use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
-use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
 use Wame\Core\Forms\FormFactory;
 use Wame\CategoryModule\Entities\CategoryEntity;
@@ -19,10 +15,14 @@ use Wame\CategoryModule\Entities\CategoryLangEntity;
 use Wame\UserModule\Repositories\UserRepository;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 
-
-
 class EditCategoryForm extends FormFactory
 {	
+	/** @val CategoryEntity */
+	public $categoryEntity;
+	
+	/** @val string */
+	public $lang;
+	
 	/** @var EntityManager */
 	private $entityManager;
 	
@@ -32,17 +32,12 @@ class EditCategoryForm extends FormFactory
 	/** @val UserEntity */
 	private $userEntity;
 	
-	/** @val CategoryEntity */
-	public $categoryEntity;
-	
 	/** @var Configurator */
 	private $treeConfigurator;
 	
 	/** @var TraversableManager */
 	private $traversableManager;
 	
-	/** @val string */
-	public $lang;
 	
 	public function __construct(CategoryRepository $categoryRepository, UserRepository $userRepository, User $user, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager) {
 		$this->categoryRepository = $categoryRepository;
@@ -57,6 +52,12 @@ class EditCategoryForm extends FormFactory
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
 	
+	
+	/**
+	 * Build form
+	 * 
+	 * @return Form	form
+	 */
 	public function build()
 	{
 		$form = $this->createForm();
@@ -73,6 +74,13 @@ class EditCategoryForm extends FormFactory
 		return $form;
 	}
 
+	/**
+	 * Form succeeded event
+	 * 
+	 * @param Form $form	firn
+	 * @param type $values	values
+	 * @throws \Exception	exception
+	 */
 	public function formSucceeded(Form $form, $values)
 	{
 		$presenter = $form->getPresenter();
@@ -95,6 +103,13 @@ class EditCategoryForm extends FormFactory
 		}
 	}
 	
+	/**
+	 * Update
+	 * 
+	 * @param int $categoryId	category id
+	 * @param array $values		values
+	 * @return Entity
+	 */
 	public function update($categoryId, $values)
 	{
 		$category = $this->categoryRepository->get(['id' => $categoryId]);
@@ -113,4 +128,5 @@ class EditCategoryForm extends FormFactory
 		
 		return $this->categoryRepository->update($categoryLangEntity);
 	}
+	
 }

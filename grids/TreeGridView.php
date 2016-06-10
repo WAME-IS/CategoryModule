@@ -14,6 +14,6 @@ class TreeGridView extends BaseGridColumn
 	
 	private function getChildren()
 	{
-		dump('test');
+		
 	}
 }

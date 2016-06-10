@@ -178,15 +178,14 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 * Attach categories to item
 	 * 
 	 * @param type $item		entity
-	 * @param type $type		type
 	 * @param type $categoryId	category ID	
 	 */
-	public function attach($item, $type, $categoryId)
+	public function attach($item, $categoryId)
 	{
 		$itemCategory = new CategoryItemEntity();
 		$itemCategory->category_id = (int)$categoryId;
 		$itemCategory->item_id = $item->id;
-		$itemCategory->type = $type;
+//		$itemCategory->type = $type;
 		
 		$this->entityManager->persist($itemCategory);
 	}
@@ -197,30 +196,29 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	 * @param type $type
 	 * @param type $categories
 	 */
-	public function attachAll($item, $type, $categories)
+	public function attachAll($item, $categories)
 	{
 		foreach($categories as $category) {
-			$this->attach($item, $type, $category);
+			$this->attach($item, $category);
 		}
 	}
 	
-	public function detach($item, $type, $categoryId)
+	public function detach($item, $categoryId)
 	{
 		$this->categoryItemRepository->remove([
 			'item_id' => $item->id, 
-			'category_id' => $categoryId, 
-			'type' => $type
+			'category_id' => $categoryId
 		]);
 	}
 	
-	public function detachAll($item, $type, $categories)
+	public function detachAll($item, $categories)
 	{
 		foreach($categories as $category) {
-			$this->detach($item, $type, $category);
+			$this->detach($item, $category);
 		}
 	}
 	
-	public function sync($item, $type, $categories)
+	public function sync($item, $categories)
 	{
 		$attachedCategories = $this->categoryItemRepository->find(['item_id' => $item->id]);
 		
@@ -230,13 +228,19 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 			$attached[] = $ai->category_id;
 		}
 		
+//		$simpleCategories = [];
+//		foreach($categories as $c) {
+//			$simpleCategories[$c['id']] = $c;
+//		}
+//		
+//		$toAttach = array_diff_key($simpleCategories, $attached);
+//		$toDetach = array_diff_key($attached, $simpleCategories);
+		
 		$toAttach = array_diff($categories, $attached);
 		$toDetach = array_diff($attached, $categories);
 		
-//		dump($toAttach, $toDetach); exit;
-		
-		$this->attachAll($item, $type, $toAttach);
-		$this->detachAll($item, $type, $toDetach);
+		$this->attachAll($item, $toAttach);
+		$this->detachAll($item, $toDetach);
 	}
 	
 	
@@ -245,7 +249,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	/**
 	 * Remove category
 	 * 
-	 * @param type $id
+	 * @param integer $id
 	 */
 	public function delete($id)
 	{
@@ -268,7 +272,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	/**
 	 * Flush
 	 * 
-	 * @param type $entity
+	 * @param Entity $entity
 	 */
 	public function flush($entity = null) {
 		if (!$entity->getLeft()) {

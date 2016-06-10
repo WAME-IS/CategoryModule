@@ -35,22 +35,20 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
 	public $items = [];
 	
 	
-	public function renderArticleCategories()
-	{
-//		dump($this->articleCategoryRepository); exit;
-		$articleCategories = $this->articleCategoryRepository->find();
-		dump($articleCategories[0]->getArticles()); exit;
-	}
+//	public function renderArticleCategories()
+//	{
+//		$articleCategories = $this->articleCategoryRepository->find();
+//	}
 	
-	public function renderArticles()
-	{
-		$this->template->items = $this->items;
-	}
+//	public function renderArticles()
+//	{
+//		$this->template->items = $this->items;
+//	}
 	
-	public function createComponentArticlesOfCategory()
-	{
-		return $this->articlesOfCategory;
-	}
+//	public function createComponentArticlesOfCategory()
+//	{
+//		return $this->articlesOfCategory;
+//	}
 	
 	public function createComponentCategoryList()
 	{

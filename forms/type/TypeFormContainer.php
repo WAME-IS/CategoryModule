@@ -40,4 +40,5 @@ class TypeFormContainer extends BaseFormContainer
 		
 		$form['type']->setDefaultValue($object->categoryEntity->type);
 	}
+	
 }

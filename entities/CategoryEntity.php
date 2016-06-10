@@ -65,4 +65,13 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
 //		$this->lang->slug = $slug;
 //	}
 	
+	public function getType()
+	{
+		return $this->type;
+	}
+	
+	public function getLangs() {
+		return parent::getLangs();
+	}
+	
 }

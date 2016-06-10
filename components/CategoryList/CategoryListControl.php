@@ -42,8 +42,6 @@ class CategoryListControl extends \Wame\Core\Components\BaseControl
 		$depth = isset($parameters['depth']) ? $parameters['depth'] : 1;
 		$type = isset($parameters['type']) ? $parameters['type'] : null;
 		
-		dump($type);
-		
 		if($type) {
 			$categories = $this->categoryRepository->find(['type' => $type, 'depth' => $depth]);
 //			$categories = $this->categoryItemRepository->getCategories($type, null);

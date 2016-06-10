@@ -1,0 +1,7 @@
+services:
+	MenuManager:
+		setup:
+			- addMenuItemType(Wame\CategoryModule\Vendor\Wame\MenuModule\Components\MenuManager\Forms\CategoryMenuItem(), 'category')
+
+	# Events
+	- {class: Wame\CategoryModule\Vendor\Wame\MenuModule\Components\MenuManager\Events\MenuItemListener, tags: [run]}

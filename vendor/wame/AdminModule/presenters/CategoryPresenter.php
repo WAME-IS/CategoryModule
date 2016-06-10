@@ -3,15 +3,16 @@
 namespace App\AdminModule\Presenters;
 
 use Nette\Application\UI\Form;
-//use Wame\CategoryModule\Forms\CategoryForm;
-use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
-use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
+use Nette\Http\Request;
+
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
-use Wame\DataGridControl\DataGridControl;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
+use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
-use Nette\Http\Request;
+use Wame\DataGridControl\DataGridControl;
+use Wame\MenuModule\Forms\MenuItemForm;
 
 class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 {	
@@ -23,9 +24,6 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	/** @var EditCategoryForm @inject */
 	public $editCategoryForm;
-	
-//	/** @var CategoryForm @inject */
-//	public $categoryForm;
 
 	/** @var CategoryRepository @inject */
 	public $categoryRepository;
@@ -42,6 +40,9 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	/** @var CategoryGrid @inject */
 	public $categoryGrid;
 	
+	/** @var MenuItemForm @inject */
+	public $menuItemForm;
+	
 	private $category;
 	
 	/** @var array */
@@ -51,60 +52,47 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	private $type;
 
 	
+	/** actions ***************************************************************/
+	
 	public function actionDefault()
 	{
 		$this->type = $this->getParameter('type');
 		$this->categories = $this->categoryRepository->find(['type' => $this->type, 'status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
 	}
 	
-//	protected function createComponentCategoryForm()
-//	{
-//		$form = $this->categoryForm->create();
-//		$form->setRenderer(new \Tomaj\Form\Renderer\BootstrapVerticalRenderer);
-//		
-//		if ($this->id) {
-//			$category = $this->categoryRepository->find($this->id);
-//
-//			$form['title']->setDefaultValue($category->lang->title);
-//			$form['slug']->setDefaultValue($category->lang->slug);
-//			
-//			$parent = $this->categoryRepository->getParent($category);
-//			
-//			if($parent) {
-//				$form['parent']->setDefaultValue($parent->id);
-//			}
-//		}
-//		
-//		$form->onSuccess[] = [$this, 'formSucceeded'];
-//		
-//		return $form;
-//	}
-	
-	protected function createComponentCreateCategoryForm() 
+	public function actionShow()
 	{
-		$form = $this->createCategoryForm
-				->setActionForm($this->request->getUrl()->setQueryParameter('do', 'createCategoryForm-submit'))
-				->build();
+		$this->category = $this->categoryRepository->find(['id' => $this->id]);
 		
-		return $form;
+		if($this->category->status == CategoryRepository::STATUS_REMOVE) {
+			$this->flashMessage(_('Category is removed'), 'danger');
+			$this->redirect(':Admin:Category:', ['id' => null]);
+		}
 	}
 	
-	protected function createComponentEditCategoryForm() 
+	public function actionDelete()
 	{
-		$form = $this->editCategoryForm->setId($this->id)->build();
-		
-		return $form;
+		$this->category = $this->categoryRepository->get(['id' => $this->id]);
 	}
 	
-	public function createComponentCategoryGrid()
+	
+	/** handles ***************************************************************/
+	
+	public function handleDelete()
 	{
-		$grid = $this->gridControl;
-		$categories = $this->categories;
-		$grid->setDataSource($categories);
-		$grid->setProvider($this->categoryGrid);
+		$this->categoryRepository->delete($this->category->id);
 		
-		return $grid;
+		$this->redirectToDefault();
 	}
+	
+	public function handleBack()
+	{
+		// TODO: lepsie by bolo redirect back, backurl musi mat BasePresenter
+		$this->redirectToDefault();
+	}
+	
+	
+	/** renders ***************************************************************/
 	
 	/**
 	 * Render list
@@ -139,16 +127,6 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->template->siteTitle = _('Edit category');
 	}
 	
-	public function actionShow()
-	{
-		$this->category = $this->categoryRepository->find(['id' => $this->id]);
-		
-		if($this->category->status == CategoryRepository::STATUS_REMOVE) {
-			$this->flashMessage(_('Category is removed'), 'danger');
-			$this->redirect(':Admin:Category:', ['id' => null]);
-		}
-	}
-	
 	/**
 	 * Render show
 	 */
@@ -160,11 +138,6 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->template->parent = $this->categoryRepository->getParent($this->category);
 	}
 	
-	public function actionDelete()
-	{
-		$this->category = $this->categoryRepository->get(['id' => $this->id]);
-	}
-	
 	/**
 	 * Render delete
 	 */
@@ -174,18 +147,63 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->template->category = $this->category;
 	}
 	
-	public function handleDelete()
+	/**
+	 * Render menu item
+	 */
+	public function renderMenuItem()
 	{
-		$this->categoryRepository->delete($this->category->id);
-		
-		$this->redirectToDefault();
+		if ($this->id) {
+			$this->template->siteTitle = _('Edit category item in menu');
+		} else {
+			$this->template->siteTitle = _('Add category item to menu');
+		}
 	}
 	
-	public function handleBack()
+	
+	/** components ************************************************************/
+	
+	protected function createComponentCreateCategoryForm() 
 	{
-		// TODO: lepsie by bolo redirect back, backurl musi mat BasePrezenter
-		$this->redirectToDefault();
+		$form = $this->createCategoryForm
+				->setActionForm($this->request->getUrl()->setQueryParameter('do', 'createCategoryForm-submit'))
+				->build();
+		
+		return $form;
 	}
+	
+	protected function createComponentEditCategoryForm() 
+	{
+		$form = $this->editCategoryForm->setId($this->id)->build();
+		
+		return $form;
+	}
+	
+	public function createComponentCategoryGrid()
+	{
+		$grid = $this->gridControl;
+		$grid->setDataSource($this->categories);
+		$grid->setProvider($this->categoryGrid);
+		
+		return $grid;
+	}
+	
+	/**
+	 * Menu item form
+	 * 
+	 * @return MenuItemForm
+	 */
+	protected function createComponentCategoryMenuItemForm()
+	{
+		$form = $this->menuItemForm
+						->setActionForm('categoryMenuItemForm')
+						->setType('category')
+						->setId($this->id)
+						->addFormContainer(new \Wame\CategoryModule\Vendor\Wame\MenuModule\Components\MenuManager\Forms\CategoryFormContainer(), 'CategoryFormContainer', 50)
+						->build();
+
+		return $form;
+	}
+	
 	
 	/**
 	 * Redirect to list

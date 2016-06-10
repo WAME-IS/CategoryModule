@@ -7,6 +7,6 @@ services:
 			- addColumn(Wame\DataGridControl\CreatorGridColumn())
 			- addColumn(Wame\DataGridControl\StatusGridColumn())
 			- addColumn(Wame\DataGridControl\CreateGridColumn())
-			- addColumn(Wame\DataGridControl\EditGridAction())
+			- addColumn(Wame\CategoryModule\Grids\EditGridAction())
 			- addColumn(Wame\DataGridControl\DeleteGridAction())
 #			- addColumn(Wame\CategoryModule\Grids\TreeGridView())

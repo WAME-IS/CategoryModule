@@ -16,7 +16,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 	const FROM_CATEGORY = 0;
 	const FROM_ITEM = 1;
 	
-	const TABLE_ARTICLES = 'articles';
+	const TABLE_ARTICLES = 'article';
 	const TABLE_UNITS = 'units';
 	const TABLE_SHOP_PRODUCT = 'shopProduct';
 	

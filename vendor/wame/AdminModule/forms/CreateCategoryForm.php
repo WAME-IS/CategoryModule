@@ -58,7 +58,6 @@ class CreateCategoryForm extends FormFactory
 		$this->treeConfigurator = new Configurator($entityManager);
 		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, \Wame\CategoryModule\Entities\CategoryEntity::class /*$this->getClass()*/);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
-//		dump($this->treeConfigurator); exit;
 		
 		$this->type = $httpRequest->getRequest()->getParameter('type');
 	}
@@ -81,14 +80,14 @@ class CreateCategoryForm extends FormFactory
 		$presenter = $form->getPresenter();
 		
 		try {
-			$category = $this->create($values, $presenter);
+			$categoryEntity = $this->create($values, $presenter);
 			// TODO: len pre testovanie
 			// tODO: relacia uz nepotrebuje typ
-			$this->categoryRepository->onCreate($form, 'articles', $category, $values);
+			$this->categoryRepository->onCreate($form, $values, $categoryEntity);
 
 			$presenter->flashMessage(_('The category was successfully created'), 'success');
 			
-			$presenter->redirect('this', ['type' => $category->type]);
+			$presenter->redirect('this', ['type' => $categoryEntity->type]);
 		} catch (Exception $ex) {
 			throw $ex;
 		}
