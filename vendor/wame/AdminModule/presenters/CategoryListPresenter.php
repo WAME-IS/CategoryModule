@@ -34,7 +34,7 @@ class CategoryListPresenter extends ComponentPresenter
 	public function actionCreate()
 	{
 		if (!$this->user->isAllowed('categoryList', 'create')) {
-			$this->flashMessage(_('To enter this section you do not have have enough privileges.'), 'danger');
+			$this->flashMessage(_('To enter this section you do not have enough privileges.'), 'danger');
 			$this->redirect(':Admin:Dashboard:');
 		}
 		
@@ -60,7 +60,7 @@ class CategoryListPresenter extends ComponentPresenter
 	public function actionEdit()
 	{
 		if (!$this->user->isAllowed('categoryList', 'edit')) {
-			$this->flashMessage(_('To enter this section you do not have have enough privileges.'), 'danger');
+			$this->flashMessage(_('To enter this section you do not have enough privileges.'), 'danger');
 			$this->redirect(':Admin:Dashboard:');
 		}
 	}
