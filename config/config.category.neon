@@ -61,5 +61,4 @@ webloader:
 
 extensions:
 	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
-	webloader: WebLoader\Nette\Extension
 #	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension
