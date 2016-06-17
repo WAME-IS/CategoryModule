@@ -17,10 +17,10 @@ class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity
 	use \Wame\Core\Entities\Columns\Title;
 	use \Wame\Core\Entities\Columns\Lang;
 
-//	/**
-//	 * @ORM\Column(name="category_id", type="integer", nullable=false)
-//	 */
-//	protected $category_id;
+	/**
+	 * @ORM\Column(name="category_id", type="integer", nullable=false)
+	 */
+	protected $category_id;
 	
 	/**
      * @ORM\ManyToOne(targetEntity="CategoryEntity", inversedBy="langs")
