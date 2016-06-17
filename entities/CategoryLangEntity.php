@@ -13,9 +13,12 @@ class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity
 	use \Wame\Core\Entities\Columns\Identifier;
 	use \Wame\Core\Entities\Columns\EditDate;
 	use \Wame\Core\Entities\Columns\EditUser;
+	use \Wame\Core\Entities\Columns\Slug;
+	use \Wame\Core\Entities\Columns\Title;
+	use \Wame\Core\Entities\Columns\Lang;
 
 	/**
-	 * @ORM\Column(name="category_id", type="integer", length=10, nullable=false)
+	 * @ORM\Column(name="category_id", type="integer", nullable=false)
 	 */
 	protected $category_id;
 	
@@ -24,21 +27,22 @@ class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
 	protected $category;
-	
-	/**
-	 * @ORM\Column(name="lang", type="string", length=2, nullable=true)
-	 */
-	protected $lang;
-	
-	/**
-	 * @ORM\Column(name="title", type="string", length=250, nullable=true)
-	 */
-	protected $title;
 
-	/**
-	 * @ORM\Column(name="slug", type="string", length=250, nullable=true)
-	 */
-	protected $slug;
-
+	
+	/** getters ***************************************************************/
+	
+	public function getCategory()
+	{
+		$this->category;
+	}
+	
+	
+	/** setters ***************************************************************/
+	
+	public function setCategory($category)
+	{
+		$this->category = $category;
+	}
+	
 }
 

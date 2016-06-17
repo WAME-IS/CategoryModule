@@ -15,13 +15,9 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
 	use \Wame\Core\Entities\Columns\Identifier;
 	use \Wame\Core\Entities\Columns\CreateDate;
 	use \Wame\Core\Entities\Columns\CreateUser;
+	use \Wame\Core\Entities\Columns\Status;
 	
 	use \Kappa\DoctrineMPTT\Entities\Traversable;
-	
-	/**
-	 * @ORM\Column(name="status", type="integer", length=1, nullable=true)
-	 */
-	protected $status = 1;
 
 	/**
      * @ORM\OneToMany(targetEntity="CategoryLangEntity", mappedBy="category")
@@ -33,45 +29,19 @@ class CategoryEntity extends BaseEntity implements TraversableInterface
 	 */
 	protected $type;
 	
-//	/** @ORM\OneToMany(targetEntity="CategoryItemEntity", mappedBy="category") */
-//	protected $categoryItems;
 	
-//	public function getLang()
-//	{
-//		$langs = parent::sortLangs($this->langs);
-//		
-//		return $langs['sk'];
-//	}
-	
-	
-	
-//	public function getTitle()
-//	{
-//		return $this->lang->title;
-//	}
-//	
-//	public function getSlug()
-//	{
-//		return $this->lang->slug;
-//	}
-//	
-//	public function setTitle($title)
-//	{
-//		$this->lang->title = $title;
-//	}
-//	
-//	public function setSlug($slug)
-//	{
-//		$this->lang->slug = $slug;
-//	}
+	/** getters ***************************************************************/
 	
 	public function getType()
 	{
 		return $this->type;
 	}
 	
-	public function getLangs() {
-		return parent::getLangs();
+	/** setters ***************************************************************/
+	
+	public function setType($type)
+	{
+		$this->type = $type;
 	}
 	
 }

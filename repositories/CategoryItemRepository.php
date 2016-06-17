@@ -9,7 +9,7 @@ use Doctrine\ORM\Query\Expr\Join;
 
 use Wame\UserModule\Entities\UserEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
-
+use Wame\CategoryModule\Managers\CategoryManager;
 
 class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 {
@@ -26,16 +26,22 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 	/** @var CategoryItemEntity */
 	private $categoryItemEntity;
 	
+	/** @var CategoryManager */
+	private $categoryManager;
+	
 	public function __construct(
 		Container $container, 
 		\Kdyby\Doctrine\EntityManager $entityManager, 
 		\h4kuna\Gettext\GettextSetup $translator,
-		User $user
+		User $user,
+		CategoryManager $categoryManager
 	) {
 		parent::__construct($container, $entityManager, $translator, $user, CategoryItemEntity::class);
 		
 		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryItemEntity = $this->entityManager->getRepository(CategoryItemEntity::class);
+		
+		$this->categoryManager = $categoryManager;
 	}
 	
 	public function getItems($type, $categoryId = null)
@@ -44,7 +50,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('i')
 			->from(CategoryItemEntity::class, 'ci')
-			->leftJoin($this->getEntityNameByAlias(self::FROM_ITEM, $type), 'i', Join::WITH, 'ci.item_id = i.id')
+			->leftJoin($this->categoryManager->getType($type)->getClassName(), 'i', Join::WITH, 'ci.item_id = i.id')
 			->where('i.status != :status')
 			->andWhere('ci.type = :type')
 			->setParameter('status', 0)
@@ -66,7 +72,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('c')
 			->from(CategoryItemEntity::class, 'ci')
-			->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'c', Join::WITH, 'ci.category_id = c.id')
+			->leftJoin(\Wame\CategoryModule\Entities\CategoryEntity::class, 'c', Join::WITH, 'ci.category_id = c.id')
 			->andWhere('c.status != :status')
 			->setParameter('status', 0);
 		
@@ -91,7 +97,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('a')
 		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin($this->getEntityNameByAlias(self::FROM_CATEGORY, $type), 'a', Join::WITH, 'ci.category_id = a.id');
+		   ->leftJoin(\Wame\CategoryModule\Entities\CategoryEntity::class, 'a', Join::WITH, 'ci.category_id = a.id');
 		
 		if($itemId) {
 			$qb->where('ci.item_id = ' . $itemId);
@@ -128,26 +134,6 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		}
 		
 		return $arr;
-	}
-	
-	// TODO: neskor nacitavat niekde z DB
-	public function getEntityNameByAlias($from, $alias)
-	{
-		if($from == self::FROM_CATEGORY) {
-			// TODO: ak sa rozbije do viac tabuliek tak zas aliasy riesit
-			return \Wame\CategoryModule\Entities\CategoryEntity::class;
-		} else {
-			switch($alias) {
-				case self::TABLE_ARTICLES:
-					return '\Wame\ArticleModule\Entities\ArticleEntity';
-				case self::TABLE_UNITS:
-					return '\Wame\UnitModule\Entities\UnitEntity';
-				case self::TABLE_SHOP_PRODUCT:
-					return \Wame\ShopProductModule\Entities\ShopProductEntity::class;// '\Wame\ShopProductModule\Entities\ShopProductEntity';
-				default:
-					throw new \Exception("Invalid table alias '$alias'");
-			}
-		}
 	}
 	
 }

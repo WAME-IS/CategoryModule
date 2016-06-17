@@ -38,11 +38,16 @@ class ParentFormContainer extends BaseFormContainer
 	private $type;
 	
 	
-	public function __construct(\Wame\Utils\HttpRequest $httpRequest, CategoryRepository $categoryRepository, CategoryLangRepository $categoryLangRepository, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager) 
-	{
+	public function __construct(
+		\Wame\Utils\HttpRequest $httpRequest, 
+		CategoryRepository $categoryRepository, 
+		CategoryLangRepository $categoryLangRepository, 
+		\Kdyby\Doctrine\EntityManager $entityManager, 
+		TraversableManager $traversableManager
+	) {
 		parent::__construct();
 		
-		$this->type = $httpRequest->getParameter('type');
+		$this->type = $httpRequest->getParameter('id');
 		
 		$this->categoryRepository = $categoryRepository;
 		$this->categoryLangRepository = $categoryLangRepository;
@@ -53,6 +58,7 @@ class ParentFormContainer extends BaseFormContainer
 		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
+	
 	
     public function render() 
 	{
