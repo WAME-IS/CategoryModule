@@ -31,7 +31,7 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
 	/** @var ArticleCategoryRepository @inject */
 	public $articleCategoryRepository;
 	
-	
+	/** @var array */
 	public $items = [];
 	
 	
@@ -49,6 +49,8 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
 //	{
 //		return $this->articlesOfCategory;
 //	}
+	
+	/** components ************************************************************/
 	
 	public function createComponentCategoryList()
 	{

@@ -6,21 +6,15 @@ use Nette\Security\User;
 use Nette\Application\UI\Form;
 use Nette\Utils\Strings;
 
+use Kdyby\Doctrine\EntityManager;
+use Kappa\DoctrineMPTT\Configurator;
+use	Kappa\DoctrineMPTT\TraversableManager;
+
 use Wame\Core\Forms\FormFactory;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
 use Wame\UserModule\Repositories\UserRepository;
 use Wame\CategoryModule\Repositories\CategoryRepository;
-
-
-use Kdyby\Doctrine\EntityManager;
-
-
-use Kappa\DoctrineMPTT\Configurator;
-use	Kappa\DoctrineMPTT\TraversableManager;
-use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
-use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
-use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
 class CreateCategoryForm extends FormFactory
 {	
@@ -45,9 +39,18 @@ class CreateCategoryForm extends FormFactory
 	/** @val string */
 	private $lang;
 	
+	/** @val string */
 	private $type;
 	
-	public function __construct(CategoryRepository $categoryRepository, UserRepository $userRepository, User $user, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager, \Wame\Utils\HttpRequest $httpRequest) {
+	
+	public function __construct(
+			CategoryRepository $categoryRepository, 
+			UserRepository $userRepository, 
+			User $user, 
+			\Kdyby\Doctrine\EntityManager $entityManager, 
+			TraversableManager $traversableManager, 
+			\Wame\Utils\HttpRequest $httpRequest
+	) {
 		$this->entityManager = $entityManager;
 		
 		$this->categoryRepository = $categoryRepository;
@@ -56,11 +59,12 @@ class CreateCategoryForm extends FormFactory
 		
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
-		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, \Wame\CategoryModule\Entities\CategoryEntity::class /*$this->getClass()*/);
+		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 		
-		$this->type = $httpRequest->getRequest()->getParameter('type');
+		$this->type = $httpRequest->getRequest()->getParameter('id');
 	}
+	
 	
 	public function build()
 	{
@@ -81,13 +85,11 @@ class CreateCategoryForm extends FormFactory
 		
 		try {
 			$categoryEntity = $this->create($values, $presenter);
-			// TODO: len pre testovanie
-			// tODO: relacia uz nepotrebuje typ
 			$this->categoryRepository->onCreate($form, $values, $categoryEntity);
 
 			$presenter->flashMessage(_('The category was successfully created'), 'success');
 			
-			$presenter->redirect('this', ['type' => $categoryEntity->type]);
+			$presenter->redirect('this');
 		} catch (Exception $ex) {
 			throw $ex;
 		}
@@ -104,38 +106,27 @@ class CreateCategoryForm extends FormFactory
 	public function create($values)
 	{
 		// category
-		$category = new CategoryEntity();
-		$category->type = $values->type;
-		$category->createDate = new \DateTime('now');
-		$category->createUser = $this->userEntity;
-		$category->status = CategoryRepository::STATUS_ACTIVE;
+		$categoryEntity = new CategoryEntity();
+		$categoryEntity->setType($values->type);
+		$categoryEntity->setCreateDate(new \DateTime('now'));
+		$categoryEntity->setCreateUser($this->userEntity);
+		$categoryEntity->setStatus(CategoryRepository::STATUS_ACTIVE);
 		
-//		$this->entityManager->persist($category);
-		
-		
-		// categoryLang
+		// category lang
 		$categoryLangEntity = new CategoryLangEntity();
-		$categoryLangEntity->category = $category;
-		$categoryLangEntity->lang = $this->lang;
-		$categoryLangEntity->title = $values['title'];
-		$categoryLangEntity->slug = $values['slug']?:(Strings::webalize($values['title']));
-		$categoryLangEntity->editDate = new \DateTime('now');
-		$categoryLangEntity->editUser = $this->userEntity;
+		$categoryLangEntity->setCategory($categoryEntity);
+		$categoryLangEntity->setLang($this->lang);
+		$categoryLangEntity->setTitle($values['title']);
+		$categoryLangEntity->setSlug($values['slug']?:(Strings::webalize($values['title'])));
+		$categoryLangEntity->setEditDate(new \DateTime('now'));
+		$categoryLangEntity->setEditUser($this->userEntity);
+		$categoryEntity->addLang($this->lang, $categoryLangEntity);
 		
 		// category tree
 		$parent = $this->categoryRepository->get(['id' => $values->parent]);
-		$this->traversableManager->insertItem($category, $parent);
+		$this->traversableManager->insertItem($categoryEntity, $parent);
 		
-//		
-//		$this->entityManager->persist($categoryLangEntity);
-//		$this->entityManager->persist($category);
-//		
-//		$this->entityManager->persist($category);
-//		$this->entityManager->persist($categoryLangEntity);
-//		$this->entityManager->flush();
-		
-		return $this->categoryRepository->create($categoryLangEntity);
-		
-//		return $category;
+		return $this->categoryRepository->create($categoryEntity);
 	}
+	
 }

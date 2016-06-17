@@ -11,6 +11,7 @@ services:
 			- addResourceAction('category', 'delete')
 			- allow('moderator', 'category', 'delete')
 
+	# Factories
 	- Wame\CategoryModule\Components\ICategoryListControlFactory
 
 	# Entities

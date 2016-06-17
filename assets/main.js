@@ -42,24 +42,24 @@ $tree
 
 /** multi-level-push-menu *****************************************************/
 
-$menu = $('#menu');
-
-var itemsArray = [
-	{
-		items: [
-			{
-				title: 'All',
-				items: []
-			}
-		]
-	}
-];
-
-$menu.multilevelpushmenu({
-	menu: itemsArray,
-	menuWidth: 300,
-	menuHeight: 300,
-	
+//$menu = $('#menu');
+//
+//var itemsArray = [
+//	{
+//		items: [
+//			{
+//				title: 'All',
+//				items: []
+//			}
+//		]
+//	}
+//];
+//
+//$menu.multilevelpushmenu({
+//	menu: itemsArray,
+//	menuWidth: 300,
+//	menuHeight: 300,
+//	
 //	onMenuReady: function() {
 //		console.log('onMenuReady');
 //		$.get($menu.data('url') + 'shopProduct&node=2', function(data) {
@@ -81,4 +81,4 @@ $menu.multilevelpushmenu({
 //			$menu.multilevelpushmenu( 'additems' , itemsArray , $menu , 0 );
 //		});
 //	}
-});
+//});

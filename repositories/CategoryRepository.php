@@ -11,10 +11,11 @@ use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
 use Wame\Utils\Tree\ComplexTreeSorter;
+use Wame\Core\Exception\RepositoryException;
 use Wame\UserModule\Entities\UserEntity;
 use Wame\CategoryModule\Entities\CategoryEntity;
-use Wame\CategoryModule\Entities\CategoryLangEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
+use Wame\CategoryModule\Queries\GetChildrenWithLang;
 
 class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 {
@@ -58,27 +59,28 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
 	
+	
 	/** CREATE ****************************************************************/
 	
 	/**
 	 * Create category
 	 * 
-	 * @param CategoryLangEntity $categoryLangEntity		CategoryLangEntity
-	 * @return CategoryEntity								CategoryEntity
-	 * @throws \Wame\Core\Exception\RepositoryException		Exception
+	 * @param CategoryEntity $categoryEntity	CategoryEntity
+	 * @return CategoryEntity					CategoryEntity
+	 * @throws RepositoryException				Exception
 	 */
-	public function create($categoryLangEntity)
+	public function create($categoryEntity)
 	{
-		$create = $this->entityManager->persist($categoryLangEntity->category);
+		$create = $this->entityManager->persist($categoryEntity);
 		
-		$this->entityManager->persist($categoryLangEntity);
+		$this->entityManager->persist($categoryEntity->langs);
 		$this->entityManager->flush();
 		
 		if (!$create) {
-			throw new \Wame\Core\Exception\RepositoryException(_('Could not create the category'));
+			throw new RepositoryException(_('Could not create the category'));
 		}
 		
-		return $categoryLangEntity->category;
+		return $categoryEntity;
 	}
 	
 	
@@ -123,7 +125,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		$query = new GetParent($this->treeConfigurator, $actual);
 		
 		try {
-			return $query->fetchOne($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'));
+			return $query->fetchOne($this->entityManager->getRepository(CategoryEntity::class));
 		} catch(\Exception $e) {
 			return null;
 		}
@@ -132,7 +134,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	public function getChildren($actual)
 	{
 		$query = new GetChildren($this->treeConfigurator, $actual);
-		return $query->fetch($this->entityManager->getRepository('Wame\CategoryModule\Entities\CategoryEntity'))->toArray();
+		return $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray();
 	}
 	
 	/**
@@ -169,10 +171,37 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	
 	/** UPDATE ****************************************************************/
 	
-	public function update($categoryLangEntity)
+	public function update($categoryEntity)
 	{
-		return $categoryLangEntity->category;
+		return $categoryEntity;
 	}
+	
+	
+	/** DELETE ****************************************************************/
+	
+	/**
+	 * Remove category
+	 * 
+	 * @param integer $id
+	 */
+	public function delete($id)
+	{
+		$category = $this->get(['id' => $id]);
+		
+		if($category) {
+			$category->status = self::STATUS_REMOVE;
+			
+			$children = $this->getChildren($category);
+			
+			foreach($children as $child)
+			{
+				$child->status = self::STATUS_REMOVE;
+			}
+		}
+	}
+	
+	
+	/** RELATION **************************************************************/
 	
 	/**
 	 * Attach categories to item
@@ -244,29 +273,38 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	}
 	
 	
-	/** DELETE ****************************************************************/
+	/** API *******************************************************************/
 	
 	/**
-	 * Remove category
+	 * Get category descendants
 	 * 
-	 * @param integer $id
+	 * @api {get} /category/:type/:node Get category by id
+	 * @param string $type
+	 * @param int $node
 	 */
-	public function delete($id)
+	public function categoryDescendant($type, $node = 1)
 	{
-		$category = $this->get(['id' => $id]);
+		$actual = $this->get(['id' => $node]);
 		
-		if($category) {
-			$category->status = self::STATUS_REMOVE;
-			
-			$children = $this->getChildren($category);
-			
-			foreach($children as $child)
-			{
-				$child->status = self::STATUS_REMOVE;
-			}
+		$query = new GetChildrenWithLang($this->treeConfigurator, $actual, $type, $this->lang);
+		
+		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+		
+		$nodes = [];
+		
+		foreach($categories as $category) {
+			$nodes[] = [
+				'label' => $category['title'],
+				'id' => $category['category_id'],
+				'load_on_demand' => true,
+//				'has_children' => $category->hasChildren
+			];
 		}
+		
+		return $nodes;
 	}
-
+	
+	
 	/** implements **/
 
 	/**
@@ -280,34 +318,6 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		} else {
 			parent::flush($entity);
 		}
-	}
-
-	
-	/** API *******************************************************************/
-	
-	/**
-	 * @api {get} /category/:type/:node Get article by id
-	 * @param string $type
-	 * @param int $node
-	 */
-	public function categoryDescendant($type, $node = 1)
-	{
-		$actual = $this->get(['id' => $node]);
-		
-		$query = new \Wame\CategoryModule\Queries\GetChildrenWithLang($this->treeConfigurator, $actual, $type, $this->lang);
-		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-		
-		$nodes = [];
-		
-		foreach($categories as $category) {
-			$nodes[] = [
-				'label' => $category['title'],
-				'id' => $category['category_id'],
-				'load_on_demand' => true
-			];
-		}
-		
-		return $nodes;
 	}
 	
 }

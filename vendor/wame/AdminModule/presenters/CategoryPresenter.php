@@ -43,6 +43,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	/** @var MenuItemForm @inject */
 	public $menuItemForm;
 	
+	/** @var CategoryEntity */
 	private $category;
 	
 	/** @var array */
@@ -56,13 +57,13 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function actionDefault()
 	{
-		$this->type = $this->getParameter('type');
+		$this->type = $this->id;
 		$this->categories = $this->categoryRepository->find(['type' => $this->type, 'status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
 	}
 	
 	public function actionShow()
 	{
-		$this->category = $this->categoryRepository->find(['id' => $this->id]);
+		$this->category = $this->categoryRepository->get(['id' => $this->id]);
 		
 		if($this->category->status == CategoryRepository::STATUS_REMOVE) {
 			$this->flashMessage(_('Category is removed'), 'danger');
@@ -119,10 +120,8 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	/**
 	 * Render edit form
-	 * 
-	 * @param integer $id
 	 */
-	public function renderEdit($id)
+	public function renderEdit()
 	{
 		$this->template->siteTitle = _('Edit category');
 	}
@@ -160,6 +159,19 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	}
 	
 	
+	/** callbacks *************************************************************/
+	
+	/**
+	 * Get children
+	 * 
+	 * @return type
+	 */
+	public function getChildren()
+	{
+		return [];
+	}
+	
+	
 	/** components ************************************************************/
 	
 	protected function createComponentCreateCategoryForm() 
@@ -183,6 +195,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$grid = $this->gridControl;
 		$grid->setDataSource($this->categories);
 		$grid->setProvider($this->categoryGrid);
+//		$grid->setTreeView([$this, 'getChildren'], 'id'); // TODO: pridat ked sa poriesi @noApi
 		
 		return $grid;
 	}
@@ -212,6 +225,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	{
 		$this->redirect(':Admin:Category:default', ['id' => null]);
 	}
+	
 }
 
 /**

@@ -11,7 +11,6 @@ use	Kappa\DoctrineMPTT\TraversableManager;
 
 use Wame\Core\Forms\FormFactory;
 use Wame\CategoryModule\Entities\CategoryEntity;
-use Wame\CategoryModule\Entities\CategoryLangEntity;
 use Wame\UserModule\Repositories\UserRepository;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 
@@ -39,7 +38,13 @@ class EditCategoryForm extends FormFactory
 	private $traversableManager;
 	
 	
-	public function __construct(CategoryRepository $categoryRepository, UserRepository $userRepository, User $user, \Kdyby\Doctrine\EntityManager $entityManager, TraversableManager $traversableManager) {
+	public function __construct(
+		CategoryRepository $categoryRepository, 
+		UserRepository $userRepository, 
+		User $user, 
+		\Kdyby\Doctrine\EntityManager $entityManager, 
+		TraversableManager $traversableManager
+	) {
 		$this->categoryRepository = $categoryRepository;
 		$this->userEntity = $userRepository->get(['id' => $user->id]);
 		$this->lang = $categoryRepository->lang;
@@ -48,7 +53,7 @@ class EditCategoryForm extends FormFactory
 		
 		$this->traversableManager = clone $traversableManager;
 		$this->treeConfigurator = new Configurator($entityManager);
-		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class /*$this->getClass()*/);
+		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
 	
@@ -77,7 +82,7 @@ class EditCategoryForm extends FormFactory
 	/**
 	 * Form succeeded event
 	 * 
-	 * @param Form $form	firn
+	 * @param Form $form	form
 	 * @param type $values	values
 	 * @throws \Exception	exception
 	 */
@@ -108,25 +113,27 @@ class EditCategoryForm extends FormFactory
 	 * 
 	 * @param int $categoryId	category id
 	 * @param array $values		values
-	 * @return Entity
+	 * @return CategoryEntity
 	 */
 	public function update($categoryId, $values)
 	{
-		$category = $this->categoryRepository->get(['id' => $categoryId]);
+		// category
+		$categoryEntity = $this->categoryRepository->get(['id' => $categoryId]);
 		
-		$categoryLangEntity = $this->entityManager->getRepository(CategoryLangEntity::class)->findOneBy(['category' => $category, 'lang' => $this->lang]);
-		$categoryLangEntity->title = $values['title'];
-		$categoryLangEntity->slug = $values['slug'];
+		// lang
+		$categoryLangEntity = $categoryEntity->langs[$this->lang];
+		$categoryLangEntity->setTitle($values['title']);
+		$categoryLangEntity->setSlug($values['slug']);
 		
+		// parent
 		$parent = $this->categoryRepository->get(['id' => $values->parent]);
-//		$parent = $this->categoryRepository->getParent($category);// get($values->parent);
 		
-		if($category && $parent) {
+		if($categoryEntity && $parent) {
 			// TODO: exception -> The EntityManager is closed.
-			$this->traversableManager->moveItem($category, $parent, TraversableManager::DESCENDANT, FALSE);
+			$this->traversableManager->moveItem($categoryEntity, $parent, TraversableManager::DESCENDANT, FALSE);
 		}
 		
-		return $this->categoryRepository->update($categoryLangEntity);
+		return $this->categoryRepository->update($categoryEntity);
 	}
 	
 }
