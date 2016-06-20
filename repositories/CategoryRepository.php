@@ -220,7 +220,8 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	}
 	
 	/**
-	 * Attach all 
+	 * Attach all
+	 * 
 	 * @param type $item
 	 * @param type $type
 	 * @param type $categories
@@ -232,6 +233,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		}
 	}
 	
+	/**
+	 * Detach
+	 * 
+	 * @param Entity $item			item
+	 * @param integer $categoryId	category ID
+	 */
 	public function detach($item, $categoryId)
 	{
 		$this->categoryItemRepository->remove([
@@ -240,6 +247,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		]);
 	}
 	
+	/**
+	 * Detach all
+	 * 
+	 * @param Entity $item			item
+	 * @param array $categories		categories
+	 */
 	public function detachAll($item, $categories)
 	{
 		foreach($categories as $category) {
@@ -247,6 +260,12 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		}
 	}
 	
+	/**
+	 * Sync
+	 * 
+	 * @param Entity $item			item
+	 * @param array $categories		categories
+	 */
 	public function sync($item, $categories)
 	{
 		$attachedCategories = $this->categoryItemRepository->find(['item_id' => $item->id]);
