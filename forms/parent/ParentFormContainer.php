@@ -14,11 +14,13 @@ use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 
+
 interface IParentFormContainerFactory
 {
 	/** @return ParentFormContainer */
 	public function create();
 }
+
 
 class ParentFormContainer extends BaseFormContainer
 {
@@ -36,8 +38,8 @@ class ParentFormContainer extends BaseFormContainer
 	
 	/** @var string */
 	private $type;
-	
-	
+
+
 	public function __construct(
 		\Wame\Utils\HttpRequest $httpRequest, 
 		CategoryRepository $categoryRepository, 
@@ -58,13 +60,7 @@ class ParentFormContainer extends BaseFormContainer
 		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
 	}
-	
-	
-    public function render() 
-	{
-        $this->template->_form = $this->getForm();
-        $this->template->render(__DIR__ . '/default.latte');
-    }
+
 
     public function configure() 
 	{
@@ -77,7 +73,8 @@ class ParentFormContainer extends BaseFormContainer
 			$form['parent']->setItems($this->categoryRepository->getPairs($this->type));
 		}
     }
-	
+
+
 	public function setDefaultValues($object)
 	{
 		$form = $this->getForm();
@@ -88,5 +85,5 @@ class ParentFormContainer extends BaseFormContainer
 			$form['parent']->setItems($this->categoryRepository->getPairs($object->categoryEntity->type))->setDefaultValue($parent->langs[$object->lang]->category_id );
 		}
 	}
-	
+
 }

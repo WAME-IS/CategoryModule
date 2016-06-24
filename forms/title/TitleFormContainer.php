@@ -2,8 +2,8 @@
 
 namespace Wame\CategoryModule\Forms;
 
-use Nette\Application\UI\Form;
 use Wame\DynamicObject\Forms\BaseFormContainer;
+
 
 interface ITitleFormContainerFactory
 {
@@ -11,14 +11,9 @@ interface ITitleFormContainerFactory
 	public function create();
 }
 
+
 class TitleFormContainer extends BaseFormContainer
 {
-    public function render() 
-	{
-        $this->template->_form = $this->getForm();
-        $this->template->render(__DIR__ . '/default.latte');
-    }
-
     public function configure() 
 	{
 		$form = $this->getForm();
@@ -26,15 +21,15 @@ class TitleFormContainer extends BaseFormContainer
 		$form->addGroup(_('Basic info'));
 		
 		$form->addText('title', _('Title'))
-				->setType('text')
-				->setRequired(_('Please enter title'))
-				->addRule(Form::FILLED, _('Title can not be empty'));
+				->setRequired(_('Please enter title'));
     }
-	
+
+
 	public function setDefaultValues($object)
 	{
 		$form = $this->getForm();
 		
 		$form['title']->setDefaultValue($object->categoryEntity->langs[$object->lang]->title);
 	}
+
 }

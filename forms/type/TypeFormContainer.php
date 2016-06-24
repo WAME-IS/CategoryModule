@@ -14,12 +14,6 @@ interface ITypeFormContainerFactory
 
 class TypeFormContainer extends BaseFormContainer
 {
-    public function render() 
-	{
-        $this->template->_form = $this->getForm();
-        $this->template->render(__DIR__ . '/default.latte');
-    }
-
     public function configure() 
 	{
 		$form = $this->getForm();
@@ -33,12 +27,13 @@ class TypeFormContainer extends BaseFormContainer
 		
 		$form->addSelect('type', _('Type'), $types);
     }
-	
+
+
 	public function setDefaultValues($object)
 	{
 		$form = $this->getForm();
 		
 		$form['type']->setDefaultValue($object->categoryEntity->type);
 	}
-	
+
 }
