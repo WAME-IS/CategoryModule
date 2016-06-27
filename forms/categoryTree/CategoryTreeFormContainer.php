@@ -6,11 +6,13 @@ use Wame\DynamicObject\Forms\BaseFormContainer;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
 
+
 interface ICategoryTreeFormContainerFactory
 {
 	/** @return CategoryTreeFormContainer */
 	public function create();
 }
+
 
 class CategoryTreeFormContainer extends BaseFormContainer
 {
@@ -25,8 +27,8 @@ class CategoryTreeFormContainer extends BaseFormContainer
 	
 	/** @var integer */
 	private $id;
-	
-	
+
+
 	public function __construct(CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository, \Wame\Utils\HttpRequest $httpRequest) 
 	{
 		parent::__construct();
@@ -37,13 +39,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 		$this->categoryRepository = $categoryRepository;
 		$this->categoryItemRepository = $categoryItemRepository;
 	}
-	
-	
-    public function render() 
-	{
-        $this->template->_form = $this->getForm();
-        $this->template->render(__DIR__ . '/default.latte');
-    }
+
 
     public function configure() 
 	{
@@ -55,7 +51,8 @@ class CategoryTreeFormContainer extends BaseFormContainer
 				->setRepository($this->categoryRepository)
 				->setType($this->type);
     }
-	
+
+
 	public function setDefaultValues($object)
 	{
 		$form = $this->getForm();
@@ -70,5 +67,5 @@ class CategoryTreeFormContainer extends BaseFormContainer
 		
 		$form["categories"]->setDefaultValue($pairs);
 	}
-	
+
 }

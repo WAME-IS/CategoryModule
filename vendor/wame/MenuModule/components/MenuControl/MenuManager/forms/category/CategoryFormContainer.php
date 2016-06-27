@@ -4,6 +4,7 @@ namespace Wame\CategoryModule\Vendor\Wame\MenuModule\Components\MenuManager\Form
 
 use Wame\DynamicObject\Forms\BaseFormContainer;
 
+
 interface ICategoryFormContainerFactory
 {
 	/** @return CategoryFormContainer */
@@ -13,13 +14,6 @@ interface ICategoryFormContainerFactory
 
 class CategoryFormContainer extends BaseFormContainer
 {
-    public function render() 
-	{
-        $this->template->_form = $this->getForm();
-        $this->template->render(__DIR__ . '/default.latte');
-    }
-
-	
     public function configure() 
 	{
 		$form = $this->getForm();
@@ -31,8 +25,8 @@ class CategoryFormContainer extends BaseFormContainer
 		
 		$form->addText('alternative_title', _('Alternative title'));
     }
-	
-	
+
+
 	public function setDefaultValues($object)
 	{
 		$form = $this->getForm();
