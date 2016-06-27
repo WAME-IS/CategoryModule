@@ -24,10 +24,10 @@ class CreateCategoryForm extends FormFactory
 	/** @var CategoryRepository */
 	private $categoryRepository;
 	
-	/** @val UserEntity */
+	/** @var UserEntity */
 	private $userEntity;
 	
-//	/** @val CategoryEntity */
+//	/** @var CategoryEntity */
 //	private $categoryEntity;
 	
 	/** @var Configurator */
@@ -36,10 +36,10 @@ class CreateCategoryForm extends FormFactory
 	/** @var TraversableManager */
 	private $traversableManager;
 	
-	/** @val string */
+	/** @var string */
 	private $lang;
 	
-	/** @val string */
+	/** @var string */
 	private $type;
 	
 	

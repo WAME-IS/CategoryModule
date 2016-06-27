@@ -16,10 +16,10 @@ use Wame\CategoryModule\Repositories\CategoryRepository;
 
 class EditCategoryForm extends FormFactory
 {	
-	/** @val CategoryEntity */
+	/** @var CategoryEntity */
 	public $categoryEntity;
 	
-	/** @val string */
+	/** @var string */
 	public $lang;
 	
 	/** @var EntityManager */
@@ -28,7 +28,7 @@ class EditCategoryForm extends FormFactory
 	/** @var CategoryRepository */
 	private $categoryRepository;
 	
-	/** @val UserEntity */
+	/** @var UserEntity */
 	private $userEntity;
 	
 	/** @var Configurator */
