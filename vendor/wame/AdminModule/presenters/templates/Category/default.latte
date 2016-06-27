@@ -1,7 +1,7 @@
 {block content}
 	<h1>{$siteTitle}</h1>
 
-	<a n:if="count($categories) > 0" class="btn btn-success ajax-modal pull-right" n:href=":Admin:Category:create, 'id' => $type">
+	<a n:if="count($categories) > 0" class="btn btn-success pull-right" n:href=":Admin:Category:create, 'id' => $type">
 		<span class="fa fa-plus"></span>
 		{_'Crate category'}
 	</a>
