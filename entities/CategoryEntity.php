@@ -2,15 +2,15 @@
 
 namespace Wame\CategoryModule\Entities;
 
-use \Wame\Core\Entities\BaseEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
+use Wame\Core\Entities\TranslatableEntity;
 
 /**
  * @ORM\Table(name="wame_category")
  * @ORM\Entity
  */
-class CategoryEntity extends BaseEntity implements TraversableInterface
+class CategoryEntity extends TranslatableEntity implements TraversableInterface
 {
 	use \Wame\Core\Entities\Columns\Identifier;
 	use \Wame\Core\Entities\Columns\CreateDate;

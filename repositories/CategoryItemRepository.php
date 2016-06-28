@@ -2,16 +2,17 @@
 
 namespace Wame\CategoryModule\Repositories;
 
-use Nette\Security\User;
-use Nette\DI\Container;
-
 use Doctrine\ORM\Query\Expr\Join;
-
-use Wame\UserModule\Entities\UserEntity;
+use h4kuna\Gettext\GettextSetup;
+use Kdyby\Doctrine\EntityManager;
+use Nette\DI\Container;
+use Nette\Security\User;
+use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Managers\CategoryManager;
+use Wame\Core\Repositories\BaseRepository;
 
-class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
+class CategoryItemRepository extends BaseRepository
 {
 	const FROM_CATEGORY = 0;
 	const FROM_ITEM = 1;
@@ -19,9 +20,6 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 	const TABLE_ARTICLES = 'article';
 	const TABLE_UNITS = 'units';
 	const TABLE_SHOP_PRODUCT = 'shopProduct';
-	
-	/** @var UserEntity */
-	private $userEntity;
 	
 	/** @var CategoryItemEntity */
 	private $categoryItemEntity;
@@ -31,14 +29,13 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 	
 	public function __construct(
 		Container $container, 
-		\Kdyby\Doctrine\EntityManager $entityManager, 
-		\h4kuna\Gettext\GettextSetup $translator,
+		EntityManager $entityManager, 
+		GettextSetup $translator,
 		User $user,
 		CategoryManager $categoryManager
 	) {
 		parent::__construct($container, $entityManager, $translator, $user, CategoryItemEntity::class);
 		
-		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryItemEntity = $this->entityManager->getRepository(CategoryItemEntity::class);
 		
 		$this->categoryManager = $categoryManager;
@@ -72,7 +69,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('c')
 			->from(CategoryItemEntity::class, 'ci')
-			->leftJoin(\Wame\CategoryModule\Entities\CategoryEntity::class, 'c', Join::WITH, 'ci.category_id = c.id')
+			->leftJoin(CategoryEntity::class, 'c', Join::WITH, 'ci.category_id = c.id')
 			->andWhere('c.status != :status')
 			->setParameter('status', 0);
 		
@@ -97,7 +94,7 @@ class CategoryItemRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('a')
 		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin(\Wame\CategoryModule\Entities\CategoryEntity::class, 'a', Join::WITH, 'ci.category_id = a.id');
+		   ->leftJoin(CategoryEntity::class, 'a', Join::WITH, 'ci.category_id = a.id');
 		
 		if($itemId) {
 			$qb->where('ci.item_id = ' . $itemId);

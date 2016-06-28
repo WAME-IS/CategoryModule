@@ -34,7 +34,6 @@ services:
 doctrine:
 	metadata:
 		Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
-		Wame\CategoryModule\Repositories: %appDir%/../vendor/wame/CategoryModule/repositories
 
 webloader:
 	css:
