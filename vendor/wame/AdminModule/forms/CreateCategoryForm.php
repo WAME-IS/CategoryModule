@@ -84,7 +84,7 @@ class CreateCategoryForm extends FormFactory
 		$presenter = $form->getPresenter();
 		
 		try {
-			$categoryEntity = $this->create($values, $presenter);
+			$categoryEntity = $this->create($values);
 			$this->categoryRepository->onCreate($form, $values, $categoryEntity);
 
 			$presenter->flashMessage(_('The category was successfully created'), 'success');
@@ -112,6 +112,12 @@ class CreateCategoryForm extends FormFactory
 		$categoryEntity->setCreateUser($this->userEntity);
 		$categoryEntity->setStatus(CategoryRepository::STATUS_ACTIVE);
 		
+        // category tree
+		$parent = $this->categoryRepository->get(['id' => $values->parent]);
+        if($parent) {
+            $this->traversableManager->insertItem($categoryEntity, $parent);
+        }
+        
 		// category lang
 		$categoryLangEntity = new CategoryLangEntity();
 		$categoryLangEntity->setCategory($categoryEntity);
@@ -121,11 +127,7 @@ class CreateCategoryForm extends FormFactory
 		$categoryLangEntity->setEditDate(new \DateTime('now'));
 		$categoryLangEntity->setEditUser($this->userEntity);
 		$categoryEntity->addLang($this->lang, $categoryLangEntity);
-		
-		// category tree
-		$parent = $this->categoryRepository->get(['id' => $values->parent]);
-		$this->traversableManager->insertItem($categoryEntity, $parent);
-		
+        
 		return $this->categoryRepository->create($categoryEntity);
 	}
 	
