@@ -42,7 +42,6 @@ webloader:
 			files:
 				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.css
 				- %appDir%/../private/components/jqTree/jqtree.css
-				- %appDir%/../private/components/multilevelpushmenu/css/jquery.multilevelpushmenu.css
 		admin:
 			files:
 				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.css
