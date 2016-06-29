@@ -13,6 +13,7 @@ services:
 
 	# Factories
 	- Wame\CategoryModule\Components\ICategoryListControlFactory
+	- Wame\CategoryModule\Components\ICategoryMenuControlFactory
 
 	# Entities
 	- Wame\CategoryModule\Entities\CategoryLangEntity
@@ -30,6 +31,7 @@ services:
 	# Events
 	- {class: Wame\CategoryModule\Events\CategoryListener, tags: [run]}
 	- {class: Wame\CategoryModule\Events\CategoryListFormListener, tags: [run]}
+	- {class: Wame\CategoryModule\Events\CategoryMenuFormListener, tags: [run]}
 
 doctrine:
 	metadata:
@@ -54,10 +56,12 @@ webloader:
 				- %appDir%/../private/components/jquery-tree-master/jquery.tree.min.js
 				- %appDir%/../private/components/jqTree/tree.jquery.js
 				- %appDir%/../private/components/multilevelpushmenu/js/jquery.multilevelpushmenu.min.js
+				- %appDir%/../vendor/Wame/CategoryModule/assets/categoryMenu.js
 				- %appDir%/../vendor/Wame/CategoryModule/assets/main.js
 		admin:
 			files:
 				- %appDir%/../private/components/jqTree/tree.jquery.js
+				- %appDir%/../vendor/Wame/CategoryModule/assets/categoryMenu.js
 				- %appDir%/../vendor/Wame/CategoryModule/assets/main.js
 
 extensions:
