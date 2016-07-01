@@ -33,7 +33,8 @@ class TypeFormContainer extends BaseFormContainer
 	{
 		$form = $this->getForm();
 		
-		$form['type']->setDefaultValue($object->categoryEntity->type);
+//		$form['type']->setDefaultValue($object->categoryEntity->type);
+        $form['type']->setDefaultValue($object->componentEntity->getParameter('type'));
 	}
 
 }

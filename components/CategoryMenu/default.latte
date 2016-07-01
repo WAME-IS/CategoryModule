@@ -1,0 +1,12 @@
+<div class="category-menu">
+<a href="#" class="btn btn-default category-menu-button">
+    <span class="fa fa-bars" aria-hidden="true"></span>
+    {_'Categories'}
+</a>
+    
+<ul n:inner-foreach="$categories as $category" class="category-menu-list">
+    <li>
+        <a href="/{$category->langs[$lang]->slug}">{$category->langs[$lang]->title}</a>
+    </li>
+</ul>
+    

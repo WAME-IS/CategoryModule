@@ -2,28 +2,29 @@
 
 namespace Wame\CategoryModule\Repositories;
 
-use Nette\Security\User;
-use Nette\DI\Container;
-
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
+use h4kuna\Gettext\GettextSetup;
 use Kappa\DoctrineMPTT\Configurator;
-use	Kappa\DoctrineMPTT\TraversableManager;
-use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
-
-use Wame\Utils\Tree\ComplexTreeSorter;
-use Wame\Core\Exception\RepositoryException;
-use Wame\UserModule\Entities\UserEntity;
+use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
+use Kappa\DoctrineMPTT\TraversableManager;
+use Kdyby\Doctrine\EntityManager;
+use Nette\DI\Container;
+use Nette\Security\User;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
+use Wame\CategoryModule\Entities\CategoryLangEntity;
 use Wame\CategoryModule\Queries\GetChildrenWithLang;
+use Wame\Core\Exception\RepositoryException;
+use Wame\Core\Repositories\TranslatableRepository;
+use Wame\UserModule\Entities\UserEntity;
+use Wame\Utils\Tree\ComplexTreeSorter;
 
-class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
+class CategoryRepository extends TranslatableRepository
 {
 	const STATUS_REMOVE = 0;
 	const STATUS_ACTIVE = 1;
-	
-	/** @var UserEntity */
-	private $userEntity;
 	
 	/** @var CategoryEntity */
 	private $categoryEntity;
@@ -40,15 +41,14 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 	
 	public function __construct(
 		Container $container, 
-		\Kdyby\Doctrine\EntityManager $entityManager, 
-		\h4kuna\Gettext\GettextSetup $translator, 
+		EntityManager $entityManager, 
+		GettextSetup $translator, 
 		TraversableManager $traversableManager,
 		CategoryItemRepository $categoryItemRepository,
 		User $user
 	) {
 		parent::__construct($container, $entityManager, $translator, $user, CategoryEntity::class);
 		
-		$this->userEntity = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['id' => $user->id]);
 		$this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
 		
 		$this->categoryItemRepository = $categoryItemRepository;
@@ -146,7 +146,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$qb->select('c')
 				->from(CategoryEntity::class, 'c')
-				->leftJoin(\Wame\CategoryModule\Entities\CategoryLangEntity::class, 'l', \Doctrine\ORM\Query\Expr\Join::WITH, 'l.category_id = c.id')
+				->leftJoin(CategoryLangEntity::class, 'l', Join::WITH, 'l.category_id = c.id')
 				->where($qb->expr()->andX(
 						$qb->expr()->orX(
 							$qb->expr()->eq('c.depth', 0),
@@ -307,7 +307,7 @@ class CategoryRepository extends \Wame\Core\Repositories\BaseRepository
 		
 		$query = new GetChildrenWithLang($this->treeConfigurator, $actual, $type, $this->lang);
 		
-		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+		$categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(Query::HYDRATE_ARRAY);
 		
 		$nodes = [];
 		
