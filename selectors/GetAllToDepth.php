@@ -16,7 +16,7 @@ use Kdyby;
 use Kdyby\Doctrine\QueryObject;
 
 /**
- * Class GetAll
+ * Class GetAllToDepth
  *
  * @package Wame\CategoryModule\Selectors
  * @author Rene Gmitter
