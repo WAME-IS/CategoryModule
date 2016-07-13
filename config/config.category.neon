@@ -55,13 +55,13 @@ webloader:
             files:
                 - %appDir%/../private/components/jquery-tree-master/jquery.tree.min.js
                 - %appDir%/../private/components/jqTree/tree.jquery.js
-                - %appDir%/../vendor/Wame/CategoryModule/assets/categoryMenu.js
-                - %appDir%/../vendor/Wame/CategoryModule/assets/main.js
+                - %appDir%/../vendor/wame/CategoryModule/assets/categoryMenu.js
+                - %appDir%/../vendor/wame/CategoryModule/assets/main.js
         admin:
             files:
                 - %appDir%/../private/components/jqTree/tree.jquery.js
-                - %appDir%/../vendor/Wame/CategoryModule/assets/categoryMenu.js
-                - %appDir%/../vendor/Wame/CategoryModule/assets/main.js
+                - %appDir%/../vendor/wame/CategoryModule/assets/categoryMenu.js
+                - %appDir%/../vendor/wame/CategoryModule/assets/main.js
 
 
 extensions:
