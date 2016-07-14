@@ -7,7 +7,7 @@ use Wame\PositionModule\Repositories\PositionRepository;
 //use Wame\ArticleCategoryPlugin\Wame\CategoryModule\Wame\AdminModule\Forms\ICategoryTreeFormContainerFactory;
 use Wame\CategoryModule\Forms\CategoryListForm;
 use Wame\CategoryModule\Forms\IDepthFormContainerFactory;
-use Wame\CategoryModule\Forms\ICategoryFormContainerFactory;
+//use Wame\CategoryModule\Forms\ICategoryFormContainerFactory;
 use Wame\CategoryModule\Forms\ITypeFormContainerFactory;
 
 class CategoryListPresenter extends ComponentPresenter
@@ -24,8 +24,8 @@ class CategoryListPresenter extends ComponentPresenter
 	/** @var IDepthFormContainerFactory @inject */
 	public $IDepthFormContainer;
 
-	/** @var ICategoryFormContainerFactory @inject */
-	public $ICategoryFormContainer;
+//	/** @var ICategoryFormContainerFactory @inject */
+//	public $ICategoryFormContainer;
 	
 	/** @var ITypeFormContainerFactory @inject */
 	public $ITypeFormContainer;
@@ -79,6 +79,7 @@ class CategoryListPresenter extends ComponentPresenter
 	{
 		$form = $this->componentForm
 						->setType('CategoryListComponent')
+                        ->addFormContainer($this->IDepthFormContainer->create(), 'DepthFormContainer')
 						->setId($this->id)
 						->build();
 		

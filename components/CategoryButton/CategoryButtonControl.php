@@ -5,13 +5,13 @@ namespace Wame\CategoryModule\Components;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
 
-interface ICategoryMenuControlFactory {
+interface ICategoryButtonControlFactory {
 
-    /** @return CategoryMenuControl */
+    /** @return CategoryButtonControl */
     public function create();
 }
 
-class CategoryMenuControl extends \Wame\Core\Components\BaseControl {
+class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
 
     /** @var CategoryRepository */
     private $categoryRepository;
@@ -55,6 +55,7 @@ class CategoryMenuControl extends \Wame\Core\Components\BaseControl {
         $this->getTemplateFile();
         $this->template->render();
     }
+    
 
     /**
      * Set component

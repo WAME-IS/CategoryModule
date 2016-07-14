@@ -1,0 +1,17 @@
+services:
+    ComponentManager:
+        setup:
+            - addComponent(Wame\CategoryModule\Vendor\Wame\ComponentModule\CategoryButtonComponent())
+
+    PermissionObject:
+        setup:
+            - addResource('categoryButton')
+            - addResourceAction('categoryButton', 'create')
+            - allow('moderator', 'categoryButton', 'create')
+            - addResourceAction('categoryButton', 'edit')
+            - allow('moderator', 'categoryButton', 'edit')
+            - addResourceAction('categoryButton', 'delete')
+            - allow('admin', 'categoryButton', 'delete')
+
+    #Listeners
+    - {class: Wame\CategoryModule\Vendor\Wame\ComponentModule\Events\CategoryButtonFormListener, tags: [run]}

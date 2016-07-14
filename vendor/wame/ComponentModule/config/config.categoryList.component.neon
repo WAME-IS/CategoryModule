@@ -1,14 +1,17 @@
 services:
-	ComponentManager:
-		setup:
-			- addComponent(Wame\CategoryModule\Vendor\Wame\ComponentModule\CategoryListComponent())
+    ComponentManager:
+        setup:
+            - addComponent(Wame\CategoryModule\Vendor\Wame\ComponentModule\CategoryListComponent())
 
-	PermissionObject:
-		setup:
-			- addResource('categoryList')
-			- addResourceAction('categoryList', 'create')
-			- allow('moderator', 'categoryList', 'create')
-			- addResourceAction('categoryList', 'edit')
-			- allow('moderator', 'categoryList', 'edit')
-			- addResourceAction('categoryList', 'delete')
-			- allow('admin', 'categoryList', 'delete')
+    PermissionObject:
+        setup:
+            - addResource('categoryList')
+            - addResourceAction('categoryList', 'create')
+            - allow('moderator', 'categoryList', 'create')
+            - addResourceAction('categoryList', 'edit')
+            - allow('moderator', 'categoryList', 'edit')
+            - addResourceAction('categoryList', 'delete')
+            - allow('admin', 'categoryList', 'delete')
+
+    # Events
+    - {class: Wame\FavoriteModule\Vendor\Wame\ComponentModule\CategoryListFormListener, tags: [run]}

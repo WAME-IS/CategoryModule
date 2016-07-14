@@ -1,13 +1,13 @@
 <?php
 
-namespace Wame\CategoryModule\Events;
+namespace Wame\FavoriteModule\Vendor\Wame\ComponentModule;
 
 use Nette\Object;
 use Wame\ComponentModule\Repositories\ComponentRepository;
 
-class CategoryMenuFormListener extends Object 
+class CategoryListFormListener extends Object 
 {
-	const COMPONENT = 'CategoryMenuComponent';
+	const COMPONENT = 'CategoryListComponent';
 	
 	/** @var ComponentRepository */
 	private $componentRepository;
@@ -26,7 +26,7 @@ class CategoryMenuFormListener extends Object
 	
 	public function onCreate($form, $values, $componentEntity) 
 	{
-		if ($componentEntity->type == self::COMPONENT) {				
+		if ($componentEntity->type == self::COMPONENT) {
 			$componentEntity->setParameters($this->getParams($values, $componentEntity->getParameters()));
 		}
 	}
@@ -56,12 +56,10 @@ class CategoryMenuFormListener extends Object
 	private function getParams($values, $parameters = [])
 	{
 		$array = [
-			'type' => $values->type,
-			'depth' => $values->depth,
-//			'category' => $values->category
+			'depth' => $values->depth
 		];
 		
 		return array_replace($parameters, $array);
 	}
-    
+
 }

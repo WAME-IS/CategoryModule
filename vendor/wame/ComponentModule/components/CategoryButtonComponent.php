@@ -5,30 +5,30 @@ namespace Wame\CategoryModule\Vendor\Wame\ComponentModule;
 use Nette\Application\LinkGenerator;
 use Wame\ComponentModule\Models\IComponent;
 use Wame\MenuModule\Models\Item;
-use Wame\CategoryModule\Components\ICategoryMenuControlFactory;
+use Wame\CategoryModule\Components\ICategoryButtonControlFactory;
 
-interface ICategoryMenuComponentFactory
+interface ICategoryButtonComponentFactory
 {
-    /** @return CategoryMenuComponent */
+    /** @return CategoryButtonComponent */
     public function create();   
 }
 
 
-class CategoryMenuComponent implements IComponent
+class CategoryButtonComponent implements IComponent
 {   
     /** @var LinkGenerator */
     private $linkGenerator;
 
-    /** @var ICategoryMenuControlFactory */
-    private $ICategoryMenuControlFactory;
+    /** @var ICategoryButtonControlFactory */
+    private $ICategoryButtonControlFactory;
 
 
     public function __construct(
         LinkGenerator $linkGenerator,
-        ICategoryMenuControlFactory $ICategoryMenuControlFactory
+        ICategoryButtonControlFactory $ICategoryButtonControlFactory
     ) {
         $this->linkGenerator = $linkGenerator;
-        $this->ICategoryMenuControlFactory = $ICategoryMenuControlFactory;
+        $this->ICategoryButtonControlFactory = $ICategoryButtonControlFactory;
     }
 
 
@@ -47,19 +47,19 @@ class CategoryMenuComponent implements IComponent
 
     public function getName()
     {
-        return 'categoryMenu';
+        return 'categoryButton';
     }
 
 
     public function getTitle()
     {
-        return _('Category menu');
+        return _('Category button');
     }
 
 
     public function getDescription()
     {
-        return _('Create category menu');
+        return _('Create category button');
     }
 
 
@@ -71,19 +71,19 @@ class CategoryMenuComponent implements IComponent
 
     public function getLinkCreate()
     {
-        return $this->linkGenerator->link('Admin:CategoryMenu:create');
+        return $this->linkGenerator->link('Admin:CategoryButton:create');
     }
 
 
     public function getLinkDetail($componentEntity)
     {
-        return $this->linkGenerator->link('Admin:CategoryMenu:edit', ['id' => $componentEntity->id]);
+        return $this->linkGenerator->link('Admin:CategoryButton:edit', ['id' => $componentEntity->id]);
     }
 
 
     public function createComponent($componentInPosition)
     {
-        $control = $this->ICategoryMenuControlFactory->create();
+        $control = $this->ICategoryButtonControlFactory->create();
         $control->setComponentInPosition($componentInPosition);
 
         return $control;
