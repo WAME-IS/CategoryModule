@@ -3,63 +3,37 @@
 namespace Wame\CategoryModule\Components;
 
 use Wame\CategoryModule\Repositories\CategoryRepository;
-use Wame\CategoryModule\Repositories\CategoryItemRepository;
 
-interface ICategoryButtonControlFactory {
-
+interface ICategoryButtonControlFactory
+{
     /** @return CategoryButtonControl */
     public function create();
 }
 
-class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
-
-    /** @var CategoryRepository */
-    private $categoryRepository;
-
-    /** @var CategoryItemRepository */
-    private $categoryItemRepository;
-
-    /** string */
+class CategoryButtonControl extends \Wame\Core\Components\BaseControl
+{
+    /** @var string */
     private $lang;
     
-    /** @var string */
-    private $type;
+    /** @var CategoryRepository */
+    private $categoryRepository;
+    
 
-    public function __construct(
-        CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository
-    ) {
+    public function __construct(CategoryRepository $categoryRepository)
+    {
         parent::__construct();
-
+        
         $this->categoryRepository = $categoryRepository;
-        $this->categoryItemRepository = $categoryItemRepository;
         
         $this->lang = $this->categoryRepository->lang;
     }
 
-    public function render() {
-        $this->setComponent();
-
-        $criteria = [
-            'type' => $this->type
-        ];
-
-        $categories = $this->categoryRepository->find($criteria);
-
+    public function render()
+    {
         $this->template->lang = $this->lang;
-        $this->template->categories = $categories;
 
         $this->getTemplateFile();
         $this->template->render();
-    }
-    
-
-    /**
-     * Set component
-     */
-    private function setComponent() {
-        if ($this->componentInPosition) {
-            $this->type = $this->getComponentParameter('type');
-        }
     }
 
 }
