@@ -25,9 +25,6 @@ class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
     /** @var string */
     private $type;
 
-    /** @var integer */
-    private $depth = 2;
-
     public function __construct(
         CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository
     ) {
@@ -43,8 +40,7 @@ class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
         $this->setComponent();
 
         $criteria = [
-            'type' => $this->type,
-            'depth' => $this->depth
+            'type' => $this->type
         ];
 
         $categories = $this->categoryRepository->find($criteria);
@@ -63,7 +59,6 @@ class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
     private function setComponent() {
         if ($this->componentInPosition) {
             $this->type = $this->getComponentParameter('type');
-//			$this->depth = $this->getComponentParameter('depth');
         }
     }
 
