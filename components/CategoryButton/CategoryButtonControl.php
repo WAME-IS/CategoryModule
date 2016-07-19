@@ -2,16 +2,20 @@
 
 namespace Wame\CategoryModule\Components;
 
-use Wame\CategoryModule\Repositories\CategoryRepository;
+use Nette\DI\Container;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
+use Wame\CategoryModule\Repositories\CategoryRepository;
+use Wame\Core\Components\BaseControl;
 
-interface ICategoryButtonControlFactory {
+interface ICategoryButtonControlFactory
+{
 
     /** @return CategoryButtonControl */
     public function create();
 }
 
-class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
+class CategoryButtonControl extends BaseControl
+{
 
     /** @var CategoryRepository */
     private $categoryRepository;
@@ -21,7 +25,7 @@ class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
 
     /** string */
     private $lang;
-    
+
     /** @var string */
     private $type;
 
@@ -29,17 +33,19 @@ class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
     private $depth = 2;
 
     public function __construct(
-        CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository
-    ) {
-        parent::__construct();
+    Container $container, CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository
+    )
+    {
+        parent::__construct($container);
 
         $this->categoryRepository = $categoryRepository;
         $this->categoryItemRepository = $categoryItemRepository;
-        
+
         $this->lang = $this->categoryRepository->lang;
     }
 
-    public function render() {
+    public function render()
+    {
         $this->setComponent();
 
         $criteria = [
@@ -55,16 +61,15 @@ class CategoryButtonControl extends \Wame\Core\Components\BaseControl {
         $this->getTemplateFile();
         $this->template->render();
     }
-    
 
     /**
      * Set component
      */
-    private function setComponent() {
+    private function setComponent()
+    {
         if ($this->componentInPosition) {
             $this->type = $this->getComponentParameter('type');
 //			$this->depth = $this->getComponentParameter('depth');
         }
     }
-
 }

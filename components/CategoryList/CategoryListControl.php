@@ -2,17 +2,21 @@
 
 namespace Wame\CategoryModule\Components;
 
-use Wame\CategoryModule\Repositories\CategoryRepository;
+use Nette\DI\Container;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
+use Wame\CategoryModule\Repositories\CategoryRepository;
+use Wame\Core\Components\BaseControl;
 use Wame\Utils\Tree\ComplexTreeSorter;
 
-interface ICategoryListControlFactory {
+interface ICategoryListControlFactory
+{
 
     /** @return CategoryListControl */
     public function create();
 }
 
-class CategoryListControl extends \Wame\Core\Components\BaseControl {
+class CategoryListControl extends BaseControl
+{
 
     /** @var CategoryRepository */
     public $categoryRepository;
@@ -23,15 +27,17 @@ class CategoryListControl extends \Wame\Core\Components\BaseControl {
     /** @var string */
     private $lang;
 
-    public function __construct(CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository) {
-        parent::__construct();
+    public function __construct(Container $container, CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository)
+    {
+        parent::__construct($container);
 
         $this->categoryRepository = $categoryRepository;
         $this->categoryItemRepository = $categoryItemRepository;
         $this->lang = $categoryRepository->lang;
     }
 
-    public function render($parameters = []) {
+    public function render($parameters = [])
+    {
         $depth = isset($parameters['depth']) ? $parameters['depth'] : 1;
         $type = isset($parameters['type']) ? $parameters['type'] : null;
 
@@ -58,5 +64,4 @@ class CategoryListControl extends \Wame\Core\Components\BaseControl {
         $this->getTemplateFile();
         $this->template->render();
     }
-
 }

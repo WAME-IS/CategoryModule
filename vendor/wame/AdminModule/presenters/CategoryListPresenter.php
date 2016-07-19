@@ -3,7 +3,7 @@
 namespace App\AdminModule\Presenters;
 
 use Wame\ComponentModule\Forms\ComponentForm;
-use Wame\PositionModule\Repositories\PositionRepository;
+use Wame\ComponentModule\Repositories\PositionRepository;
 //use Wame\ArticleCategoryPlugin\Wame\CategoryModule\Wame\AdminModule\Forms\ICategoryTreeFormContainerFactory;
 use Wame\CategoryModule\Forms\CategoryListForm;
 use Wame\CategoryModule\Forms\IDepthFormContainerFactory;

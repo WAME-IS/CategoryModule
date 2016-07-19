@@ -3,7 +3,7 @@
 namespace Wame\CategoryModule\Vendor\Wame\ComponentModule;
 
 use Nette\Application\LinkGenerator;
-use Wame\ComponentModule\Models\IComponent;
+use Wame\ComponentModule\Registers\IComponent;
 use Wame\MenuModule\Models\Item;
 use Wame\CategoryModule\Components\ICategoryButtonControlFactory;
 
@@ -81,11 +81,9 @@ class CategoryButtonComponent implements IComponent
     }
 
 
-    public function createComponent($componentInPosition)
+    public function createComponent()
     {
         $control = $this->ICategoryButtonControlFactory->create();
-        $control->setComponentInPosition($componentInPosition);
-
         return $control;
     }
 
