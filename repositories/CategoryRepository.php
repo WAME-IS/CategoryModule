@@ -71,14 +71,10 @@ class CategoryRepository extends TranslatableRepository
 	 */
 	public function create($categoryEntity)
 	{
-		$create = $this->entityManager->persist($categoryEntity);
+		$this->entityManager->persist($categoryEntity);
 		
 		$this->entityManager->persist($categoryEntity->langs);
 		$this->entityManager->flush();
-		
-		if (!$create) {
-			throw new RepositoryException(_('Could not create the category'));
-		}
 		
 		return $categoryEntity;
 	}
