@@ -24,9 +24,9 @@ services:
     - Wame\CategoryModule\Repositories\CategoryLangRepository
     - Wame\CategoryModule\Repositories\CategoryItemRepository
 
-    # Models
-    CategoryManager:
-        class: Wame\CategoryModule\Managers\CategoryManager
+    # Registers
+    CategoryRegister:
+        class: Wame\CategoryModule\Registers\CategoryRegister
 
     # Events
     - {class: Wame\CategoryModule\Events\CategoryListener, tags: [run]}

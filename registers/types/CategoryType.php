@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\CategoryModule\Models\Type;
+namespace Wame\CategoryModule\Registers\Types;
 
 abstract class CategoryType
 {

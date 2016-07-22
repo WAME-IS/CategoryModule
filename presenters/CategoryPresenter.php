@@ -33,35 +33,24 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
     /** @var integer */
     public $selectedCategory;
     
-    /** @var string */
-    public $type;
-    
     
     public function actionShow($id)
     {
-        $type = $this->getParameter('type');
-        
-        try {
-            $category = $this->categoryRepository->get(['id' => $id]);
-            $categoryItems = $this->categoryItemRepository->getItems($type, $this->id);
-        } catch(\Exception $e) {
-            
-        } finally {
-//            $this->redirect(404, ':Homepage:Homepage:');
-        }
+        $category = $this->categoryRepository->get(['id' => $id]);
+        $categoryItems = $this->categoryItemRepository->getItems($category->type, $this->id);
     }
     
 	
 	/** components ************************************************************/
 	
-	public function createComponentCategoryList()
+	protected function createComponentCategoryList()
 	{
 		$component = $this->ICategoryListControlFactory->create();
 		
 		return $component;
 	}
     
-    public function createComponentListByType()
+    protected function createComponentListByType()
     {
         $component = $this->IListByTypeControlFactory->create();
         

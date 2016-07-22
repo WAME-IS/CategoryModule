@@ -9,7 +9,7 @@ use Nette\DI\Container;
 use Nette\Security\User;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
-use Wame\CategoryModule\Managers\CategoryManager;
+use Wame\CategoryModule\Registers\CategoryRegister;
 use Wame\Core\Repositories\BaseRepository;
 
 class CategoryItemRepository extends BaseRepository
@@ -24,30 +24,31 @@ class CategoryItemRepository extends BaseRepository
 	/** @var CategoryItemEntity */
 	private $categoryItemEntity;
 	
-	/** @var CategoryManager */
-	private $categoryManager;
+	/** @var CategoryRegister */
+	private $categoryRegister;
 	
+    
 	public function __construct(
 		Container $container, 
 		EntityManager $entityManager, 
 		GettextSetup $translator,
 		User $user,
-		CategoryManager $categoryManager
+		CategoryRegister $categoryRegister
 	) {
 		parent::__construct($container, $entityManager, $translator, $user, CategoryItemEntity::class);
 		
 		$this->categoryItemEntity = $this->entityManager->getRepository(CategoryItemEntity::class);
 		
-		$this->categoryManager = $categoryManager;
+		$this->categoryRegister = $categoryRegister;
 	}
 	
 	public function getItems($type, $categoryId = null)
 	{
 		$qb = $this->entityManager->createQueryBuilder();
-		
+        
 		$qb->select('i')
 			->from(CategoryItemEntity::class, 'ci')
-			->leftJoin($this->categoryManager->getType($type)->getClassName(), 'i', Join::WITH, 'ci.item_id = i.id')
+			->leftJoin($this->categoryRegister->getByName($type)->getClassName(), 'i', Join::WITH, 'ci.item_id = i.id')
 			->where('i.status != :status')
 			->andWhere('ci.type = :type')
 			->setParameter('status', 0)
