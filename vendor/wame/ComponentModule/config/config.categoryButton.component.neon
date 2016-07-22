@@ -1,7 +1,7 @@
 services:
-    ComponentManager:
+    ComponentRegister:
         setup:
-            - addComponent(Wame\CategoryModule\Vendor\Wame\ComponentModule\CategoryButtonComponent())
+            - add(Wame\CategoryModule\Vendor\Wame\ComponentModule\CategoryButtonComponent())
 
     PermissionObject:
         setup:

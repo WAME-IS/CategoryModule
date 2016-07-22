@@ -15,10 +15,6 @@ services:
     - Wame\CategoryModule\Components\ICategoryListControlFactory
     - Wame\CategoryModule\Components\ICategoryButtonControlFactory
 
-    # Entities
-    - Wame\CategoryModule\Entities\CategoryLangEntity
-    - Wame\CategoryModule\Entities\CategoryItemEntity
-
     # Repositories
     - Wame\CategoryModule\Repositories\CategoryRepository
     - Wame\CategoryModule\Repositories\CategoryLangRepository

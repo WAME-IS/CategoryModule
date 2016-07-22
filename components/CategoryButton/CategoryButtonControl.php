@@ -2,29 +2,32 @@
 
 namespace Wame\CategoryModule\Components;
 
+use Nette\DI\Container;
 use Wame\CategoryModule\Repositories\CategoryRepository;
+use Wame\Core\Components\BaseControl;
 
 interface ICategoryButtonControlFactory
 {
+
     /** @return CategoryButtonControl */
     public function create();
 }
 
-class CategoryButtonControl extends \Wame\Core\Components\BaseControl
+class CategoryButtonControl extends BaseControl
 {
+
     /** @var string */
     private $lang;
-    
+
     /** @var CategoryRepository */
     private $categoryRepository;
-    
 
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(Container $container, CategoryRepository $categoryRepository)
     {
-        parent::__construct();
-        
+        parent::__construct($container);
+
         $this->categoryRepository = $categoryRepository;
-        
+
         $this->lang = $this->categoryRepository->lang;
     }
 
@@ -35,5 +38,4 @@ class CategoryButtonControl extends \Wame\Core\Components\BaseControl
         $this->getTemplateFile();
         $this->template->render();
     }
-
 }

@@ -3,15 +3,7 @@
 namespace Wame\CategoryModule\FormCategory\Controls;
 
 use Nette;
-use Nette\Application\UI;
-use Nette\Bridges;
 use Nette\Forms;
-use Nette\Localization;
-use Nette\Utils;
-
-use Latte;
-
-use Wame\CategoryModule\Repositories\CategoryRepository;
 
 abstract class BaseControl extends Forms\Controls\BaseControl
 {
