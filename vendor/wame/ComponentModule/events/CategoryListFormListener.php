@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\FavoriteModule\Vendor\Wame\ComponentModule;
+namespace Wame\CategoryModule\Vendor\Wame\ComponentModule;
 
 use Nette\Object;
 use Wame\ComponentModule\Repositories\ComponentRepository;

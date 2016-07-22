@@ -14,4 +14,4 @@ services:
             - allow('admin', 'categoryList', 'delete')
 
     # Events
-    - {class: Wame\FavoriteModule\Vendor\Wame\ComponentModule\CategoryListFormListener, tags: [run]}
+    - {class: Wame\CategoryModule\Vendor\Wame\ComponentModule\CategoryListFormListener, tags: [run]}
