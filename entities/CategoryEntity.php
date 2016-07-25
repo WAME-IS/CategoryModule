@@ -4,7 +4,7 @@ namespace Wame\CategoryModule\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kappa\DoctrineMPTT\Entities\TraversableInterface;
-use Wame\Core\Entities\TranslatableEntity;
+use Wame\LanguageModule\Entities\TranslatableEntity;
 
 /**
  * @ORM\Table(name="wame_category")

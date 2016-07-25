@@ -17,7 +17,7 @@ use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
 use Wame\CategoryModule\Queries\GetChildrenWithLang;
 use Wame\Core\Exception\RepositoryException;
-use Wame\Core\Repositories\TranslatableRepository;
+use Wame\LanguageModule\Repositories\TranslatableRepository;
 use Wame\UserModule\Entities\UserEntity;
 use Wame\Utils\Tree\ComplexTreeSorter;
 
