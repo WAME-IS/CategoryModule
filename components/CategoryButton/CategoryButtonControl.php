@@ -16,9 +16,6 @@ interface ICategoryButtonControlFactory
 class CategoryButtonControl extends BaseControl
 {
 
-    /** @var string */
-    private $lang;
-
     /** @var CategoryRepository */
     private $categoryRepository;
 
@@ -27,15 +24,10 @@ class CategoryButtonControl extends BaseControl
         parent::__construct($container);
 
         $this->categoryRepository = $categoryRepository;
-
-        $this->lang = $this->categoryRepository->lang;
     }
 
     public function render()
     {
-        $this->template->lang = $this->lang;
-
-        $this->getTemplateFile();
-        $this->template->render();
+        
     }
 }

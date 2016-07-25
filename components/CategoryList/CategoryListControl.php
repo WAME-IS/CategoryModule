@@ -23,17 +23,13 @@ class CategoryListControl extends BaseControl
 
     /** @var CategoryItemRepository */
     public $categoryItemRepository;
-
-    /** @var string */
-    private $lang;
-
+    
     public function __construct(Container $container, CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository)
     {
         parent::__construct($container);
 
         $this->categoryRepository = $categoryRepository;
         $this->categoryItemRepository = $categoryItemRepository;
-        $this->lang = $categoryRepository->lang;
     }
 
     public function render($parameters = [])
@@ -58,10 +54,6 @@ class CategoryListControl extends BaseControl
             $categories = $categories->child_nodes;
         }
 
-        $this->template->lang = $this->lang;
         $this->template->categories = $categories;
-
-        $this->getTemplateFile();
-        $this->template->render();
     }
 }
