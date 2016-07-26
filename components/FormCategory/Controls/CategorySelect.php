@@ -17,10 +17,12 @@ class CategorySelect extends BaseControl
 	 */
 	private static $registered = FALSE;
 	
-	public function __construct($items = [], $depth = 1, $label = NULL) {
+	public function __construct($items = [], $depth = 1, $label = NULL)
+    {
 		parent::__construct($label);
 	}
 	
+    
 	public function setItems($items)
 	{
 		$this->items = $items;

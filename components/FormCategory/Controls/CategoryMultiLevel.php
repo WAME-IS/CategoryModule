@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 use Wame\CategoryModule\FormCategory\Controls\BaseControl;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 
-class CategoryMultiLevel extends BaseControl
+class CategoryMultiLevel extends Forms\Controls\HiddenField
 {	
 	/** @var CategoryRepository */
 	private $categoryRepository;
@@ -18,12 +18,14 @@ class CategoryMultiLevel extends BaseControl
 	private static $registered = FALSE;
 	
 	
-	public function __construct($label = NULL, $items = [], $type = null, $depth = 1) {
+	public function __construct($label = NULL, $items = [], $type = null, $depth = 1)
+    {
 		parent::__construct($label);
 		
 		$this->type = $type;
 	}
 	
+    
 	/**
 	 * Set type
 	 * 
@@ -38,7 +40,7 @@ class CategoryMultiLevel extends BaseControl
 	
 	public function setDepth($depth)
 	{
-		$this->depth;
+		$this->depth = $depth;
 		
 		return $this;
 	}
@@ -59,9 +61,16 @@ class CategoryMultiLevel extends BaseControl
 	
 	public function getControl()
 	{
-		$input = Html::el('input', ['name' => 'categories', 'type' => "hidden"]);
+        $control = parent::getControl();
+        
+        $control->addAttributes([
+            'type' => 'hidden',
+            'name' => $this->getHtmlName()
+        ]);
+        
 		$tree = Html::el('div', ['id' => "menu", 'data-url' => "/api/v1/category/?type=" . $this->type]);
-		return $input.$tree;
+        
+        return $tree . $control;
 	}
 	
 	public static function register($items = [], $type = null, $depth = 1, $method = 'addCategoryMultiLevel')

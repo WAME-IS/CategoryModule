@@ -41,7 +41,7 @@ class CategoryList extends BaseControl
 	
 	public function setDepth($depth)
 	{
-		$this->depth;
+		$this->depth = $depth;
 		
 		return $this;
 	}
@@ -62,9 +62,16 @@ class CategoryList extends BaseControl
 	
 	public function getControl()
 	{
-		$input = Html::el('input', ['name' => 'categories', 'type' => "hidden"]);
+        $control = parent::getControl();
+        
+        $control->addAttributes([
+					'type' => 'hidden',
+					'name' => $this->getHtmlName()
+				]);
+//                ->setValue($this->getValue())
+        
 		$tree = Html::el('div', ['id' => "tree1", 'data-url' => "/api/v1/category/?type=" . $this->type]);
-		return $input.$tree;
+		return $tree . $control;
 		
 //		$items = $this->categoryRepository->getTree(['status' => 1, 'type' => $this->type]);
 //		return $this->generate($items, true);
