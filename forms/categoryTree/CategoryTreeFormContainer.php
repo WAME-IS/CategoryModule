@@ -39,8 +39,8 @@ class CategoryTreeFormContainer extends BaseFormContainer
 		$this->categoryRepository = $categoryRepository;
 		$this->categoryItemRepository = $categoryItemRepository;
 	}
-
-
+    
+    
     public function configure() 
 	{
 		$form = $this->getForm();
@@ -51,8 +51,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 				->setRepository($this->categoryRepository)
 				->setType($this->type);
     }
-
-
+    
 	public function setDefaultValues($object)
 	{
 		$form = $this->getForm();
@@ -65,7 +64,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 			$pairs[$itemCategory->id] = $itemCategory->langs['sk']->title;
 		}
 		
-		$form["categories"]->setDefaultValue($pairs);
+		$form["categories"]->setDefaultValue(implode(',', $pairs));
 	}
 
 }

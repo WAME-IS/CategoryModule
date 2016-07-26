@@ -24,14 +24,19 @@ class CategoryListControl extends BaseControl
     /** @var CategoryItemRepository */
     public $categoryItemRepository;
     
-    public function __construct(Container $container, CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository)
-    {
+    
+    public function __construct(
+        Container $container, 
+        CategoryRepository $categoryRepository, 
+        CategoryItemRepository $categoryItemRepository
+    ) {
         parent::__construct($container);
 
         $this->categoryRepository = $categoryRepository;
         $this->categoryItemRepository = $categoryItemRepository;
     }
 
+    
     public function render($parameters = [])
     {
         $depth = isset($parameters['depth']) ? $parameters['depth'] : 1;
@@ -44,7 +49,8 @@ class CategoryListControl extends BaseControl
         }
 
         if ($depth) {
-            $criteria['depth'] = $depth;
+            $criteria['depth <='] = 1 + $depth;
+            $criteria['depth >'] = 1;
         }
 
         $categories = $this->categoryRepository->find($criteria);
@@ -56,4 +62,5 @@ class CategoryListControl extends BaseControl
 
         $this->template->categories = $categories;
     }
+    
 }
