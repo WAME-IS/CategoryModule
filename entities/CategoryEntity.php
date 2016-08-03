@@ -28,6 +28,22 @@ class CategoryEntity extends TranslatableEntity implements TraversableInterface
 	 * @ORM\Column(name="type", type="string", nullable=false)
 	 */
 	protected $type;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="CategoryEntity", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+	protected $parent;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="CategoryEntity", mappedBy="parent")
+     */
+	protected $children;
+    
+//    /**
+//     * @ORM\Column(name="sort", type="integer", nullable=false)
+//     */
+//    protected $sort = 0;
 	
 	
 	/** getters ***************************************************************/
@@ -36,12 +52,37 @@ class CategoryEntity extends TranslatableEntity implements TraversableInterface
 	{
 		return $this->type;
 	}
+    
+    public function getParent()
+	{
+		return $this->parent;
+	}
+    
+    public function getChildren()
+	{
+		return $this->children;
+	}
+    
+//    public function getSort()
+//    {
+//        return $this->sort;
+//    }
 	
+    
 	/** setters ***************************************************************/
 	
 	public function setType($type)
 	{
 		$this->type = $type;
 	}
+    
+    
+    /** others ****************************************************************/
 	
+    public function addChild(CategoryEntity $child)
+    {
+        $this->children[] = $child;
+        $child->setParent($this);
+    }
+    
 }

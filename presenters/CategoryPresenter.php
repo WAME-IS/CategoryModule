@@ -34,6 +34,20 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
     public $selectedCategory;
     
     
+    public function handleGen()
+    {
+        $categories = $this->categoryRepository->find();
+        
+        foreach($categories as $category) {
+            $parent = $this->categoryRepository->getParent($category);
+            
+            if($parent) {
+                $category->setParent($parent);
+            }
+        }
+    }
+    
+    
     public function actionShow($id)
     {
         $category = $this->categoryRepository->get(['id' => $id]);

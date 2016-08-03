@@ -99,7 +99,7 @@ class CategoryRepository extends TranslatableRepository
 		return $category;
 	}
 	
-	public function getTree($criteria)
+	public function getTree($criteria = null)
 	{
 		$actual = $this->get($criteria);
 		

@@ -49,7 +49,8 @@ class CategoryTreeFormContainer extends BaseFormContainer
 		
 		$form->addCategoryPicker('categories', _('Categories'))
 				->setRepository($this->categoryRepository)
-				->setType($this->type);
+				->setType($this->type)
+                ->setRequired();
     }
     
 	public function setDefaultValues($object)
