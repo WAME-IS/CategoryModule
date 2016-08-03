@@ -58,7 +58,12 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public function actionDefault()
 	{
 		$this->type = $this->id;
-		$this->categories = $this->categoryRepository->find(['type' => $this->type, 'status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+        
+        if($this->type) {
+            $this->categories = $this->categoryRepository->find(['type' => $this->type, 'status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+        } else {
+            $this->redirect(':Admin:Dashboard:');
+        }
 	}
 	
 	public function actionShow()
