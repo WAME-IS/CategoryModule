@@ -42,26 +42,27 @@ class CategoryItemRepository extends BaseRepository
 		$this->categoryRegister = $categoryRegister;
 	}
 	
-	public function getItems($type, $categoryId = null)
+    
+	public function getItems($type = null, $categoryId = null, $order = null)
 	{
 		$qb = $this->entityManager->createQueryBuilder();
         
 		$qb->select('i')
 			->from(CategoryItemEntity::class, 'ci')
-			->leftJoin($this->categoryRegister->getByName($type)->getClassName(), 'i', Join::WITH, 'ci.item_id = i.id')
-			->where('i.status != :status')
-			->andWhere('ci.type = :type')
-			->setParameter('status', 0)
-			->setParameter('type', $type);
+			->innerJoin($this->categoryRegister->getByName($type)->getClassName(), 'i', Join::WITH, 'ci.item_id = i.id')
+			->innerJoin(CategoryEntity::class, 'c', Join::WITH, 'ci.category_id = c.id')
+//			->andWhere('i.status != :status')->setParameter('status', 0)
+			->andWhere('c.type = :type')->setParameter('type', $type);
 		
 		if($categoryId) {
 			$qb->andWhere('ci.category_id = ' . $categoryId);
 		}
-		
-		$query = $qb->getQuery();
-		$results = $query->getResult();
-
-		return $results;
+        
+        if($order) {
+            $qb->orderBy('i.id', $order);
+        }
+        
+		return $qb->getQuery()->getResult();
 	}
 	
 	public function getCategories($type, $itemId = null, $depth = 1)
@@ -122,7 +123,8 @@ class CategoryItemRepository extends BaseRepository
 		
 		return $arr;
 	}
-	
+
+    
 	private function generatePairs($array)
 	{
 		$arr = [];

@@ -24,6 +24,9 @@ class CategoryListControl extends BaseControl
     /** @var CategoryItemRepository */
     public $categoryItemRepository;
     
+    /** @var integer */
+    private $categoryParent;
+    
     
     public function __construct(
         Container $container, 
@@ -37,11 +40,8 @@ class CategoryListControl extends BaseControl
     }
 
     
-    public function render($parameters = [])
+    public function render($parent = null, $type = null, $depth = null)
     {
-        $depth = isset($parameters['depth']) ? $parameters['depth'] : 1;
-        $type = isset($parameters['type']) ? $parameters['type'] : null;
-
         $criteria = [];
 
         if ($type) {
@@ -52,15 +52,38 @@ class CategoryListControl extends BaseControl
             $criteria['depth <='] = 1 + $depth;
             $criteria['depth >'] = 1;
         }
-
+        
+        
+        if($parent) {
+            $criteria['parent'] = $parent;
+        }
+        
         $categories = $this->categoryRepository->find($criteria);
 
-        if (!$depth) {
-            $categories = (new ComplexTreeSorter($categories))->sortTree();
-            $categories = $categories->child_nodes;
-        }
-
+//        if (!$depth) {
+//            $categories = (new ComplexTreeSorter($categories))->sortTree();
+//            $categories = $categories->child_nodes;
+//        }
+        
         $this->template->categories = $categories;
+    }
+    
+    
+    /** methods ***************************************************************/
+    
+    public function setCategoryParent($id)
+    {
+        $this->categoryParent = $id;
+    }
+    
+    public function setDepth($depth)
+    {
+        $this->depth = $depth;
+    }
+    
+    public function setType($type)
+    {
+        $this->type = $type;
     }
     
 }

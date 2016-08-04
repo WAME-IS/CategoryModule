@@ -33,6 +33,11 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
     /** @var integer */
     public $selectedCategory;
     
+    /** @var CategoryEntity */
+    private $category;
+    
+    
+    /** handles ***************************************************************/
     
     public function handleGen()
     {
@@ -48,18 +53,27 @@ class CategoryPresenter extends \App\Core\Presenters\BasePresenter
     }
     
     
-    public function actionShow($id)
+    /** actions ***************************************************************/
+    
+    public function actionShow($id = null)
     {
-        $category = $this->categoryRepository->get(['id' => $id]);
-        $categoryItems = $this->categoryItemRepository->getItems($category->type, $this->id);
+        $this->category = $this->categoryRepository->get(['id' => $id]);
+//        $categoryItems = $this->categoryItemRepository->getItems($category->type, $this->id);
     }
     
+    
+    public function renderShow()
+    {
+        $this->template->type = $this->category->type;
+        $this->template->parent = $this->category;
+    }
 	
 	/** components ************************************************************/
 	
 	protected function createComponentCategoryList()
 	{
 		$component = $this->ICategoryListControlFactory->create();
+        $component->setCategoryParent($this->id);
 		
 		return $component;
 	}

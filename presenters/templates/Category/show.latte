@@ -1,9 +1,11 @@
 {block content}
     <div class="row">
         <div class="col-md-3">
-            {control categoryList}
+            <div class="page-header"><h2>{$parent->title}</h2></div>
+            {control categoryList, type => $type, parent => $parent}
         </div>
         <div class="col-md-9">
+            <div class="page-header"><h2>{_'Products'}</h2></div>
             {position categoryRight}
         </div>
     </div>

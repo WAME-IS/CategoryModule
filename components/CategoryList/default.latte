@@ -1,10 +1,10 @@
 {block categoriesList}
-<ul n:if="$categories">
-    <li n:foreach="$categories as $category">
-        <a href="{plink :Category:Category:show $category->id}">{$category->title}</a>
-		{if property_exists($category, 'child_nodes')}
-			{include categoriesList, categories => $category->child_nodes}
-		{/if}
-    </li>
-</ul>
+    <ul n:if="$categories">
+        <li n:foreach="$categories as $category">
+            <a href="{plink :Category:Category:show $category->id}">{$category->title}</a>
+            {if property_exists($category, 'child_nodes')}
+                {include categoriesList, categories => $category->child_nodes}
+            {/if}
+        </li>
+    </ul>
 {/block}
