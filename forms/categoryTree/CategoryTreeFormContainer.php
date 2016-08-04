@@ -62,7 +62,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 		$pairs = [];
 		
 		foreach($itemCategories as $itemCategory) {
-			$pairs[$itemCategory->id] = $itemCategory->langs['sk']->title;
+			$pairs[$itemCategory->id] = $itemCategory->title;
 		}
 		
 		$form["categories"]->setDefaultValue(implode(',', $pairs));
