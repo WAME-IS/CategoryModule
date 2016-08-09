@@ -65,7 +65,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 			$pairs[$itemCategory->id] = $itemCategory->title;
 		}
 		
-		$form["categories"]->setDefaultValue(implode(',', $pairs));
+		$form["categories"]->setDefaultValue(implode(',', array_keys($pairs)));
 	}
 
 }

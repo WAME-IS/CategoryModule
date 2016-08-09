@@ -64,11 +64,12 @@ class CategoryList extends BaseControl
 	{
         $control = parent::getControl();
         
-        $control->addAttributes([
-					'type' => 'hidden',
-					'name' => $this->getHtmlName()
-				]);
-//                ->setValue($this->getValue())
+        $control
+            ->addAttributes([
+                'type' => 'hidden',
+                'name' => $this->getHtmlName()
+            ])
+            ->setValue($this->getValue());
         
 		$tree = Html::el('div', ['id' => "tree1", 'data-url' => "/api/v1/category/?type=" . $this->type]);
 		return $tree . $control;

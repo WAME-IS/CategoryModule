@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 use Wame\CategoryModule\FormCategory\Controls\BaseControl;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 
-class CategoryMultiLevel extends Forms\Controls\HiddenField
+class CategoryMultiLevel extends BaseControl
 {	
 	/** @var CategoryRepository */
 	private $categoryRepository;
@@ -63,10 +63,11 @@ class CategoryMultiLevel extends Forms\Controls\HiddenField
 	{
         $control = parent::getControl();
         
-        $control->addAttributes([
-            'type' => 'hidden',
-            'name' => $this->getHtmlName()
-        ]);
+        $control
+            ->addAttributes([
+                'type' => 'hidden',
+                'name' => $this->getHtmlName()
+            ])->setValue($this->getValue());
         
 		$tree = Html::el('div', ['id' => "menu", 'data-url' => "/api/v1/category/?type=" . $this->type]);
         
