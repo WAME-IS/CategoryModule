@@ -290,6 +290,28 @@ class CategoryRepository extends TranslatableRepository
 	
 	/** API *******************************************************************/
 	
+    /**
+	 * Get categories
+	 * 
+	 * @api {get} /categories/:ids Get categories
+	 * @param string $ids
+	 */
+    public function categories($ids)
+    {
+        $categories = $this->find(['id' => explode(',', $ids)]);
+        
+        $array = [];
+        
+        foreach($categories as $category) {
+            $array[] = [
+                'id' => $category->id,
+                'title' => $category->title
+            ];
+        }
+        
+        return $array;
+    }
+    
 	/**
 	 * Get category descendants
 	 * 
