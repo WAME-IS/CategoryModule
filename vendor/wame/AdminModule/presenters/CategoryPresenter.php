@@ -12,6 +12,7 @@ use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
 use Wame\DataGridControl\DataGridControl;
+use Wame\DataGridControl\IDataGridControlFactory;
 use Wame\MenuModule\Forms\MenuItemForm;
 
 class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
@@ -34,8 +35,11 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	/** @var CategoryLangRepository @inject */
 	public $categoryLangRepository;
 	
-	/** @var DataGridControl @inject */
+    /** @var IDataGridControlFactory @inject */
 	public $gridControl;
+    
+//	/** @var DataGridControl @inject */
+//	public $gridControl;
 	
 	/** @var CategoryGrid @inject */
 	public $categoryGrid;
@@ -167,14 +171,18 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	/** callbacks *************************************************************/
 	
 	/**
-	 * Get children
-	 * 
-	 * @return type
-	 */
-	public function getChildren()
-	{
-		return [];
-	}
+     * Get children
+     * 
+     * @param integer $parentId    parent id
+     * @return QueryBuilder
+     */
+	public function getChildren($parentId)
+    {
+        $qb = $this->categoryRepository->createQueryBuilder('a');
+        $qb->andWhere($qb->expr()->eq('a.parent', ':parent'))->setParameter('parent', $parentId);
+        
+        return $qb;
+    }
 	
 	
 	/** components ************************************************************/
@@ -197,10 +205,14 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function createComponentCategoryGrid()
 	{
-		$grid = $this->gridControl;
-		$grid->setDataSource($this->categories);
+        $qb = $this->categoryRepository->createQueryBuilder('a');
+        $qb->andWhere($qb->expr()->eq('a.type', ':type'))->setParameter('type', $this->type);
+        $qb->andWhere($qb->expr()->eq('a.parent', ':parent'))->setParameter('parent', 1);
+        
+		$grid = $this->gridControl->create();
+		$grid->setDataSource($qb);
 		$grid->setProvider($this->categoryGrid);
-//		$grid->setTreeView([$this, 'getChildren'], 'id'); // TODO: pridat ked sa poriesi @noApi
+		$grid->setTreeView([$this, 'getChildren'], 'children'); // TODO: pridat ked sa poriesi @noApi
 		
 		return $grid;
 	}
