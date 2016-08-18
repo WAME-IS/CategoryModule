@@ -2,7 +2,7 @@ services:
 	CategoryGrid:
 		class: Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid
 		setup:
-			- addColumn(Wame\DataGridControl\IdGridColumn())
+#			- addColumn(Wame\DataGridControl\IdGridColumn())
 			- addColumn(Wame\DataGridControl\TitleGridColumn())
 			- addColumn(Wame\DataGridControl\CreatorGridColumn())
 			- addColumn(Wame\DataGridControl\StatusGridColumn())

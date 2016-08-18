@@ -207,7 +207,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	{
         $qb = $this->categoryRepository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->eq('a.type', ':type'))->setParameter('type', $this->type);
-        $qb->andWhere($qb->expr()->eq('a.parent', ':parent'))->setParameter('parent', 1);
+        $qb->andWhere($qb->expr()->eq('a.depth', ':depth'))->setParameter('depth', 2);
         
 		$grid = $this->gridControl->create();
 		$grid->setDataSource($qb);
