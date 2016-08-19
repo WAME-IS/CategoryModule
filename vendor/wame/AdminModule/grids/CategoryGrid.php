@@ -2,7 +2,7 @@
 
 namespace Wame\CategoryModule\Vendor\Wame\AdminModule\Grids;
 
-class CategoryGrid extends \Wame\DataGridControl\GridProvider
+class CategoryGrid extends \Wame\DataGridControl\DataGridControl
 {
 	
 }

@@ -2,17 +2,13 @@
 
 namespace App\AdminModule\Presenters;
 
-use Nette\Application\UI\Form;
 use Nette\Http\Request;
-
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
-use Wame\DataGridControl\DataGridControl;
-use Wame\DataGridControl\IDataGridControlFactory;
 use Wame\MenuModule\Forms\MenuItemForm;
 
 class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
@@ -34,12 +30,6 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 
 	/** @var CategoryLangRepository @inject */
 	public $categoryLangRepository;
-	
-    /** @var IDataGridControlFactory @inject */
-	public $gridControl;
-    
-//	/** @var DataGridControl @inject */
-//	public $gridControl;
 	
 	/** @var CategoryGrid @inject */
 	public $categoryGrid;
@@ -187,6 +177,11 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	/** components ************************************************************/
 	
+    /**
+     * Create category form component
+     * 
+     * @return type
+     */
 	protected function createComponentCreateCategoryForm() 
 	{
 		$form = $this->createCategoryForm
@@ -196,6 +191,11 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		return $form;
 	}
 	
+    /**
+     * Edit category form component
+     * 
+     * @return type
+     */
 	protected function createComponentEditCategoryForm() 
 	{
 		$form = $this->editCategoryForm->setId($this->id)->build();
@@ -203,22 +203,25 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		return $form;
 	}
 	
-	public function createComponentCategoryGrid()
+    /**
+     * Category grid component
+     * 
+     * @return CategoryGrid
+     */
+	protected function createComponentCategoryGrid()
 	{
         $qb = $this->categoryRepository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->eq('a.type', ':type'))->setParameter('type', $this->type);
         $qb->andWhere($qb->expr()->eq('a.depth', ':depth'))->setParameter('depth', 2);
         
-		$grid = $this->gridControl->create();
-		$grid->setDataSource($qb);
-		$grid->setProvider($this->categoryGrid);
-		$grid->setTreeView([$this, 'getChildren'], 'children'); // TODO: pridat ked sa poriesi @noApi
+		$this->categoryGrid->setDataSource($qb);
+		$this->categoryGrid->setTreeView([$this, 'getChildren'], 'children');
 		
-		return $grid;
+		return $this->categoryGrid;
 	}
 	
 	/**
-	 * Menu item form
+	 * Menu item form component
 	 * 
 	 * @return MenuItemForm
 	 */
@@ -244,10 +247,3 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	}
 	
 }
-
-/**
- * TODO:
- * 
- * forward pre presmerovanie spat
- * - https://doc.nette.org/en/2.3/presenters#toc-redirection
- */
