@@ -2,3 +2,8 @@ services:
 	defaultRoutesRegister:
 		setup:
 		- add(Wame\CategoryModule\Vendor\Core\Registers\CategoryRouterEntity::create(), 'category')
+
+router:
+    defaultRoutes:
+        '/[<lang>/]categories/<type>': 'Category:Category:default'
+        '/[<lang>/]category/<id>': 'Category:Category:show'
