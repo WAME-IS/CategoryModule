@@ -111,12 +111,11 @@ class CreateCategoryForm extends FormFactory
 		$categoryEntity->setCreateDate(new \DateTime('now'));
 		$categoryEntity->setCreateUser($this->userEntity);
 		$categoryEntity->setStatus(CategoryRepository::STATUS_ACTIVE);
-		
+        
         // category tree
 		$parent = $this->categoryRepository->get(['id' => $values->parent]);
-        if($parent) {
-            $this->traversableManager->insertItem($categoryEntity, $parent);
-        }
+        $this->traversableManager->insertItem($categoryEntity, $parent);
+        $categoryEntity->setParent($parent);
         
 		// category lang
 		$categoryLangEntity = new CategoryLangEntity();
