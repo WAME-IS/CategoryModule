@@ -12,6 +12,7 @@ services:
             - allow('moderator', 'category', 'delete')
 
     # Factories
+    - Wame\CategoryModule\Components\ICategoryControlFactory
     - Wame\CategoryModule\Components\ICategoryListControlFactory
     - Wame\CategoryModule\Components\ICategoryButtonControlFactory
 
