@@ -8,6 +8,7 @@ use Nette\InvalidArgumentException;
 use Wame\CategoryModule\Components\CategoryListControl;
 use Wame\CategoryModule\Components\ICategoryControlFactory;
 use Wame\CategoryModule\Entities\CategoryEntity;
+use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\ChameleonComponents\Definition\ControlDataDefinition;
 use Wame\ChameleonComponents\Definition\DataDefinition;
@@ -56,13 +57,27 @@ class CategoryListControl extends ChameleonTreeListControl
             $categoryCriteria->where(Criteria::expr()->lte('depth', $this->depth));
         }
 
-        $relatedDefinition = new DataDefinition(new DataDefinitionTarget('*', true), $relatedCriteria);
+        $relatedDefinition = new DataDefinition(new DataDefinitionTarget('*', true));
         $relatedDefinition->onProcess[] = function($dataDefinition) use ($categoryCriteria) {
-            $this->setTreeRoot($dataDefinition->getTarget()->getType(), $categoryCriteria);
+            $statusType = $this->statusTypeRegister->getByEntityClass($dataDefinition->getTarget()->getType());
+            if (!$statusType) {
+                throw new InvalidArgumentException("Unsupported category type");
+            }
+            $statusAlias = $statusType->getAlias();
+
+            $this->setTreeRoot($statusAlias, $categoryCriteria);
         };
+
         if ($this->category) {
-            $relatedDefinition->setHint('relation', $relatedDefinition)
-            //Criteria::create()->where(Criteria::expr()->eq('category', $this->category));
+            $query = $relatedDefinition->getHint('query');
+            $query[] =function($qb) {
+                $mainAlias = $qb->getAllAliases()[0];
+                $qb->innerJoin(CategoryItemEntity::class, 'ci');
+                $qb->andWhere('ci.category = :category')->setParameter('category', $this->category);
+                $qb->andWhere('ci.type = :type')->setParameter('type', $this->type);
+                $qb->andWhere('ci.item_id = ' . $mainAlias . '.id');
+            };
+            $relatedDefinition->setHint('query', $query);
         }
 
         $listDefinition = new DataDefinition(new DataDefinitionTarget($this->getListType(), true), $categoryCriteria);
@@ -75,18 +90,13 @@ class CategoryListControl extends ChameleonTreeListControl
     }
 
     /**
-     * @param string $type
+     * @param string $statusAlias
      * @param Criteria $categoryCriteria
      * @throws InvalidArgumentException
      */
-    private function setTreeRoot($type, $categoryCriteria)
+    private function setTreeRoot($statusAlias, $categoryCriteria)
     {
-        $statusType = $this->statusTypeRegister->getByEntityClass($type);
-        if (!$statusType) {
-            throw new InvalidArgumentException("Unsupported category type");
-        }
-
-        $category = $this->categoryRepository->get(['depth' => 1, 'type' => $statusType->getAlias()]);
+        $category = $this->categoryRepository->get(['depth' => 1, 'type' => $statusAlias]);
         if (!$category) {
             throw new InvalidArgumentException("Category not found");
         }
