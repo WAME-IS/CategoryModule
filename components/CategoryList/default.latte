@@ -1,10 +1,48 @@
-{block categoriesList}
-    <ul n:if="$categories">
-        <li n:foreach="$categories as $category">
-            <a href="{plink :Category:Category:show $category->id}">{$category->title}</a>
-            {if property_exists($category, 'child_nodes')}
-                {include categoriesList, categories => $category->child_nodes}
+{if $listComponents}
+    
+    {if $listContainer}
+        {$listContainer->startTag()|noescape}
+    {/if}
+    
+    {define listLevel}
+        {if $treeContainer}
+            {$treeContainer->startTag()|noescape}
+        {/if}
+    
+        {foreach $components as $componentNode}
+            {if $treeItemContainer}
+                {$treeItemContainer->startTag()|noescape}
             {/if}
-        </li>
-    </ul>
-{/block}
+            
+            {if $componentNode->container}
+                {$componentNode->container->startTag()|noescape}
+            {/if}
+
+            {control $componentNode->component}
+
+            {if $componentNode->container}
+                {$componentNode->container->endTag()|noescape}
+            {/if}
+            
+            {if $componentNode->childNodes}
+                {include listLevel components=>$componentNode->childNodes}
+            {/if}
+            
+            {if $treeItemContainer}
+                {$treeItemContainer->endTag()|noescape}
+            {/if}
+        {/foreach}
+        
+        {if $treeContainer}
+            {$treeContainer->endTag()|noescape}
+        {/if}
+    {/define}
+    
+    {include listLevel components=>$listComponents}
+    
+    {if $listContainer}
+        {$listContainer->endTag()|noescape}
+    {/if}
+{else}
+    {control noItems}
+{/if}

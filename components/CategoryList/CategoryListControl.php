@@ -27,16 +27,13 @@ class CategoryListControl extends ChameleonTreeListControl
 {
 
     /** @persistent */
-    private $categoryId = null;
+    public $category = null;
 
     /** @var CategoryRepository */
     private $categoryRepository;
 
     /** @var StatusTypeRegister */
     private $statusTypeRegister;
-
-    /** @var int */
-    private $depth;
 
     public function __construct(Container $container, CategoryRepository $categoryRepository, StatusTypeRegister $statusTypeRegister, ICategoryControlFactory $ICategoryControlFactory, ISimpleEmptyListControlFactory $ISimpleEmptyListControlFactory)
     {
@@ -54,11 +51,6 @@ class CategoryListControl extends ChameleonTreeListControl
 
     public function getDataDefinition()
     {
-        $relatedCriteria = null;
-        if ($this->categoryId) {
-            $relatedCriteria = Criteria::create()->where(Criteria::expr()->eq('category', $this->categoryId));
-        }
-
         $categoryCriteria = Criteria::create();
         if ($this->depth) {
             $categoryCriteria->where(Criteria::expr()->lte('depth', $this->depth));
@@ -68,6 +60,10 @@ class CategoryListControl extends ChameleonTreeListControl
         $relatedDefinition->onProcess[] = function($dataDefinition) use ($categoryCriteria) {
             $this->setTreeRoot($dataDefinition->getTarget()->getType(), $categoryCriteria);
         };
+        if ($this->category) {
+            $relatedDefinition->setHint('relation', $relatedDefinition)
+            //Criteria::create()->where(Criteria::expr()->eq('category', $this->category));
+        }
 
         $listDefinition = new DataDefinition(new DataDefinitionTarget($this->getListType(), true), $categoryCriteria);
 
@@ -99,24 +95,5 @@ class CategoryListControl extends ChameleonTreeListControl
         $categoryCriteria->andWhere(Criteria::expr()->lte('rgt', $category->getRight()));
 
         $this->getTreeBuilder()->setFrom($category);
-    }
-
-    /**
-     * Set active category
-     * @param CategoryEntity $category
-     */
-    public function setCategory($category)
-    {
-        $this->categoryId = $category->getId();
-    }
-
-    function getDepth()
-    {
-        return $this->depth;
-    }
-
-    function setDepth($depth)
-    {
-        $this->depth = $depth;
     }
 }

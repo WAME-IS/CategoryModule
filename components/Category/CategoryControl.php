@@ -20,10 +20,16 @@ class CategoryControl extends SingleEntityControl
     {
         return CategoryEntity::class;
     }
-    
-    public function handleSelect()
+
+    public function render()
     {
-        $list = $this->lookup(CategoryListControl::class);
-        $list->setCategory($this->getEntity());
+        parent::render();
+
+        $categoryList = $this->lookup(CategoryListControl::class);
+        if ($categoryList instanceof CategoryListControl) {
+            $this->template->categoryLink = $categoryList->link('this', ['category' => $this->getEntity()->id]);
+        } else {
+            $this->template->categoryLink = $categoryList->getPresenter()->link('Category:Category:default', ['category' => $this->getEntity()->id]);
+        }
     }
 }
