@@ -36,6 +36,9 @@ class CategoryListControl extends ChameleonTreeListControl
     /** @var StatusTypeRegister */
     private $statusTypeRegister;
 
+    /** @var string */
+    private $categoryType;
+
     public function __construct(Container $container, CategoryRepository $categoryRepository, StatusTypeRegister $statusTypeRegister, ICategoryControlFactory $ICategoryControlFactory, ISimpleEmptyListControlFactory $ISimpleEmptyListControlFactory)
     {
         parent::__construct($container);
@@ -64,17 +67,18 @@ class CategoryListControl extends ChameleonTreeListControl
                 throw new InvalidArgumentException("Unsupported category type");
             }
             $statusAlias = $statusType->getAlias();
+            $this->categoryType = $statusAlias;
 
             $this->setTreeRoot($statusAlias, $categoryCriteria);
         };
 
         if ($this->category) {
             $query = $relatedDefinition->getHint('query');
-            $query[] =function($qb) {
+            $query[] = function($qb) {
                 $mainAlias = $qb->getAllAliases()[0];
                 $qb->innerJoin(CategoryItemEntity::class, 'ci');
-                $qb->andWhere('ci.category = :category')->setParameter('category', $this->category);
-                $qb->andWhere('ci.type = :type')->setParameter('type', $this->type);
+                $qb->andWhere($qb->expr()->in('ci.category', $this->getCategoriesIds()));
+                $qb->andWhere('ci.type = :type')->setParameter('type', $this->categoryType);
                 $qb->andWhere('ci.item_id = ' . $mainAlias . '.id');
             };
             $relatedDefinition->setHint('query', $query);
@@ -87,6 +91,16 @@ class CategoryListControl extends ChameleonTreeListControl
         ]);
         $controlDataDefinition->setTriggersProcessing(true);
         return $controlDataDefinition;
+    }
+
+    private function getCategoriesIds()
+    {
+        $categories = $this->categoryRepository->getChildren($this->categoryRepository->get(['id' => $this->category]));
+        $categoriesIds = array_map(function($e) {
+            return $e->getId();
+        }, $categories);
+        $categoriesIds[] = $this->category;
+        return $categoriesIds;
     }
 
     /**

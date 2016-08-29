@@ -50,12 +50,12 @@ class CategoryItemRepository extends BaseRepository
 		$qb->select('i')
 			->from(CategoryItemEntity::class, 'ci')
 			->innerJoin($this->categoryRegister->getByName($type)->getClassName(), 'i', Join::WITH, 'ci.item_id = i.id')
-			->innerJoin(CategoryEntity::class, 'c', Join::WITH, 'ci.category_id = c.id')
+			->innerJoin(CategoryEntity::class, 'c', Join::WITH, 'ci.category = c')
 //			->andWhere('i.status != :status')->setParameter('status', 0)
 			->andWhere('c.type = :type')->setParameter('type', $type);
 		
 		if($categoryId) {
-			$qb->andWhere('ci.category_id = ' . $categoryId);
+			$qb->andWhere('ci.category = ' . $categoryId);
 		}
         
         if($order) {
@@ -71,7 +71,7 @@ class CategoryItemRepository extends BaseRepository
 		
 		$qb->select('c')
 			->from(CategoryItemEntity::class, 'ci')
-			->leftJoin(CategoryEntity::class, 'c', Join::WITH, 'ci.category_id = c.id')
+			->leftJoin(CategoryEntity::class, 'c', Join::WITH, 'ci.category = c')
 			->andWhere('c.status != :status')
 			->setParameter('status', 0);
 		
@@ -96,7 +96,7 @@ class CategoryItemRepository extends BaseRepository
 		
 		$qb->select('a')
 		   ->from(CategoryItemEntity::class, 'ci')
-		   ->leftJoin(CategoryEntity::class, 'a', Join::WITH, 'ci.category_id = a.id');
+		   ->leftJoin(CategoryEntity::class, 'a', Join::WITH, 'ci.category = a');
 		
 		if($itemId) {
 			$qb->where('ci.item_id = ' . $itemId);
@@ -118,7 +118,7 @@ class CategoryItemRepository extends BaseRepository
 		$arr = [];
 		
 		foreach($categoryItem as $ci) {
-			$arr[$categories[$ci->category_id]][$ci->item_id] = $items[$ci->item_id];
+			$arr[$categories[$ci->category->getId()]][$ci->item_id] = $items[$ci->item_id];
 		}
 		
 		return $arr;
