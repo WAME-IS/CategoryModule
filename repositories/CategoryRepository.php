@@ -250,7 +250,7 @@ class CategoryRepository extends TranslatableRepository
         $attached = [];
 
         foreach ($attachedCategories as $ai) {
-            $attached[] = $ai->category_id;
+            $attached[] = $ai->category;
         }
 
         $toAttach = array_diff($categories, $attached);
@@ -303,7 +303,7 @@ class CategoryRepository extends TranslatableRepository
         foreach ($categories as $category) {
             $nodes[] = [
                 'label' => $category['title'],
-                'id' => $category['category_id'],
+                'id' => $category['category']->getId(),
                 'load_on_demand' => true,
 //				'has_children' => $category->hasChildren
             ];
