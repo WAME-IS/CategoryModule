@@ -1,88 +1,50 @@
 <?php
+use App\Core\Presenters\BasePresenter;
+use Wame\CategoryModule\Components\ICategoryControlFactory;
+use Wame\CategoryModule\Components\ICategoryListControlFactory;
+use Wame\CategoryModule\Repositories\CategoryRepository;
 
 namespace App\CategoryModule\Presenters;
 
-use Wame\CategoryModule\Repositories\CategoryRepository;
-use Wame\CategoryModule\Repositories\CategoryLangRepository;
-use Wame\CategoryModule\Repositories\CategoryItemRepository;
-use Wame\CategoryModule\Components\ICategoryListControlFactory;
-
-use Wame\ListByTypeControl\Components\IListByTypeControlFactory;
-
-
-class CategoryPresenter extends \App\Core\Presenters\BasePresenter
+class CategoryPresenter extends BasePresenter
 {
-	/** @var CategoryRepository @inject */
-	public $categoryRepository;
 
-	/** @var CategoryLangRepository @inject */
-	public $categoryLangRepository;
-    
-    /** @var CategoryItemRepository @inject */
-    public $categoryItemRepository;
-	
-	/** @var ICategoryListControlFactory @inject */
-	public $ICategoryListControlFactory;
-    
-    /** @var IListByTypeControlFactory @inject */
-    public $IListByTypeControlFactory;
-    
-	/** @var array */
-	public $items = [];
-    
-    /** @var integer */
-    public $selectedCategory;
-    
-    /** @var CategoryEntity */
-    private $category;
-    
-    
-    /** handles ***************************************************************/
-    
+    /** @var CategoryRepository @inject */
+    public $categoryRepository;
+
+    /** @var ICategoryListControlFactory @inject */
+    public $ICategoryListControlFactory;
+
+    /** @var ICategoryControlFactory @inject */
+    public $ICategoryControlFactory;
+
+    /** handles ************************************************************** */
     public function handleGen()
     {
+        //TODO remove
         $categories = $this->categoryRepository->find();
-        
-        foreach($categories as $category) {
+
+        foreach ($categories as $category) {
             $parent = $this->categoryRepository->getParent($category);
-            
-            if($parent) {
+
+            if ($parent) {
                 $category->setParent($parent);
             }
         }
     }
-    
-    
-    /** actions ***************************************************************/
-    
-    public function actionShow($id = null)
+
+    /** actions ************************************************************** */
+    public function actionShow($id)
     {
-        $this->category = $this->categoryRepository->get(['id' => $id]);
-//        $categoryItems = $this->categoryItemRepository->getItems($category->type, $this->id);
+        $categoryControl = $this->ICategoryControlFactory->create();
+        $categoryControl->setEntityId($id);
+        $this->addComponent($categoryControl, 'category');
     }
-    
-    
-    public function renderShow()
+
+    /** components *********************************************************** */
+    protected function createComponentCategoryList()
     {
-        $this->template->type = $this->category->type;
-        $this->template->parent = $this->category;
-    }
-	
-	/** components ************************************************************/
-	
-	protected function createComponentCategoryList()
-	{
-		$component = $this->ICategoryListControlFactory->create();
-        $component->setCategoryParent($this->id);
-		
-		return $component;
-	}
-    
-    protected function createComponentListByType()
-    {
-        $component = $this->IListByTypeControlFactory->create();
-        
+        $component = $this->ICategoryListControlFactory->create();
         return $component;
     }
-	
 }
