@@ -3,7 +3,7 @@
 namespace Wame\CategoryModule\Components;
 
 use Wame\CategoryModule\Entities\CategoryEntity;
-use Wame\Core\Components\SingleEntityControl;
+use Wame\ChameleonComponents\Components\SingleEntityControl;
 use Wame\ListControl\Components\IEntityControlFactory;
 
 interface ICategoryControlFactory extends IEntityControlFactory
