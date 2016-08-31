@@ -39,6 +39,7 @@ class CategoryListControl extends ChameleonTreeListControl
     /** @var string */
     private $categoryType;
 
+    
     public function __construct(Container $container, CategoryRepository $categoryRepository, StatusTypeRegister $statusTypeRegister, ICategoryControlFactory $ICategoryControlFactory, ISimpleEmptyListControlFactory $ISimpleEmptyListControlFactory)
     {
         parent::__construct($container);
@@ -55,12 +56,23 @@ class CategoryListControl extends ChameleonTreeListControl
 
     public function getDataDefinition()
     {
+        $depth = $this->getComponentParameter('depth');
+        $this->setDepth($depth);
+        
         $categoryCriteria = Criteria::create();
         if ($this->depth) {
             $categoryCriteria->where(Criteria::expr()->lte('depth', $this->depth));
         }
-
-        $relatedDefinition = new DataDefinition(new DataDefinitionTarget('*', true));
+        
+        $componentStatusType = $this->getComponentParameter('statusType');
+        
+        $target = '*';
+        
+        if($componentStatusType) {
+            $target = $this->statusTypeRegister->getByName($componentStatusType)->getEntityName();
+        }
+        
+        $relatedDefinition = new DataDefinition(new DataDefinitionTarget($target, true));
         $relatedDefinition->onProcess[] = function($dataDefinition) use ($categoryCriteria) {
             $statusType = $this->statusTypeRegister->getByEntityClass($dataDefinition->getTarget()->getType());
             if (!$statusType) {
@@ -120,4 +132,5 @@ class CategoryListControl extends ChameleonTreeListControl
 
         $this->getTreeBuilder()->setFrom($category);
     }
+    
 }

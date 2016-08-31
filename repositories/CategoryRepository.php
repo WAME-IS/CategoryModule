@@ -299,11 +299,11 @@ class CategoryRepository extends TranslatableRepository
         $categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(Query::HYDRATE_ARRAY);
 
         $nodes = [];
-
+        
         foreach ($categories as $category) {
             $nodes[] = [
                 'label' => $category['title'],
-                'id' => $category['category']->getId(),
+                'id' => $category['id'],
                 'load_on_demand' => true,
 //				'has_children' => $category->hasChildren
             ];
