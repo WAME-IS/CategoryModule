@@ -56,13 +56,8 @@ class CategoryListControl extends ChameleonTreeListControl
 
     public function getDataDefinition()
     {
-        $depth = $this->getComponentParameter('depth');
-        $this->setDepth($depth);
         
-        $categoryCriteria = Criteria::create();
-        if ($this->depth) {
-            $categoryCriteria->where(Criteria::expr()->lte('depth', $this->depth));
-        }
+        $categoryCriteria = $this->getCriteria() ?: Criteria::create();
         
         $componentStatusType = $this->getComponentParameter('statusType');
         
