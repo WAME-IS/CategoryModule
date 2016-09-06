@@ -57,7 +57,7 @@ class CategoryListControl extends ChameleonTreeListControl
     public function getDataDefinition()
     {
         
-        $categoryCriteria = $this->getCriteria() ?: Criteria::create();
+        $categoryCriteria = $this->loadParametersCriteria();
         
         $componentStatusType = $this->getComponentParameter('statusType');
         
@@ -97,6 +97,7 @@ class CategoryListControl extends ChameleonTreeListControl
             $relatedDefinition, $listDefinition
         ]);
         $controlDataDefinition->setTriggersProcessing(true);
+        
         return $controlDataDefinition;
     }
 
