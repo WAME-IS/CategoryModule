@@ -51,6 +51,7 @@ webloader:
                 - %appDir%/../private/components/jquery-tree-master/jquery.tree.min.js
                 - %appDir%/../private/components/jqTree/tree.jquery.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/categoryMenu.js
+                - %appDir%/../vendor/wame/CategoryModule/assets/categorySelect2.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/main.js
         admin:
             files:

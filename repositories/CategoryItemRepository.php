@@ -72,8 +72,8 @@ class CategoryItemRepository extends BaseRepository
 		$qb->select('c')
 			->from(CategoryItemEntity::class, 'ci')
 			->leftJoin(CategoryEntity::class, 'c', Join::WITH, 'ci.category = c')
-			->andWhere('c.status != :status')
-			->setParameter('status', 0);
+            ->andWhere('c.type = :type')->setParameter('type', $type);
+//			->andWhere('c.status != :status')->setParameter('status', 0);
 		
 		if($itemId) {
 			$qb->andWhere('ci.item_id = :itemId');

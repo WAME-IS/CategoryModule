@@ -1,33 +1,34 @@
 services:
-#	- Wame\CategoryModule\Forms\CategoryForm
+    # Factories
+    - Wame\CategoryModule\Forms\ITitleFormContainerFactory
+    - Wame\CategoryModule\Forms\IUrlFormContainerFactory
+    - Wame\CategoryModule\Forms\IParentFormContainerFactory
+    - Wame\CategoryModule\Forms\IDepthFormContainerFactory
+    - Wame\CategoryModule\Forms\ICategoryTreeFormContainerFactory
+    - Wame\CategoryModule\Forms\ITypeFormContainerFactory
+    - Wame\CategoryModule\Forms\ICategorySelect2FormContainerFactory
 
-	# Factories
-	- Wame\CategoryModule\Forms\ITitleFormContainerFactory
-	- Wame\CategoryModule\Forms\IUrlFormContainerFactory
-	- Wame\CategoryModule\Forms\IParentFormContainerFactory
-	- Wame\CategoryModule\Forms\IDepthFormContainerFactory
-	- Wame\CategoryModule\Forms\ICategoryTreeFormContainerFactory
-	- Wame\CategoryModule\Forms\ITypeFormContainerFactory
+    - Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory
 
-	# Create category in administration form
-	CreateCategoryForm:
-		class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm
-		setup:
-			- addFormContainer(Wame\CategoryModule\Forms\TitleFormContainer(), 'TitleFormContainer', 99)
-			- addFormContainer(Wame\CategoryModule\Forms\UrlFormContainer(), 'UrlFormContainer', 98)
-			- addFormContainer(Wame\CategoryModule\Forms\ParentFormContainer(), 'ParentFormContainer', 97)
+    # Create category in administration form
+    CreateCategoryForm:
+        class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm
+        setup:
+            - addFormContainer(Wame\CategoryModule\Forms\TitleFormContainer(), 'TitleFormContainer', 99)
+            - addFormContainer(Wame\CategoryModule\Forms\UrlFormContainer(), 'UrlFormContainer', 98)
+            - addFormContainer(Wame\CategoryModule\Forms\ParentFormContainer(), 'ParentFormContainer', 97)
 
-	# Edit category in administration form
-	EditCategoryForm:
-		class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm
-		setup:
-			- addFormContainer(Wame\CategoryModule\Forms\TitleFormContainer(), 'TitleFormContainer', 99)
-			- addFormContainer(Wame\CategoryModule\Forms\UrlFormContainer(), 'UrlFormContainer', 98)
-			- addFormContainer(Wame\CategoryModule\Forms\ParentFormContainer(), 'ParentFormContainer', 97)
+    # Edit category in administration form
+    EditCategoryForm:
+        class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm
+        setup:
+            - addFormContainer(Wame\CategoryModule\Forms\TitleFormContainer(), 'TitleFormContainer', 99)
+            - addFormContainer(Wame\CategoryModule\Forms\UrlFormContainer(), 'UrlFormContainer', 98)
+            - addFormContainer(Wame\CategoryModule\Forms\ParentFormContainer(), 'ParentFormContainer', 97)
 
-	CategoryListForm:
-		class: Wame\CategoryModule\Forms\CategoryListForm
+    CategoryListForm:
+        class: Wame\CategoryModule\Forms\CategoryListForm
 
 extensions:
-	formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
+    formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
 #	metaEditor: Wame\SeoModule\MetaEditor\DI\MetaEditorExtension
