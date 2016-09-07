@@ -40,8 +40,6 @@ class CategorySelect2FormContainer extends BaseFormContainer
 		$this->type = $httpRequest->getParameter('type');
 		$this->id = $httpRequest->getParameter('id');
 		
-		$this->categoryRepository = $categoryRepository;
-		$this->categoryItemRepository = $categoryItemRepository;
 	}
     
     
