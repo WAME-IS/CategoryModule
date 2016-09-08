@@ -3,7 +3,6 @@
 namespace Wame\CategoryModule\Components;
 
 use Doctrine\Common\Collections\Criteria;
-use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
@@ -105,4 +104,8 @@ trait CategoryListTrait
         $this->getTreeBuilder()->setFrom($category);
     }
     
+    protected function loadParametersCriteria()
+    {
+        return Criteria::create();
+    }
 }

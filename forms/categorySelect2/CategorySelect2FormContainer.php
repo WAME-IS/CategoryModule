@@ -9,50 +9,28 @@ use Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory;
 
 interface ICategorySelect2FormContainerFactory extends \Wame\DynamicObject\Registers\Types\IBaseFormContainerType
 {
-	/** @return CategorySelect2FormContainer */
-	public function create();
+
+    /** @return CategorySelect2FormContainer */
+    public function create();
 }
 
 class CategorySelect2FormContainer extends BaseFormContainer
 {
-	/** CategoryRepository */
-	protected $categoryRepository;
-	
-	/** @var CategoryItemRepository */
-	protected $categoryItemRepository;
-	
-	/** @var string */
-	protected $type;
-	
-	/** @var integer */
-	private $id;
-    
-    /** @var ICategorySelect2Factory */
-    private $ICategorySelect2Factory;
 
-
-	public function __construct(ICategorySelect2Factory $ICategorySelect2Factory, CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository, \Wame\Utils\HttpRequest $httpRequest) 
-	{
-		parent::__construct();
-        
-        $this->ICategorySelect2Factory = $ICategorySelect2Factory;
-		
-		$this->type = $httpRequest->getParameter('type');
-		$this->id = $httpRequest->getParameter('id');
-		
-	}
-    
-    
-    public function configure() 
-	{
-		$form = $this->getForm();
-        
-        
-        
-        $form->addMultiSelect('categories', _('Categories'), $this->getPairs())
-            ->setAttribute('class', 'category-select2');
+    public function __construct()
+    {
+        parent::__construct();
     }
-    
+
+    public function configure()
+    {
+        $form = $this->getForm();
+
+
+        $select = new \Wame\CategoryModule\FormCategory\Controls\CategorySelect2(_('Categories'));
+        $select->setAttribute('class', 'category-select2');
+        $form->addComponent($select, 'categories');
+    }
 //	public function setDefaultValues($object)
 //	{
 //		$form = $this->getForm();
@@ -67,24 +45,4 @@ class CategorySelect2FormContainer extends BaseFormContainer
 //		
 //		$form["categories"]->setDefaultValue(implode(',', array_keys($pairs)));
 //	}
-    
-    
-    /**
-     * Get pairs
-     * 
-     * @return string
-     */
-    private function getPairs()
-    {
-        $categories = $this->categoryItemRepository->getCategories('shopProduct');
-        
-        $categoryPairs = [];
-        
-        foreach($categories as $category) {
-            $categoryPairs[$category->id] = $category->title;
-        }
-        
-        return $categoryPairs;
-    }
-
 }
