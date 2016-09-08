@@ -37,6 +37,9 @@ class CategorySelect2FormContainer extends BaseFormContainer
         
         $this->ICategorySelect2Factory = $ICategorySelect2Factory;
 		
+        $this->categoryRepository = $categoryRepository;
+        $this->categoryItemRepository = $categoryItemRepository;
+        
 		$this->type = $httpRequest->getParameter('type');
 		$this->id = $httpRequest->getParameter('id');
 		
