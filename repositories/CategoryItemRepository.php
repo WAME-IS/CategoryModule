@@ -21,9 +21,6 @@ class CategoryItemRepository extends BaseRepository
 	const TABLE_UNITS = 'units';
 	const TABLE_SHOP_PRODUCT = 'shopProduct';
 	
-	/** @var CategoryItemEntity */
-	private $categoryItemEntity;
-	
 	/** @var CategoryRegister */
 	private $categoryRegister;
 	
@@ -35,9 +32,7 @@ class CategoryItemRepository extends BaseRepository
 		User $user,
 		CategoryRegister $categoryRegister
 	) {
-		parent::__construct($container, $entityManager, $translator, $user, CategoryItemEntity::class);
-		
-		$this->categoryItemEntity = $this->entityManager->getRepository(CategoryItemEntity::class);
+		parent::__construct(CategoryItemEntity::class);
 		
 		$this->categoryRegister = $categoryRegister;
 	}

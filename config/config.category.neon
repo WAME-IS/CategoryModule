@@ -17,9 +17,13 @@ services:
     - Wame\CategoryModule\Components\ICategoryButtonControlFactory
 
     # Repositories
-    - Wame\CategoryModule\Repositories\CategoryRepository
-    - Wame\CategoryModule\Repositories\CategoryLangRepository
-    - Wame\CategoryModule\Repositories\CategoryItemRepository
+    CategoryRepository:
+        class: Wame\CategoryModule\Repositories\CategoryRepository
+        inject: yes
+
+    CategoryItemRepository:
+        class: Wame\CategoryModule\Repositories\CategoryItemRepository
+        inject: yes
 
     # Registers
     CategoryRegister:
@@ -30,8 +34,8 @@ services:
 
 
 doctrine:
-	metadata:
-		Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
+    metadata:
+        Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
 
 
 webloader:
