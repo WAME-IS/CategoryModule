@@ -288,22 +288,30 @@ class CategoryRepository extends TranslatableRepository
      * @param string $type
      * @param int $node
      */
-    public function categoryDescendant($type, $node = 1)
+    public function categoryDescendant($type, $node = null)
     {
-        $actual = $this->get(['id' => $node]);
-
-        $query = new GetChildrenWithLang($this->treeConfigurator, $actual, $type, $this->lang);
-
-        $categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(Query::HYDRATE_ARRAY);
-
+        $criteria = [
+            'type' => $type
+        ];
+        
+        if($node) {
+            $actual = $this->get(['id' => $node]);
+            $criteria['parent'] = $actual;
+        } else {
+            $criteria['depth'] = 1;
+        }
+        
+        $categories = $this->find($criteria);
+        
         $nodes = [];
+        
         
         foreach ($categories as $category) {
             $nodes[] = [
-                'label' => $category['title'],
-                'id' => $category['id'],
+                'label' => $category->title,
+                'id' => $category->id,
                 'load_on_demand' => true,
-//				'has_children' => $category->hasChildren
+				'has_children' => count($category->children) > 0
             ];
         }
 
