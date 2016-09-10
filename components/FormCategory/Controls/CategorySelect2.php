@@ -84,8 +84,11 @@ class CategorySelect2 extends BaseControl
     
 	public function generate()
 	{
+        if(!$this->items) {
+            return;
+        }
+        
 		$body = null;
-
         foreach($this->items as $category) {
             $body .= Html::el('option')
                     ->setValue($category->id)

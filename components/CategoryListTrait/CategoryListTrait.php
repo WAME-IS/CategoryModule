@@ -53,27 +53,20 @@ trait CategoryListTrait
         $relatedDefinition->onProcess[] = function($dataDefinition) use ($categoryCriteria) {
             $statusType = $this->statusTypeRegister->getByEntityClass($dataDefinition->getTarget()->getType());
             if (!$statusType) {
-                throw new InvalidArgumentException("Unsupported category type");
+                throw new InvalidArgumentException("Unsupported category type $statusType");
             }
             $statusAlias = $statusType->getAlias();
             $this->categoryType = $statusAlias;
 
             $this->setTreeRoot($statusAlias, $categoryCriteria);
         };
-
+        
         $categoriesIds = $this->getCategoriesIds();
         if ($categoriesIds) {
-            $query = $relatedDefinition->getHint('query');
-            $query[] = function($qb) {
-                $mainAlias = $qb->getAllAliases()[0];
-                $qb->innerJoin(CategoryItemEntity::class, 'ci');
-                $qb->andWhere($qb->expr()->in('ci.category', $categoriesIds));
-                $qb->andWhere('ci.type = :type')->setParameter('type', $this->categoryType);
-                $qb->andWhere('ci.item_id = ' . $mainAlias . '.id');
-            };
-            $relatedDefinition->setHint('query', $query);
+            $relationCriteria = Criteria::create()->where(Criteria::expr()->in('category', $categoriesIds));
+            $relatedDefinition->addRelation(new DataDefinitionTarget(CategoryEntity::class, true), $relationCriteria);
         }
-
+        
         $listDefinition = new DataDefinition(new DataDefinitionTarget($this->getListType(), true), $categoryCriteria);
 
         $controlDataDefinition = new ControlDataDefinition($this, [
