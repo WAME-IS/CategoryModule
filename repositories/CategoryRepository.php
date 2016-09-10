@@ -4,14 +4,11 @@ namespace Wame\CategoryModule\Repositories;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
-use h4kuna\Gettext\GettextSetup;
 use Kappa\DoctrineMPTT\Configurator;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
 use Kappa\DoctrineMPTT\TraversableManager;
 use Kdyby\Doctrine\EntityManager;
-use Nette\DI\Container;
-use Nette\Security\User;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
@@ -27,9 +24,6 @@ class CategoryRepository extends TranslatableRepository
     const STATUS_REMOVE = 0;
     const STATUS_ACTIVE = 1;
 
-    /** @var CategoryEntity */
-    private $categoryEntity;
-
     /** @var Configurator */
     private $treeConfigurator;
 
@@ -39,11 +33,13 @@ class CategoryRepository extends TranslatableRepository
     /** @var CategoryItemRepository */
     private $categoryItemRepository;
 
-    public function __construct(Container $container, EntityManager $entityManager, GettextSetup $translator, TraversableManager $traversableManager, CategoryItemRepository $categoryItemRepository, User $user)
-    {
-        parent::__construct($container, $entityManager, $translator, $user, CategoryEntity::class);
-
-        $this->categoryEntity = $this->entityManager->getRepository(CategoryEntity::class);
+    
+    public function __construct(
+        EntityManager $entityManager,
+        TraversableManager $traversableManager, 
+        CategoryItemRepository $categoryItemRepository
+    ) {
+        parent::__construct(CategoryEntity::class, CategoryLangEntity::class);
 
         $this->categoryItemRepository = $categoryItemRepository;
 
@@ -52,6 +48,8 @@ class CategoryRepository extends TranslatableRepository
         $this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
         $this->traversableManager->setConfigurator($this->treeConfigurator);
     }
+    
+    
     /** CREATE *************************************************************** */
 
     /**
@@ -290,22 +288,30 @@ class CategoryRepository extends TranslatableRepository
      * @param string $type
      * @param int $node
      */
-    public function categoryDescendant($type, $node = 1)
+    public function categoryDescendant($type, $node = null)
     {
-        $actual = $this->get(['id' => $node]);
-
-        $query = new GetChildrenWithLang($this->treeConfigurator, $actual, $type, $this->lang);
-
-        $categories = $query->fetch($this->entityManager->getRepository(CategoryEntity::class))->toArray(Query::HYDRATE_ARRAY);
-
+        $criteria = [
+            'type' => $type
+        ];
+        
+        if($node) {
+            $actual = $this->get(['id' => $node]);
+            $criteria['parent'] = $actual;
+        } else {
+            $criteria['depth'] = 1;
+        }
+        
+        $categories = $this->find($criteria);
+        
         $nodes = [];
+        
         
         foreach ($categories as $category) {
             $nodes[] = [
-                'label' => $category['title'],
-                'id' => $category['id'],
+                'label' => $category->title,
+                'id' => $category->id,
                 'load_on_demand' => true,
-//				'has_children' => $category->hasChildren
+				'has_children' => count($category->children) > 0
             ];
         }
 

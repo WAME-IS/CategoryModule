@@ -2,18 +2,13 @@
 
 namespace Wame\CategoryModule\Forms;
 
+use Kappa\DoctrineMPTT\Configurator;
+use	Kappa\DoctrineMPTT\TraversableManager;
 use Nette\Application\UI\Form;
 use Wame\DynamicObject\Forms\BaseFormContainer;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryLangRepository;
-
-use Kappa\DoctrineMPTT\Configurator;
-use	Kappa\DoctrineMPTT\TraversableManager;
-use	Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetAll;
-use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetParent;
-use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
-
 
 interface IParentFormContainerFactory
 {
@@ -21,14 +16,10 @@ interface IParentFormContainerFactory
 	public function create();
 }
 
-
 class ParentFormContainer extends BaseFormContainer
 {
 	/** @var CategoryRepository */
 	protected $categoryRepository;
-	
-	/** @var CategoryLangRepository */
-	protected $categoryLangRepository;
 	
 	/** @var Configurator */
 	private $treeConfigurator;
@@ -43,7 +34,6 @@ class ParentFormContainer extends BaseFormContainer
 	public function __construct(
 		\Wame\Utils\HttpRequest $httpRequest, 
 		CategoryRepository $categoryRepository, 
-		CategoryLangRepository $categoryLangRepository, 
 		\Kdyby\Doctrine\EntityManager $entityManager, 
 		TraversableManager $traversableManager
 	) {
@@ -52,7 +42,6 @@ class ParentFormContainer extends BaseFormContainer
 		$this->type = $httpRequest->getParameter('id');
 		
 		$this->categoryRepository = $categoryRepository;
-		$this->categoryLangRepository = $categoryLangRepository;
 		
 		// Traversable
 		$this->traversableManager = clone $traversableManager;

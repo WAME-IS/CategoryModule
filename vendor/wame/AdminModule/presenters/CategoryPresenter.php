@@ -5,7 +5,6 @@ namespace App\AdminModule\Presenters;
 use Nette\Http\Request;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
-use Wame\CategoryModule\Repositories\CategoryLangRepository;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
@@ -27,9 +26,6 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	/** @var CategoryItemRepository @inject */
 	public $categoryItemRepository;
-
-	/** @var CategoryLangRepository @inject */
-	public $categoryLangRepository;
 	
 	/** @var CategoryGrid @inject */
 	public $categoryGrid;
@@ -54,7 +50,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->type = $this->id;
         
         if($this->type) {
-            $this->categories = $this->categoryRepository->find(['type' => $this->type, 'status NOT IN (?)' => [CategoryRepository::STATUS_REMOVE]]);
+            $this->categories = $this->categoryRepository->find(['type' => $this->type]);
         } else {
             $this->redirect(':Admin:Dashboard:');
         }

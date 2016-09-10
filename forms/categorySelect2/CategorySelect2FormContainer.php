@@ -2,12 +2,11 @@
 
 namespace Wame\CategoryModule\Forms;
 
+use Wame\CategoryModule\FormCategory\Controls\CategorySelect2;
 use Wame\DynamicObject\Forms\BaseFormContainer;
-use Wame\CategoryModule\Repositories\CategoryRepository;
-use Wame\CategoryModule\Repositories\CategoryItemRepository;
-use Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory;
+use Wame\DynamicObject\Registers\Types\IBaseFormContainerType;
 
-interface ICategorySelect2FormContainerFactory extends \Wame\DynamicObject\Registers\Types\IBaseFormContainerType
+interface ICategorySelect2FormContainerFactory extends IBaseFormContainerType
 {
 
     /** @return CategorySelect2FormContainer */
@@ -27,7 +26,7 @@ class CategorySelect2FormContainer extends BaseFormContainer
         $form = $this->getForm();
 
 
-        $select = new \Wame\CategoryModule\FormCategory\Controls\CategorySelect2(_('Categories'));
+        $select = new CategorySelect2(_('Categories'));
         $select->setAttribute('class', 'category-select2');
         $form->addComponent($select, 'categories');
     }

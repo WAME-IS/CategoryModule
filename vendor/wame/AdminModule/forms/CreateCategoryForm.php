@@ -123,7 +123,7 @@ class CreateCategoryForm extends FormFactory
 		$categoryLangEntity->setLang($this->lang);
 		$categoryLangEntity->setTitle($values['title']);
 		$categoryLangEntity->setSlug($values['slug']?:(Strings::webalize($values['title'])));
-		$categoryLangEntity->setEditDate(new \DateTime('now'));
+		$categoryLangEntity->setEditDate(\Wame\Utils\Date::toDateTime('now'));
 		$categoryLangEntity->setEditUser($this->userEntity);
 		$categoryEntity->addLang($this->lang, $categoryLangEntity);
         

@@ -68,6 +68,9 @@ class GetChildrenWithLang extends QueryObject
 			->setParameter('type', $this->type)
 			->andWhere('e.depth = :depth')
 			->setParameter('depth', $this->actual->depth + 1);
+        
+//        var_dump($qb->getQuery()->getDQL());
+//        dump($this->actual->depth + 1);
 		
 		
 		if($this->lang) {
