@@ -93,6 +93,7 @@ trait CategoryListTrait
 
         $categoryCriteria->andWhere(Criteria::expr()->gte('lft', $category->getLeft()));
         $categoryCriteria->andWhere(Criteria::expr()->lte('rgt', $category->getRight()));
+        $categoryCriteria->andWhere(Criteria::expr()->lte('depth', $this->getComponentParameter('depth')));
 
         $this->getTreeBuilder()->setFrom($category);
     }
