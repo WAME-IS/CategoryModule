@@ -7,7 +7,7 @@ $('.tree').tree({
 
 /** categoryMenu **************************************************************/
 
-$('.category-menu').categoryMenu();
+$('.cnt-CategoryButtonControl').categoryMenu();
 
 
 /** jqTree ********************************************************************/
