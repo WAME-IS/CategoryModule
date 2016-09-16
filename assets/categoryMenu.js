@@ -27,8 +27,6 @@
             });
             
             $list.hide();
-            
-            console.log('=> categoryMenu - loaded');
         });  
     };
 })(jQuery);  

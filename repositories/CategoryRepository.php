@@ -20,7 +20,6 @@ use Wame\Utils\Tree\NestedSetTreeBuilder;
 
 class CategoryRepository extends TranslatableRepository
 {
-
     const STATUS_REMOVE = 0;
     const STATUS_ACTIVE = 1;
 
@@ -50,7 +49,7 @@ class CategoryRepository extends TranslatableRepository
     }
     
     
-    /** CREATE *************************************************************** */
+    /** CREATE ****************************************************************/
 
     /**
      * Create category
@@ -68,7 +67,9 @@ class CategoryRepository extends TranslatableRepository
 
         return $categoryEntity;
     }
-    /** READ ***************************************************************** */
+    
+    
+    /** READ ******************************************************************/
 
     /**
      * Get category by item ID
@@ -151,12 +152,22 @@ class CategoryRepository extends TranslatableRepository
         return $pairs;
     }
 
-    /** UPDATE *************************************************************** */
+    
+    /** UPDATE ****************************************************************/
+    
+    /**
+     * Update
+     * 
+     * @param CategoryEntity $categoryEntity    category
+     * @return CategoryEntity
+     */
     public function update($categoryEntity)
     {
         return $categoryEntity;
     }
-    /** DELETE *************************************************************** */
+    
+    
+    /** DELETE ****************************************************************/
 
     /**
      * Remove category
@@ -177,7 +188,9 @@ class CategoryRepository extends TranslatableRepository
             }
         }
     }
-    /** RELATION ************************************************************* */
+    
+    
+    /** RELATION **************************************************************/
 
     /**
      * Attach categories to item
@@ -188,7 +201,13 @@ class CategoryRepository extends TranslatableRepository
     public function attach($item, $category)
     {
         $itemCategory = new CategoryItemEntity();
-        $itemCategory->category = $category;
+        
+        if($category instanceof CategoryEntity) {
+            $itemCategory->category = $category->id;
+        } else {
+            $itemCategory->category = $category;
+        }
+        
         $itemCategory->item_id = $item->id;
 //		$itemCategory->type = $type;
 
@@ -257,6 +276,8 @@ class CategoryRepository extends TranslatableRepository
         $this->attachAll($item, $toAttach);
         $this->detachAll($item, $toDetach);
     }
+    
+    
     /** API ****************************************************************** */
 
     /**
@@ -317,6 +338,39 @@ class CategoryRepository extends TranslatableRepository
 
         return $nodes;
     }
+    
+    
+    /**
+     * Api get categories
+     * 
+     * @api {get} /categories/ Search categories
+     * @param array $columns
+     * @param string $phrase
+     * @param string $select
+     * 
+     * @return CategoryEntity[]
+     */
+    public function apiGetCategories($columns = [], $phrase = null, $select = '*')
+    {
+        $search = $this->entityManager->createQueryBuilder()
+            ->select($select)
+            ->from(CategoryEntity::class, 'a')
+            ->leftJoin(CategoryLangEntity::class, 'langs', Join::WITH, 'a.id = langs.category')
+            ->andWhere('a.status = :status')
+            ->setParameter('status', self::STATUS_ACTIVE)
+            ->andWhere('langs.lang = :lang')
+            ->setParameter('lang', $this->lang);
+
+        foreach ($columns as $column) {
+            $search->andWhere($column . ' LIKE :phrase');
+        }
+
+        $search->setParameter('phrase', '%' . $phrase . '%');
+
+        return $search->getQuery()->getResult();
+    }
+    
+    
     /** implements * */
 
     /**

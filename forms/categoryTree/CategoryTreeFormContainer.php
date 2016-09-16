@@ -57,7 +57,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 	{
 		$form = $this->getForm();
 		
-		$itemCategories = $this->categoryItemRepository->findEntities($this->type, $this->id);
+		$itemCategories = $this->categoryItemRepository->findItems($this->type, $this->id);
 		
 		$pairs = [];
 		

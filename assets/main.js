@@ -38,8 +38,16 @@ $tree
 		else {
 			$tree.tree('addToSelection', selected_node);
 		}
-		
-		console.log('tree.select');
+        
 		var state = $tree.tree('getState');
 		$categories.val((state.selected_node).join());
 	});
+
+
+/** Autocomplete for add category group action ********************************/
+
+$('[data-wame-autocomplete="category"]').wameAutocomplete({
+    source: '/api/v1/categories',
+    columns: ['langs.title'],
+    select: 'a.id, langs.title'
+});
