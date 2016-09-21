@@ -1,14 +1,14 @@
 <?php
+
+namespace App\CategoryModule\Presenters;
+
 use App\Core\Presenters\BasePresenter;
 use Wame\CategoryModule\Components\ICategoryControlFactory;
 use Wame\CategoryModule\Components\ICategoryListControlFactory;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 
-namespace App\CategoryModule\Presenters;
-
 class CategoryPresenter extends BasePresenter
 {
-
     /** @var CategoryRepository @inject */
     public $categoryRepository;
 
@@ -18,7 +18,9 @@ class CategoryPresenter extends BasePresenter
     /** @var ICategoryControlFactory @inject */
     public $ICategoryControlFactory;
 
-    /** handles ************************************************************** */
+    
+    /** handles ***************************************************************/
+    
     public function handleGen()
     {
         //TODO remove
@@ -32,19 +34,24 @@ class CategoryPresenter extends BasePresenter
             }
         }
     }
+    
 
-    /** actions ************************************************************** */
+    /** actions ***************************************************************/
+    
     public function actionShow($id)
     {
         $categoryControl = $this->ICategoryControlFactory->create();
         $categoryControl->setEntityId($id);
         $this->addComponent($categoryControl, 'category');
     }
+    
 
-    /** components *********************************************************** */
+    /** components ************************************************************/
+    
     protected function createComponentCategoryList()
     {
         $component = $this->ICategoryListControlFactory->create();
         return $component;
     }
+    
 }

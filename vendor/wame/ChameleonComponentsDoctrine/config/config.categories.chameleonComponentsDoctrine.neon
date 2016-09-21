@@ -1,0 +1,6 @@
+services:
+    - Wame\CategoryModule\Vendor\Wame\ChameleonComponentsDoctrine\Loader\CategoryRelationLoader
+
+    RelationsRegister:
+        setup:
+            - @Wame\CategoryModule\Vendor\Wame\ChameleonComponentsDoctrine\Loader\CategoryRelationLoader::initialize(@RelationsRegister)

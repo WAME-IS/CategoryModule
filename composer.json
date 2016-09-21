@@ -13,7 +13,8 @@
         "wame/Core": "*",
         "wame/MenuModule": "*",
         "wame/PermissionModule": "*",
-        "wame/UserModule": "*"
+        "wame/UserModule": "*",
+        "wame/AutocompleteFormControl": "*"
     },
     "autoload": {
         "classmap": [

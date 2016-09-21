@@ -6,7 +6,7 @@ services:
     - Wame\CategoryModule\Forms\IDepthFormContainerFactory
     - Wame\CategoryModule\Forms\ICategoryTreeFormContainerFactory
     - Wame\CategoryModule\Forms\ITypeFormContainerFactory
-    - Wame\CategoryModule\Forms\ICategorySelect2FormContainerFactory
+    - Wame\CategoryModule\Forms\Containers\ICategorySelect2ContainerFactory
 
     - Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory
 

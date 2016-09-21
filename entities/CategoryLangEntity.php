@@ -3,12 +3,13 @@
 namespace Wame\CategoryModule\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Wame\Core\Entities\BaseLangEntity;
 
 /**
  * @ORM\Table(name="wame_category_lang")
  * @ORM\Entity
  */
-class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity 
+class CategoryLangEntity extends BaseLangEntity
 {
 	use \Wame\Core\Entities\Columns\Identifier;
 	use \Wame\Core\Entities\Columns\EditDate;
@@ -38,6 +39,13 @@ class CategoryLangEntity extends \Wame\Core\Entities\BaseEntity
 	{
 		$this->category = $category;
 	}
+    
+    
+    /** {@inheritDoc} */
+    public function setEntity($entity)
+    {
+        $this->category = $entity;
+    }
 	
 }
 
