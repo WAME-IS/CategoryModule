@@ -1,0 +1,10 @@
+{var $category = $_form['CategoryContainer']['category']}
+<div class="form-group">
+    {foreach $category->items as $key => $label}
+        <div class="checkbox">
+            <label n:name="$category:$key">
+                <input n:name="$category:$key"> {$label}
+            </label>
+        </div>
+    {/foreach}
+</div>
