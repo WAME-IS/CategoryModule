@@ -11,10 +11,11 @@ services:
             - addResourceAction('category', 'delete')
             - allow('moderator', 'category', 'delete')
 
-    # Factories
+    # Components
     - Wame\CategoryModule\Components\ICategoryControlFactory
     - Wame\CategoryModule\Components\ICategoryListControlFactory
     - Wame\CategoryModule\Components\ICategoryButtonControlFactory
+    - Wame\CategoryModule\Components\ICategoryFilterControlFactory
 
     # Repositories
     CategoryRepository:

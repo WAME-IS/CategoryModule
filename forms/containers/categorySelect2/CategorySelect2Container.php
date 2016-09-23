@@ -13,11 +13,18 @@ interface ICategorySelect2ContainerFactory extends IBaseContainer
 
 class CategorySelect2Container extends BaseContainer
 {
+    /** @var CategoryEntity[] */
+    private $categories;
+    
+    
     public function configure()
     {
-        $categories = ['test'];
-        
-        $this->addSelect('categories', _('Categories'), $categories)->setAttribute('class', 'category-select2');
+        $this->addSelect('categories', _('Categories'), $this->categories)->setAttribute('class', 'category-select2');
+    }
+    
+    public function setItems($items)
+    {
+        $this->categories = $items;
     }
     
 }

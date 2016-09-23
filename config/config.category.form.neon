@@ -10,6 +10,8 @@ services:
 
     - Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory
 
+    - Wame\CategoryModule\Forms\Containers\ICategoryContainerFactory
+
     # Create category in administration form
     CreateCategoryForm:
         class: Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm
@@ -28,6 +30,12 @@ services:
 
     CategoryListForm:
         class: Wame\CategoryModule\Forms\CategoryListForm
+
+    CategoryFilterFormBuilder:
+        class: Wame\CategoryModule\Forms\CategoryFilterFormBuilder
+        setup:
+            - add(@Wame\CategoryModule\Forms\Containers\ICategoryContainerFactory, "CategoryContainer", {priority: 90})
+#            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, "SubmitContainer", {priority: 0})
 
 extensions:
     formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
