@@ -24,7 +24,6 @@ class CategorySelect2Container extends BaseContainer
     
     public function setItems($items)
     {
-        \Tracy\Debugger::barDump("setItems");
         $this->categories = $items;
     }
     
