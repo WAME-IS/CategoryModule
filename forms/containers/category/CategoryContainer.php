@@ -28,30 +28,11 @@ class CategoryContainer extends BaseContainer
     /** {@inheritDoc} */
     public function configure() 
 	{
-        $categories = $this->categoryRepository->find();
+        // TODO: zapracovat chameleona
+        $categories = $this->categoryRepository->find(['type' => 'shopProduct', 'depth' => 2]);
         
-		$this->addCheckboxList('category', _('Category'), $this->getPairs($categories));
+		$this->addCheckboxList('category', _('Category'), \Wame\Utils\Arrays::getPairs($categories, 'id', 'title'));
     }
-
-//    /** {@inheritDoc} */
-//	public function setDefaultValues($entity, $langEntity = null)
-//	{
-//        $this['category']->setDefaultValue($langEntity ? $langEntity->getTitle() : $entity->getTitle());
-//	}
-//
-//    /** {@inheritDoc} */
-//    public function create($form, $values)
-//    {
-//        $entity = method_exists($form, 'getLangEntity') ? $form->getLangEntity(): $form->getEntity();
-//        $entity->setTitle($values['category']);
-//    }
-//
-//    /** {@inheritDoc} */
-//    public function update($form, $values)
-//    {
-//        $entity = method_exists($form, 'getLangEntity') ? $form->getLangEntity(): $form->getEntity();
-//        $entity->setTitle($values['category']);
-//    }
     
     private function getPairs($categories)
     {
