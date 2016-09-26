@@ -7,3 +7,7 @@ router:
     defaultRoutes:
         '/[<lang>/]categories/<type>': 'Category:Category:default'
         '/[<lang>/]category/<id>': 'Category:Category:show'
+        '/[<lang>/]admin/categories/<id>': 'Admin:Category:default'
+        '/[<lang>/]admin/category/create/<id>': 'Admin:Category:create'
+        '/[<lang>/]admin/category/edit/<id>': 'Admin:Category:edit'
+        '/[<lang>/]admin/category/delete/<id>': 'Admin:Category:delete'
