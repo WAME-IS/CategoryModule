@@ -1,3 +1,5 @@
 $(function() {
-    $('.category-select2').select2();
+    if($('.category-select2').length) {
+        $('.category-select2').select2();
+    }
 });
