@@ -23,22 +23,6 @@ class CategoryItemEntity extends BaseEntity
 	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
 	 */
 	protected $category;
-	
-	/**
-	 * @ORM\Column(name="type", type="string", length=250, nullable=true)
-	 */
-	protected $type;
-	
-	
-	public function getItem()
-	{
-//		switch($this->type) {
-//			case 'article':
-//				$entity = new \Wame\ArticleModule\Entities\{$type}Entity;
-//				$this->entityManager($type)->find($this->item_id);
-//				break;
-//		}
-	}
 
 }
 
