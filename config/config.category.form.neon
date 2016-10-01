@@ -6,11 +6,13 @@ services:
     - Wame\CategoryModule\Forms\IDepthFormContainerFactory
     - Wame\CategoryModule\Forms\ICategoryTreeFormContainerFactory
     - Wame\CategoryModule\Forms\ITypeFormContainerFactory
-    - Wame\CategoryModule\Forms\Containers\ICategorySelect2ContainerFactory
 
     - Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory
 
+    # Containers
     - Wame\CategoryModule\Forms\Containers\ICategoryContainerFactory
+    - Wame\CategoryModule\Forms\Containers\ICategoryTreeContainerFactory
+    - Wame\CategoryModule\Forms\Containers\ICategorySelect2ContainerFactory
 
     # Create category in administration form
     CreateCategoryForm:

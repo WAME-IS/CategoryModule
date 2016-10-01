@@ -24,13 +24,14 @@ class CategoryMultiLevel extends BaseControl
 		
 		$this->type = $type;
 	}
-	
-    
-	/**
-	 * Set type
-	 * 
-	 * @param string $type	type
-	 */
+
+
+    /**
+     * Set type
+     *
+     * @param string $type type
+     * @return $this
+     */
 	public function setType($type)
 	{
 		$this->type = $type;

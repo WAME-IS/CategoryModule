@@ -23,8 +23,13 @@ class CategoryContainer extends BaseContainer
         parent::__construct();
         $this->categoryRepository = $categoryRepository;
     }
-    
-    
+
+
+    public function compose($template)
+    {
+        $template->type = "test";
+    }
+
     /** {@inheritDoc} */
     public function configure() 
 	{
