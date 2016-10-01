@@ -13,6 +13,10 @@ interface ICategoryMultiLevelContainerFactory extends IBaseContainer
 
 class CategoryMultiLevelContainer extends BaseContainer
 {
+    /** @var string */
+    protected $ype;
+
+
     /** {@inheritDoc} */
     public function configure() 
 	{

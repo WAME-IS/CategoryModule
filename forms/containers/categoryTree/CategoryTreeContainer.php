@@ -13,12 +13,15 @@ interface ICategoryTreeContainerFactory extends IBaseContainer
 
 class CategoryTreeContainer extends BaseContainer
 {
-    private $type;
+    /** @var string */
+    protected $type;
     
     
     /** {@inheritDoc} */
     public function configure() 
 	{
+	    $this->getForm()->addGroup(_("Category"));
+
 		$this->addHidden('category', _('Category'))
 				->setRequired(_('Please select category'));
     }
