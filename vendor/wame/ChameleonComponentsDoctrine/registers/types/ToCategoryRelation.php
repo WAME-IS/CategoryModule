@@ -52,7 +52,7 @@ class ToCategoryRelation implements IRelation
 
         $qb->innerJoin(\Wame\CategoryModule\Entities\CategoryItemEntity::class, $relationAlias);
         $qb->andWhere($relationAlias . '.item_id = ' . $mainAlias . '.id');
-        $qb->andWhere($relationAlias . '.type = :type')->setParameter('type', $this->type);
+//        $qb->andWhere($relationAlias . '.type = :type')->setParameter('type', $this->type);
         if ($category) {
             $qb->andWhere($relationAlias . '.category = :category')->setParameter('category', $category);
         }

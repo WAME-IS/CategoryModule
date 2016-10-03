@@ -26,7 +26,7 @@ class CategoryItemRepository extends BaseItemRepository
     public function getAssoc($type)
 	{
 		// TODO: spojit do 1 query, ako? treba dbat aj na relacie lang
-		$categoryItem = $this->find(['type' => $type]);
+		$categoryItem = $this->find(/*['type' => $type]*/);
 		$categories = $this->generatePairs($this->getCategories($type));
 		$items = $this->generatePairs($this->getItems($type));
 		

@@ -58,7 +58,7 @@ class FromCategoryListRelation implements IRelation
 
         $qb->innerJoin(CategoryItemEntity::class, $relationAlias);
         $qb->andWhere($relationAlias . '.category = ' . $mainAlias);
-        $qb->andWhere($relationAlias . '.type = :type')->setParameter('type', $this->type);
+//        $qb->andWhere($relationAlias . '.type = :type')->setParameter('type', $this->type);
         if ($items) {
             $qb->andWhere($qb->expr()->in($relationAlias . '.item_id', $items));
         }
