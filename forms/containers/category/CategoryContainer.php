@@ -24,7 +24,8 @@ class CategoryContainer extends BaseContainer
         $this->categoryRepository = $categoryRepository;
     }
 
-
+    
+    /** {@inheritDoc} */
     public function compose($template)
     {
         $template->type = "test";

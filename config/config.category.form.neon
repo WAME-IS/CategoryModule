@@ -1,5 +1,5 @@
 services:
-    # Factories
+    # Form containers
     - Wame\CategoryModule\Forms\ITitleFormContainerFactory
     - Wame\CategoryModule\Forms\IUrlFormContainerFactory
     - Wame\CategoryModule\Forms\IParentFormContainerFactory
@@ -7,12 +7,18 @@ services:
     - Wame\CategoryModule\Forms\ICategoryTreeFormContainerFactory
     - Wame\CategoryModule\Forms\ITypeFormContainerFactory
 
-    - Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory
+
+    # Form groups
+    - Wame\CategoryModule\Forms\Groups\ICategoryGroupFactory
+
 
     # Containers
     - Wame\CategoryModule\Forms\Containers\ICategoryContainerFactory
     - Wame\CategoryModule\Forms\Containers\ICategoryTreeContainerFactory
     - Wame\CategoryModule\Forms\Containers\ICategorySelect2ContainerFactory
+
+
+    # Forms
 
     # Create category in administration form
     CreateCategoryForm:
@@ -38,6 +44,9 @@ services:
         setup:
             - add(@Wame\CategoryModule\Forms\Containers\ICategoryContainerFactory, "CategoryContainer", {priority: 90})
 #            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, "SubmitContainer", {priority: 0})
+
+
+    - Wame\CategoryModule\FormCategory\Controls\ICategorySelect2Factory
 
 extensions:
     formCategory: Wame\CategoryModule\FormCategory\DI\FormCategoryExtension
