@@ -1,14 +1,14 @@
 {block content}
-	<h1>{$siteTitle}</h1>
 
-	<a n:if="count($categories) > 0" class="btn btn-success pull-right" n:href=":Admin:Category:create, 'id' => $type">
-		<span class="fa fa-plus"></span>
-		{_'Crate category'}
-	</a>
-	
-	{if count($categories) == 0}
-		<div class="lead text-muted">{_'You do not have crate any categories.'}</div>
-		<a class="btn btn-success" n:href=":Admin:Category:create, 'id' => $type">{_'Create first category'}</a>
-	{else}
-		{control categoryGrid}
-	{/if}
+{if count($categories) == 0}
+    <div class="empty-block">
+        <p>{_'You do not have created any categories.'}</p>
+
+        <a class="btn btn-success btn-lg ajax-modal ajax-modal-fixed" n:href=":Admin:Category:create, 'id' => $type">
+            <i class="material-icons">add_circle_outline</i>
+            {_'Create first category'}
+        </a>
+    </div>
+{else}
+    {control categoryGrid}
+{/if}
