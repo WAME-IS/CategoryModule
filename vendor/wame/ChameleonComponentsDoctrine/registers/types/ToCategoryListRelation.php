@@ -10,6 +10,7 @@ use Wame\ChameleonComponents\Definition\DataSpace;
 use Wame\ChameleonComponentsDoctrine\Registers\Types\IRelation;
 use Wame\Core\Entities\BaseEntity;
 use Wame\Utils\Strings;
+use Doctrine\ORM\Query\Expr\Join;
 
 class ToCategoryListRelation implements IRelation
 {
@@ -53,7 +54,7 @@ class ToCategoryListRelation implements IRelation
         $categories = $to ? $to->getControl()->getStatus()->get(Strings::plural($this->className)) : null;
         $mainAlias = $qb->getAllAliases()[0];
 
-        $qb->innerJoin(CategoryItemEntity::class, $relationAlias);
+        $qb->innerJoin(CategoryItemEntity::class, $relationAlias, Join::WITH, "$relationAlias.item_id = $mainAlias.id");
         $qb->andWhere($relationAlias . '.item_id = ' . $mainAlias . '.id');
 //        $qb->andWhere($relationAlias . '.type = :type')->setParameter('type', $this->type);
         if ($categories) {

@@ -1,0 +1,24 @@
+services:
+    # Grids
+    CategoryGrid:
+        class: Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid
+        setup:
+            - add(Wame\DataGridControl\Columns\Title(), null, {priority: 99})
+            - add(Wame\DataGridControl\Columns\CreateUser())
+            - add(Wame\DataGridControl\Columns\Status())
+            - add(Wame\DataGridControl\Columns\CreateDate())
+            - add(Wame\DataGridControl\Actions\Edit())
+            - add(Wame\DataGridControl\Actions\Delete())
+            - add(Wame\DataGridControl\ToolbarButtons\Add())
+
+
+    # Forms
+    Admin.CategoryFormBuilder:
+        class: Wame\DynamicObject\Forms\LangEntityFormBuilder
+        setup:
+            - setRepository(@CategoryRepository)
+            - add(@Wame\DynamicObject\Forms\Groups\IBasicGroupFactory, 'BasicGroup', {priority: 100})
+            - add(@Wame\DynamicObject\Forms\Containers\ITitleContainerFactory, 'TitleContainer', {priority: 90})
+            - add(@Wame\DynamicObject\Forms\Containers\ISlugContainerFactory, 'SlugContainer', {priority: 80})
+            - add(@Wame\CategoryModule\Forms\Containers\IParentContainerFactory, 'ParentContainer', {priority: 70})
+            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 0})

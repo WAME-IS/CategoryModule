@@ -1,0 +1,4 @@
+services:
+    StatusTypeRegister:
+        setup:
+            - add(Wame\CategoryModule\Vendor\Wame\Core\Registers\Types\CategoryStatusType(), 'category')

@@ -20,7 +20,7 @@ class CategoryEntity extends TranslatableEntity implements TraversableInterface
 	use \Kappa\DoctrineMPTT\Entities\Traversable;
 
 	/**
-     * @ORM\OneToMany(targetEntity="CategoryLangEntity", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="CategoryLangEntity", mappedBy="category", cascade={"persist"})
      */
     protected $langs;
 	

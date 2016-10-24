@@ -1,6 +1,6 @@
 {block content}
 
-{if count($categories) == 0}
+{if $count == 0}
     <div class="empty-block">
         <p>{_'You do not have created any categories.'}</p>
 
@@ -10,5 +10,5 @@
         </a>
     </div>
 {else}
-    {control categoryGrid}
+    {control grid}
 {/if}

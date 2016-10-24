@@ -2,30 +2,15 @@
 
 namespace App\AdminModule\Presenters;
 
-use Nette\Http\Request;
 use Wame\CategoryModule\Repositories\CategoryRepository;
-use Wame\CategoryModule\Repositories\CategoryItemRepository;
-use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\CreateCategoryForm;
-use Wame\CategoryModule\Vendor\Wame\AdminModule\Forms\EditCategoryForm;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
 use Wame\MenuModule\Forms\MenuItemForm;
+use Wame\DynamicObject\Vendor\Wame\AdminModule\Presenters\AdminFormPresenter;
 
-class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
-{	
-	/** @var Request @inject */
-	public $request;
-	
-	/** @var CreateCategoryForm @inject */
-	public $createCategoryForm;
-	
-	/** @var EditCategoryForm @inject */
-	public $editCategoryForm;
-
+class CategoryPresenter extends AdminFormPresenter
+{
 	/** @var CategoryRepository @inject */
-	public $categoryRepository;
-	
-	/** @var CategoryItemRepository @inject */
-	public $categoryItemRepository;
+	public $repository;
 	
 	/** @var CategoryGrid @inject */
 	public $categoryGrid;
@@ -33,11 +18,8 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	/** @var MenuItemForm @inject */
 	public $menuItemForm;
 	
-	/** @var CategoryEntity */
-	private $category;
-	
-	/** @var array */
-	private $categories;
+	/** @var int */
+	private $count;
 	
 	/** @var string */
 	private $type;
@@ -50,7 +32,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 		$this->type = $this->id;
         
         if($this->type) {
-            $this->categories = $this->categoryRepository->find(['type' => $this->type]);
+            $this->count = $this->repository->countBy(['type' => $this->type]);
         } else {
             $this->redirect(':Admin:Dashboard:');
         }
@@ -58,17 +40,22 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function actionShow()
 	{
-		$this->category = $this->categoryRepository->get(['id' => $this->id]);
+		$this->entity = $this->repository->get(['id' => $this->id]);
 		
-		if($this->category->status == CategoryRepository::STATUS_REMOVE) {
+		if($this->entity->status == CategoryRepository::STATUS_REMOVE) {
 			$this->flashMessage(_('Category is removed'), 'danger');
 			$this->redirect(':Admin:Category:', ['id' => null]);
 		}
 	}
+    
+    public function actionEdit()
+	{
+		$this->entity = $this->repository->get(['id' => $this->id]);
+	}
 	
 	public function actionDelete()
 	{
-		$this->category = $this->categoryRepository->get(['id' => $this->id]);
+		$this->entity = $this->repository->get(['id' => $this->id]);
 	}
 	
 	
@@ -76,7 +63,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	
 	public function handleDelete()
 	{
-		$this->categoryRepository->delete($this->category->id);
+		$this->repository->delete($this->entity->id);
 		
 		$this->redirectToDefault();
 	}
@@ -97,7 +84,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	{
 		$this->template->type = $this->type;
 		$this->template->siteTitle = _('Categories');
-		$this->template->categories = $this->categories;
+		$this->template->count = $this->count;
 	}
 	
 	/**
@@ -107,10 +94,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	 */
 	public function renderCreate()
 	{
-		$categories = $this->categoryRepository->find();
-		
 		$this->template->siteTitle = _('Create category');
-		$this->template->categories = $categories;
 	}
 	
 	/**
@@ -119,6 +103,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public function renderEdit()
 	{
 		$this->template->siteTitle = _('Edit category');
+		$this->template->subTitle = $this->entity->title;
 	}
 	
 	/**
@@ -126,10 +111,10 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	 */
 	public function renderShow()
 	{
-		$this->template->category = $this->category;
-		$this->template->siteTitle = _($this->category->langs[$this->lang]->title);
+		$this->template->category = $this->entity;
+		$this->template->siteTitle = $this->entity->title;
 		
-		$this->template->parent = $this->categoryRepository->getParent($this->category);
+		$this->template->parent = $this->repository->getParent($this->entity);
 	}
 	
 	/**
@@ -138,7 +123,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	public function renderDelete()
 	{
 		$this->template->siteTitle = _('Delete category');
-		$this->template->category = $this->category;
+		$this->template->subTitle = $this->entity->title;
 	}
 	
 	/**
@@ -164,7 +149,7 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
      */
 	public function getChildren($parentId)
     {
-        $qb = $this->categoryRepository->createQueryBuilder('a');
+        $qb = $this->repository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->eq('a.parent', ':parent'))->setParameter('parent', $parentId);
         
         return $qb;
@@ -174,39 +159,13 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 	/** components ************************************************************/
 	
     /**
-     * Create category form component
-     * 
-     * @return type
-     */
-	protected function createComponentCreateCategoryForm() 
-	{
-		$form = $this->createCategoryForm
-				->setActionForm($this->request->getUrl()->setQueryParameter('do', 'createCategoryForm-submit'))
-				->build();
-		
-		return $form;
-	}
-	
-    /**
-     * Edit category form component
-     * 
-     * @return type
-     */
-	protected function createComponentEditCategoryForm() 
-	{
-		$form = $this->editCategoryForm->setId($this->id)->build();
-		
-		return $form;
-	}
-	
-    /**
      * Category grid component
      * 
      * @return CategoryGrid
      */
-	protected function createComponentCategoryGrid()
+	protected function createComponentGrid()
 	{
-        $qb = $this->categoryRepository->createQueryBuilder('a');
+        $qb = $this->repository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->eq('a.type', ':type'))->setParameter('type', $this->type);
         $qb->andWhere($qb->expr()->eq('a.depth', ':depth'))->setParameter('depth', 2);
         
@@ -232,14 +191,20 @@ class CategoryPresenter extends \App\AdminModule\Presenters\BasePresenter
 
 		return $form;
 	}
-	
-	
-	/**
-	 * Redirect to list
-	 */
-	private function redirectToDefault()
-	{
-		$this->redirect(':Admin:Category:default', ['id' => null]);
-	}
+    
+    
+    /** implements ************************************************************/
+
+    /** {@inheritdoc} */
+    protected function getFormBuilderServiceAlias()
+    {
+        return "Admin.CategoryFormBuilder";
+    }
+    
+//    /** {@inheritdoc} */
+//    protected function getGridServiceAlias()
+//    {
+//        return "Admin.CategoryGrid";
+//    }
 	
 }
