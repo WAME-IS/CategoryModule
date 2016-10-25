@@ -18,12 +18,12 @@ class CategoryPresenter extends AdminFormPresenter
 	/** @var MenuItemForm @inject */
 	public $menuItemForm;
 	
-	/** @var int */
-	private $count;
-	
 	/** @var string */
 	private $type;
 
+    /** @var CategoryEntity */
+    private $parent;
+    
 	
 	/** actions ***************************************************************/
 	
@@ -46,6 +46,8 @@ class CategoryPresenter extends AdminFormPresenter
 			$this->flashMessage(_('Category is removed'), 'danger');
 			$this->redirect(':Admin:Category:', ['id' => null]);
 		}
+        
+        $this->parent = $this->repository->getParent($this->entity);
 	}
     
     public function actionEdit()
@@ -114,7 +116,7 @@ class CategoryPresenter extends AdminFormPresenter
 		$this->template->category = $this->entity;
 		$this->template->siteTitle = $this->entity->title;
 		
-		$this->template->parent = $this->repository->getParent($this->entity);
+		$this->template->parent = $this->parent;
 	}
 	
 	/**
