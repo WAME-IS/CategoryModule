@@ -32,7 +32,7 @@ class CategoryPresenter extends AdminFormPresenter
 		$this->type = $this->id;
         
         if($this->type) {
-            $this->count = $this->repository->countBy(['type' => $this->type]);
+            $this->count = $this->repository->countBy(['type' => $this->type, 'depth >' => 1]);
         } else {
             $this->redirect(':Admin:Dashboard:');
         }
