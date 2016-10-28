@@ -5,7 +5,7 @@ namespace App\AdminModule\Presenters;
 use Wame\Core\Presenters\Traits\UseParentTemplates;
 
 
-class CategoryFilterControlPresenter extends AbastractComponentPresenter
+class CategoryFilterControlPresenter extends AbstractComponentPresenter
 {	
     use UseParentTemplates;
     
