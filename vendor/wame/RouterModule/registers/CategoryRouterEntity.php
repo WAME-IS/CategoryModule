@@ -18,7 +18,7 @@ class CategoryRouterEntity {
 		$entity->presenter = "Category";
 		$entity->action = "default";
 		$entity->defaults = [];
-		$entity->sort = 30;
+		$entity->sort = 0;
 		$entity->sitemap = false;
 		$entity->status = 1;
 		return $entity;
