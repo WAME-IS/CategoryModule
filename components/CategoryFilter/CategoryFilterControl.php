@@ -5,7 +5,7 @@ namespace Wame\CategoryModule\Components;
 use Doctrine\Common\Collections\Criteria;
 use Nette\DI\Container;
 use Wame\Core\Components\BaseControl;
-use Wame\CategoryModule\Forms\CategoryFilterFormBuilder;
+//use Wame\CategoryModule\Forms\CategoryFilterFormBuilder;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\ChameleonComponents\IO\DataLoaderControl;
 use Wame\Utils\Strings;
@@ -25,17 +25,17 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
     /** @persistent */
     public $categories;
 
-    /** @var CategoryFilterFormBuilder */
-    private $categoryFilterFormBuilder;
+//    /** @var CategoryFilterFormBuilder */
+//    private $categoryFilterFormBuilder;
     
     
     public function __construct(
-        Container $container, 
-        CategoryFilterFormBuilder $categoryFilterFormBuilder
+        Container $container
+//        CategoryFilterFormBuilder $categoryFilterFormBuilder
     ) {
         parent::__construct($container);
         
-        $this->categoryFilterFormBuilder = $categoryFilterFormBuilder;
+//        $this->categoryFilterFormBuilder = $categoryFilterFormBuilder;
 
         $this->getStatus()->get(Strings::plural(CategoryEntity::class), function ($value) {
             $this['categoryFilterForm']['CategorySelect2Container']['categories']->setItems($value);
@@ -46,7 +46,7 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
     {
         if ($this->categories) {
             $categoriesIds = [];
-            $rootCategories = $this->categoryRepository->find(['id IN' => $this->categories]);
+            $rootCategories = $this->categoryRepository->find(['id IN' => explode(',', $this->categories)]);
             foreach ($rootCategories as $rootCategory) {
                 $categories = $this->categoryRepository->getChildren($rootCategory);
                 $localCategoriesIds = array_map(function($e) {
@@ -60,7 +60,11 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
 
     public function createComponentForm()
     {
-        return $this->categoryFilterFormBuilder->build();
+        $presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
+        $form = $presenter->context->getService("CategoryFilterFormBuilder")->build();
+        return $form;
+        
+//        return $this->categoryFilterFormBuilder->build();
     }
 
     public function getTreeBuilder()
