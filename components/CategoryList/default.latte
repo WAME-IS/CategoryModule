@@ -1,30 +1,35 @@
 {var $depthFrom = $this->control->getComponentParameter('depthFrom')}
+{var $hasParent = false}
 
 {if $listComponents}
     {define listLevel}
-        {if $treeContainer}
+        {if $treeContainer && !$hasParent}
             {$treeContainer->startTag()|noescape}
         {/if}
 
         {foreach $components as $componentNode}
-            {if $treeItemContainer}
-                {$treeItemContainer->startTag()|noescape}
-            {/if}
-
             {if $componentNode->component->entity->getDepth() >= $depthFrom}
+                {if $treeItemContainer}
+                    {$treeItemContainer->startTag()|noescape}
+                {/if}
+                
                 {control $componentNode->component}
-            {/if}
+                
+                {if $componentNode->childNodes}
+                    {include listLevel components=>$componentNode->childNodes, hasParent=>false}
+                {/if}
 
-            {if $componentNode->childNodes}
-                {include listLevel components=>$componentNode->childNodes}
-            {/if}
-
-            {if $treeItemContainer}
-                {$treeItemContainer->endTag()|noescape}
+                {if $treeItemContainer}
+                    {$treeItemContainer->endTag()|noescape}
+                {/if}
+            {else}
+                {if $componentNode->childNodes}
+                    {include listLevel components=>$componentNode->childNodes, hasParent=>true}
+                {/if}
             {/if}
         {/foreach}
 
-        {if $treeContainer}
+        {if $treeContainer && !$hasParent}
             {$treeContainer->endTag()|noescape}
         {/if}
     {/define}
