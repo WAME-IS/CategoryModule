@@ -86,14 +86,17 @@ trait CategoryListTrait
      */
     protected function setTreeRoot($statusAlias, $categoryCriteria)
     {
-        $category = $this->categoryRepository->get(['depth' => 1, 'type' => $statusAlias]);
+        $depthFrom = $this->getComponentParameter('depthFrom') ?: 1;
+        $depthTo = $this->getComponentParameter('depthTo');
+        
+        $category = $this->categoryRepository->get(['depth' => $depthFrom, 'type' => $statusAlias]);
         if (!$category) {
             throw new InvalidArgumentException("Category not found");
         }
 
         $categoryCriteria->andWhere(Criteria::expr()->gte('lft', $category->getLeft()));
         $categoryCriteria->andWhere(Criteria::expr()->lte('rgt', $category->getRight()));
-        $categoryCriteria->andWhere(Criteria::expr()->lte('depth', $this->getComponentParameter('depth')));
+        $categoryCriteria->andWhere(Criteria::expr()->lte('depth', $depthTo));
 
         $this->getTreeBuilder()->setFrom($category);
     }
