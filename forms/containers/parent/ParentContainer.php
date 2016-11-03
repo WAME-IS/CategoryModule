@@ -9,6 +9,7 @@ use Wame\DynamicObject\Forms\Containers\BaseContainer;
 use Wame\DynamicObject\Registers\Types\IBaseContainer;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Entities\CategoryEntity;
+use Wame\Core\Registers\StatusTypeRegister;
 
 interface IParentContainerFactory extends IBaseContainer
 {
@@ -30,11 +31,15 @@ class ParentContainer extends BaseContainer
 	/** @var TraversableManager */
 	private $traversableManager;
     
+    /** @var StatusTypeRegister */
+    protected $statusTypeRegister;
+    
     
     public function __construct(
         CategoryRepository $categoryRepository,
         EntityManager $entityManager, 
-		TraversableManager $traversableManager
+		TraversableManager $traversableManager,
+        StatusTypeRegister $statusTypeRegister
     ) {
         parent::__construct();
         
@@ -44,6 +49,8 @@ class ParentContainer extends BaseContainer
 		$this->treeConfigurator = new Configurator($entityManager);
 		$this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
 		$this->traversableManager->setConfigurator($this->treeConfigurator);
+        
+        $this->statusTypeRegister = $statusTypeRegister;
         
         $this->monitor(\Nette\Application\UI\Presenter::class);
     }
@@ -65,16 +72,13 @@ class ParentContainer extends BaseContainer
     /** {@inheritDoc} */
     public function create($form, $values)
     {
+        $type = $this->getForm()->getPresenter()->getParameter('id');
+        
         $entity = method_exists($form, 'getLangEntity') && property_exists($form->getLangEntity(), 'parent') ? $form->getLangEntity() : $form->getEntity();
         
-        $entity->setType('event');
-        
-//        $this->repository->create($entity);
+        $entity->setType($type);
         
         $parent = $this->repository->get(['id' => $values['parent']]);
-        
-        \Tracy\Debugger::barDump($entity);
-        \Tracy\Debugger::barDump($parent);
         
         $this->traversableManager->insertItem($entity, $parent);
         $entity->setParent($parent);
@@ -112,6 +116,17 @@ class ParentContainer extends BaseContainer
                 }
             }
         }
+    }
+    
+    
+    /**
+     * Get type
+     * 
+     * @return type
+     */
+    protected function getType($form)
+    {
+        return $this->getEntityAlias($this->statusTypeRegister, $form->getEntity());
     }
 
 }
