@@ -1,5 +1,6 @@
-{if $listComponents}
+{var $depthFrom = $this->control->getComponentParameter('depthFrom')}
 
+{if $listComponents}
     {define listLevel}
         {if $treeContainer}
             {$treeContainer->startTag()|noescape}
@@ -10,7 +11,9 @@
                 {$treeItemContainer->startTag()|noescape}
             {/if}
 
-            {control $componentNode->component}
+            {if $componentNode->component->entity->getDepth() >= $depthFrom}
+                {control $componentNode->component}
+            {/if}
 
             {if $componentNode->childNodes}
                 {include listLevel components=>$componentNode->childNodes}
