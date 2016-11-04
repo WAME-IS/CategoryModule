@@ -45,7 +45,7 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
     protected function getCategoriesIds()
     {
         if ($this->categories) {
-            $categoriesIds = [];
+            $categoriesIds = explode(",", $this->categories);
             $rootCategories = $this->categoryRepository->find(['id IN' => explode(',', $this->categories)]);
             foreach ($rootCategories as $rootCategory) {
                 $categories = $this->categoryRepository->getChildren($rootCategory);
@@ -62,6 +62,12 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
     {
         $presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
         $form = $presenter->context->getService("CategoryFilterFormBuilder")->build();
+        
+        if($this->categories) {
+            $categories = explode(",", $this->categories);
+            $form["CategoryContainer"]["category"]->setValue($categories);
+        }
+        
         return $form;
         
 //        return $this->categoryFilterFormBuilder->build();
