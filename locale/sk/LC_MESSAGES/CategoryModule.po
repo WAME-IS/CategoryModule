@@ -1,0 +1,194 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CategoryModule\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2016-11-07T09:51:20+01:00\n"
+"PO-Revision-Date: 2016-11-07T09:51:20+01:00\n"
+"Language: sk\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: gettext;__;ngettext;n__;pgettext;p__;dgettext;d__;dpgettext;dp__;npgettext;np__;dnpgettext;dnp__;noop;noop__;_\n"
+"X-Poedit-Basepath: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule\n"
+"X-Poedit-SearchPath-0: .\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);\n"
+"X-Domain: CategoryModule\n"
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/categoryTree/CategoryTreeFormContainer.php:48
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/category/CategoryContainer.php:40
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/categoryMultiLevel/CategoryMultiLevelContainer.php:23
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/categoryTree/CategoryTreeContainer.php:43
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/groups/category/CategoryGroup.php:29
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/Core/registers/types/CategoryStatusType.php:13
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/MenuModule/components/MenuControl/MenuManager/CategoryMenuItem.php:56
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/MenuModule/components/MenuControl/MenuManager/forms/category/CategoryFormContainer.php:21
+msgid "Category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/categoryTree/CategoryTreeFormContainer.php:50
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/categorySelect2/CategorySelect2Container.php:22
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-components-categorybutton-default-latte.php:23
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:88
+msgid "Categories"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/categoryMultiLevel/CategoryMultiLevelContainer.php:24
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/categoryTree/CategoryTreeContainer.php:44
+msgid "Please select category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/categoryTree/CategoryTreeContainer.php:39
+msgid "Add new category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/parent/ParentContainer.php:55
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/parent/ParentFormContainer.php:58
+msgid "Parent"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/parent/ParentContainer.php:56
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/parent/ParentFormContainer.php:59
+msgid "-Top rank-"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/depth/DepthFormContainer.php:21
+msgid "Depth"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/title/TitleFormContainer.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/type/TypeFormContainer.php:21
+msgid "Basic info"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/title/TitleFormContainer.php:23
+msgid "Title"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/title/TitleFormContainer.php:24
+msgid "Please enter title"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/type/TypeFormContainer.php:28
+msgid "Type"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/url/UrlFormContainer.php:21
+msgid "URL"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/grids/groupActions/AddCategorySelected.php:24
+msgid "Add category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-forms-containers-categorytree-default-latte.php:26
+msgid "Loading ..."
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-presenters-templates-category-show-latte.php:21
+msgid "Products"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/forms/CreateCategoryForm.php:75
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:99
+msgid "Create category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/forms/CreateCategoryForm.php:90
+msgid "The category was successfully created"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/forms/EditCategoryForm.php:70
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:107
+msgid "Edit category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/forms/EditCategoryForm.php:98
+msgid "The category was successfully updated."
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryButtonPresenter.php:20
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryButtonPresenter.php:46
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryListPresenter.php:37
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryListPresenter.php:63
+msgid "To enter this section you do not have enough privileges."
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryButtonPresenter.php:28
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryListPresenter.php:45
+msgid "This position does not exist."
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryButtonPresenter.php:33
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryListPresenter.php:50
+msgid "This position is removed."
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryButtonPresenter.php:38
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryListPresenter.php:55
+msgid "This position is disabled."
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryButtonPresenter.php:53
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/ComponentModule/components/CategoryButtonComponent.php:62
+msgid "Create category button"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryButtonPresenter.php:58
+msgid "Edit category button"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryFilterControlPresenter.php:21
+msgid "Category filter component"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryListPresenter.php:70
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/ComponentModule/components/CategoryListComponent.php:62
+msgid "Create category list"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryListPresenter.php:91
+msgid "Edit category list"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:46
+msgid "Category is removed"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:127
+msgid "Delete category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:137
+msgid "Edit category item in menu"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:139
+msgid "Add category item to menu"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/ComponentModule/components/CategoryButtonComponent.php:56
+msgid "Category button"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/ComponentModule/components/CategoryFilterComponent.php:49
+msgid "Category filter"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/ComponentModule/components/CategoryFilterComponent.php:55
+msgid "Create category filter component"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/ComponentModule/components/CategoryListComponent.php:56
+msgid "Category list"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/MenuModule/components/MenuControl/MenuManager/CategoryMenuItem.php:62
+msgid "Insert link to the category"
+msgstr ""
+
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/MenuModule/components/MenuControl/MenuManager/forms/category/CategoryFormContainer.php:26
+msgid "Alternative title"
+msgstr ""
