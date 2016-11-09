@@ -18,17 +18,13 @@ trait CategoryListTrait
     /** @var CategoryRepository */
     protected $categoryRepository;
 
-    /** @var StatusTypeRegister */
-    protected $statusTypeRegister;
-
     /** @var string */
     protected $categoryType;
 
     
-    public function injectCategories(CategoryRepository $categoryRepository, StatusTypeRegister $statusTypeRegister)
+    public function injectCategories(CategoryRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
-        $this->statusTypeRegister = $statusTypeRegister;
     }
 
     public function getListType()
@@ -38,7 +34,6 @@ trait CategoryListTrait
 
     public function getDataDefinition()
     {
-        
         $categoryCriteria = $this->loadParametersCriteria();
         
         $componentStatusType = $this->getComponentParameter('statusType');
