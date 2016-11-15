@@ -276,7 +276,7 @@ class CategoryRepository extends TranslatableRepository
     }
     
     
-    /** API ****************************************************************** */
+    /** API *******************************************************************/
 
     /**
      * Get categories
@@ -342,34 +342,33 @@ class CategoryRepository extends TranslatableRepository
      * Api get categories
      * 
      * @api {get} /categories/ Search categories
-     * @param array $columns
-     * @param string $phrase
-     * @param string $select
+     * @param string $query
      * 
      * @return CategoryEntity[]
      */
-    public function apiGetCategories($columns = [], $phrase = null, $select = '*')
+    public function apiGetCategories($query = null)
     {
-        $search = $this->entityManager->createQueryBuilder()
-            ->select($select)
-            ->from(CategoryEntity::class, 'a')
-            ->leftJoin(CategoryLangEntity::class, 'langs', Join::WITH, 'a.id = langs.category')
-            ->andWhere('a.status = :status')
-            ->setParameter('status', self::STATUS_ACTIVE)
-            ->andWhere('langs.lang = :lang')
-            ->setParameter('lang', $this->lang);
+        $separator = ' ';
+        
+        $phrases = explode($separator, $query);
+        
+        /* @var $qb QueryBuilder */
+        $qb = $this->createQueryBuilder('a');
+        
+        $qb->select('a.id, l0.title');
 
-        foreach ($columns as $column) {
-            $search->andWhere($column . ' LIKE :phrase');
+        $likeTitle = $qb->expr()->andx();
+        foreach($phrases as $phrase) {
+            $likeTitle->add($qb->expr()->like("l0.title", $qb->expr()->literal("%$phrase%")));
         }
-
-        $search->setParameter('phrase', '%' . $phrase . '%');
-
-        return $search->getQuery()->getResult();
+                
+        $qb->andWhere($likeTitle);
+        
+        return $qb->getQuery()->getResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
     }
     
     
-    /** implements * */
+    /** implements ************************************************************/
 
     /**
      * Flush
