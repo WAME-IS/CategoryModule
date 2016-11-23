@@ -17,33 +17,33 @@ class CategoryTreeContainer extends BaseContainer
 {
     /** @var StatusTypeRegister */
     protected $statusTypeRegister;
-    
+
     /** @var string */
     protected $type;
-    
-    
-    public function __construct(StatusTypeRegister $statusTypeRegister)
+
+
+    public function __construct(\Nette\DI\Container $container, StatusTypeRegister $statusTypeRegister)
     {
-        parent::__construct();
-        
+        parent::__construct($container);
+
         $this->statusTypeRegister = $statusTypeRegister;
     }
-    
-    
+
+
     /** {@inheritDoc} */
-    public function configure() 
+    public function configure()
 	{
         $this->type = $this->getEntityAlias($this->statusTypeRegister, $this->getForm()->getEntity());
-        
+
         $group = new CategoryGroup();
         $group->addButton(_("Add new category"), ":Admin:Category:create", ['id' => $this->type], 'add_circle_outline');
-        
+
         $this->getForm()->addBaseGroup($group, 'CategoryGroup');
-        
+
 		$this->addHidden('category', _('Category'))
 				->setRequired(_('Please select category'));
     }
-    
+
     /** {@inheritDoc} */
     public function compose($template)
     {
