@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2016-11-07T09:51:20+01:00\n"
-"PO-Revision-Date: 2016-11-07T09:51:20+01:00\n"
+"POT-Creation-Date: 2016-11-21T15:46:38+01:00\n"
+"PO-Revision-Date: 2016-11-21T15:46:38+01:00\n"
 "Language: sk\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: gettext;__;ngettext;n__;pgettext;p__;dgettext;d__;dpgettext;dp__;npgettext;np__;dnpgettext;dnp__;noop;noop__;_\n"
@@ -30,8 +30,18 @@ msgstr ""
 
 #: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/categoryTree/CategoryTreeFormContainer.php:50
 #: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/categorySelect2/CategorySelect2Container.php:22
-#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-components-categorybutton-default-latte.php:23
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-components-categorybutton-default-latte.php:14
 #: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/vendor/wame/AdminModule/presenters/CategoryPresenter.php:88
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/users-macmini2-weby-git-cms-wame-admin-4-0-0-vendor-wame-categorymodule-components-categorybutton-default-latte.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583425809272f.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583426c7b1c09.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583429179de46.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342992e5d64.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583429f6c630d.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342f868eae6.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583431f63442f.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58343252ae436.php:14
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/5834333482e96.php:14
 msgid "Categories"
 msgstr ""
 
@@ -44,12 +54,12 @@ msgstr ""
 msgid "Add new category"
 msgstr ""
 
-#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/parent/ParentContainer.php:55
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/parent/ParentContainer.php:63
 #: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/parent/ParentFormContainer.php:58
 msgid "Parent"
 msgstr ""
 
-#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/parent/ParentContainer.php:56
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/containers/parent/ParentContainer.php:64
 #: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/forms/parent/ParentFormContainer.php:59
 msgid "-Top rank-"
 msgstr ""
@@ -83,11 +93,31 @@ msgstr ""
 msgid "Add category"
 msgstr ""
 
-#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-forms-containers-categorytree-default-latte.php:26
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-forms-containers-categorytree-default-latte.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/users-macmini2-weby-git-cms-wame-admin-4-0-0-vendor-wame-categorymodule-forms-containers-categorytree-default-latte.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342580b4207.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583426c7d4fc0.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342917c047b.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/5834299313e8e.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583429f701c1e.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342f86b480f.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583431f652e65.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58343252cf1e6.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58343334a4676.php:21
 msgid "Loading ..."
 msgstr ""
 
-#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-presenters-templates-category-show-latte.php:21
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/categorymodule-presenters-templates-category-show-latte.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/users-macmini2-weby-git-cms-wame-admin-4-0-0-vendor-wame-categorymodule-presenters-templates-category-show-latte.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342580c5256.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583426c7e6943.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342917d307d.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/5834299325c70.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583429f71a7e6.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58342f86c96fb.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/583431f663b9e.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58343252e0572.php:51
+#: /Users/MacMini2/Weby/GIT/cms-wame-admin-4.0.0/vendor/wame/CategoryModule/temp/latteCompiler/58343334b55df.php:51
 msgid "Products"
 msgstr ""
 
