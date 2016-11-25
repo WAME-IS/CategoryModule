@@ -17,11 +17,15 @@ interface ICategoryListControlFactory
 
 class CategoryListControl extends ChameleonTreeListControl
 {
-
     use CategoryListTrait;
 
+    
     /** @persistent */
     public $category = null;
+    
+    /** @var bool */
+    public $main = false;
+    
 
     public function __construct(Container $container, ICategoryControlFactory $ICategoryControlFactory, ISimpleEmptyListControlFactory $ISimpleEmptyListControlFactory)
     {
@@ -29,15 +33,26 @@ class CategoryListControl extends ChameleonTreeListControl
         $this->setComponentFactory($ICategoryControlFactory);
         $this->setNoItemsFactory($ISimpleEmptyListControlFactory);
     }
+    
+    /** {@inheritDoc} */
+    public function beforeRender()
+    {
+        parent::beforeRender();
+        
+        $this->main = $this->getComponentParameter('main');
+    }
 
+    
     protected function getCategoriesIds()
     {
-        if ($this->category) {
-            $categories = $this->categoryRepository->getChildren($this->categoryRepository->get(['id' => $this->category]));
+        $category = $this->category ?: $this->presenter->getParameter('category');
+        
+        if ($category) {
+            $categories = $this->categoryRepository->getChildren($this->categoryRepository->get(['id' => $category]));
             $categoriesIds = array_map(function($e) {
                 return $e->getId();
             }, $categories);
-            $categoriesIds[] = $this->category;
+            $categoriesIds[] = $category;
             return $categoriesIds;
         }
     }

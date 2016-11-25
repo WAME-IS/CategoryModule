@@ -27,7 +27,16 @@ class CategoryControl extends SingleEntityControl
 
         $categoryList = $this->lookup(CategoryListControl::class);
         if ($categoryList instanceof CategoryListControl) {
-            $this->template->categoryLink = $categoryList->link('this', ['category' => $this->getEntity()->id]);
+            /** NEW ***********************************************************/
+            if($categoryList->main) {
+                $this->template->categoryLink = $categoryList->getPresenter()->link(':ShopProduct:ShopProduct:default', ['category' => $this->getEntity()->id]);
+            } else {
+                $this->template->categoryLink = $categoryList->link('this', ['category' => $this->getEntity()->id]);
+            }
+            /** /NEW **********************************************************/
+            
+            // povodne
+//            $this->template->categoryLink = $categoryList->link('this', ['category' => $this->getEntity()->id]);
         } else {
             $this->template->categoryLink = $categoryList->getPresenter()->link('Category:Category:default', ['category' => $this->getEntity()->id]);
         }
