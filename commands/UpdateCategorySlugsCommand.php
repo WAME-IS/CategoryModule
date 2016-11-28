@@ -20,10 +20,10 @@ class UpdateCategorySlugsCommand extends Command
 				->setDescription('Updates category slugs');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
-		
+	protected function execute(InputInterface $input, OutputInterface $output)
+    {
 		try {
-            $categories = $this->repository->find();
+            $categories = $this->repository->find(['slug' => null]);
             
             foreach($categories as $category) {
                 $category->setSlug(Strings::webalize($category->getTitle()));
