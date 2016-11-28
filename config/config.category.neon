@@ -33,6 +33,11 @@ services:
     # Events
     - {class: Wame\CategoryModule\Events\CategoryListener, tags: [run]}
 
+    # Commands
+    updateCategorySlugsCommand:
+        class: Wame\CategoryModule\Commands\UpdateCategorySlugsCommand
+        tags: [kdyby.console.command]
+
 
 doctrine:
     metadata:

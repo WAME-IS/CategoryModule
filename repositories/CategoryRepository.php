@@ -369,7 +369,7 @@ class CategoryRepository extends TranslatableRepository
     
     
     /** implements ************************************************************/
-
+    
     /**
      * Flush
      * 
@@ -377,10 +377,11 @@ class CategoryRepository extends TranslatableRepository
      */
     public function flush($entity = null)
     {
-        if (!$entity->getLeft()) {
+        if ($entity && !$entity->getLeft()) {
             $this->traversableManager->insertItem($entity);
         } else {
-            parent::flush($entity);
+            $this->entityManager->flush($entity);
         }
     }
+    
 }
