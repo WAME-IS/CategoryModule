@@ -24,6 +24,8 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
     
     /** @persistent */
     public $categories;
+    
+    public $allowedCategories = [];
 
 //    /** @var CategoryFilterFormBuilder */
 //    private $categoryFilterFormBuilder;
@@ -41,12 +43,72 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
             $this['categoryFilterForm']['CategorySelect2Container']['categories']->setItems($value);
         });
     }
+    
+    
+    /** rendering *************************************************************/
+    
+    /** {@inheritDoc} **/
+    public function beforeRender()
+    {
+        parent::beforeRender();
+        
+        $statusName = \Wame\Utils\Strings::plural(\Wame\ShopProductModule\Entities\ShopProductEntity::class);
+        $statusNameQb = $statusName . '-qb';
+        
+        /* @var $qb QueryBuilder */
+        $qb = clone $this->getStatus()->get($statusNameQb);
+        
+        if($qb && in_array('cat', $qb->getAllAliases())) {
+            $qb->select('cat')
+                ->setFirstResult(null)
+                ->setMaxResults(null);
+            
+            \Wame\Utils\Doctrine::removeWherePart($qb, 'c.category', ['c_category']);
+            \Wame\Utils\Doctrine::removeWherePart($qb, 'c.item_id');
+            
+            $foundCategories = $qb->getQuery()->getResult();
+            
+            foreach($foundCategories as $category) {
+                $this->allowedCategories[] = $category->id;
+            }
+        }
+    }
+    
+    /** {@inheritDoc} **/
+    public function render()
+    {
+        
+    }
+    
+    
+    /** methods ***************************************************************/
+    
+    public function getTreeBuilder()
+    {
+        return new NestedSetTreeBuilder();
+    }
+
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+    
+    
+    protected function loadParametersCriteria()
+    {
+        return Criteria::create();
+    }
 
     protected function getCategoriesIds()
     {
         if ($this->categories) {
             $categoriesIds = explode(",", $this->categories);
-            $rootCategories = $this->categoryRepository->find(['id IN' => explode(',', $this->categories)]);
+            $rootCategories = $this->categoryRepository->find(['id IN' => $categoriesIds]);
             foreach ($rootCategories as $rootCategory) {
                 $categories = $this->categoryRepository->getChildren($rootCategory);
                 $localCategoriesIds = array_map(function($e) {
@@ -58,7 +120,10 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
         }
     }
 
-    public function createComponentForm()
+    
+    /** components ************************************************************/
+    
+    protected function createComponentForm()
     {
         $presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
         $form = $presenter->context->getService("CategoryFilterFormBuilder")->build();
@@ -69,33 +134,6 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
         }
         
         return $form;
-        
-//        return $this->categoryFilterFormBuilder->build();
-    }
-
-    public function getTreeBuilder()
-    {
-        return new NestedSetTreeBuilder();
-    }
-
-    protected function loadParametersCriteria()
-    {
-        return Criteria::create();
-    }
-
-    public function render()
-    {
-        
-    }
-
-    function getCategories()
-    {
-        return $this->categories;
-    }
-
-    function setCategories($categories)
-    {
-        $this->categories = $categories;
     }
     
 }

@@ -55,6 +55,7 @@ class ToCategoryListRelation implements IRelation
         $mainAlias = $qb->getAllAliases()[0];
 
         $qb->innerJoin(CategoryItemEntity::class, $relationAlias, Join::WITH, "$relationAlias.item_id = $mainAlias.id");
+        $qb->innerJoin(CategoryEntity::class, 'cat', Join::WITH, "$relationAlias.category = cat.id");
         $qb->andWhere($relationAlias . '.item_id = ' . $mainAlias . '.id');
 //        $qb->andWhere($relationAlias . '.type = :type')->setParameter('type', $this->type);
         if ($categories) {

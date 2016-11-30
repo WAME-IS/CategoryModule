@@ -29,7 +29,10 @@ class CategoryFilterFormBuilder extends BaseFormBuilder
         $categoryIds = implode(',', array_keys(\Wame\Utils\Arrays::getPairs($categories, 'id', 'id')));
 //        $categorySlugs = \Wame\Utils\Arrays::getPairs($categories, 'id', 'slug');
 //        $categoryFilterControl->setCategories(implode(",", $categorySlugs));
+        
+        
         $categoryFilterControl->setCategories($categoryIds);
+//        $categoryFilterControl->setCategories($categoryFilterControl->allowedCategories);
     }
     
 }
