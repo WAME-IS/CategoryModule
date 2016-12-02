@@ -1,4 +1,3 @@
-{var $depthFrom = $this->control->getComponentParameter('depthFrom')}
 {var $hasParent = false}
 
 {if $listComponents}
@@ -8,7 +7,7 @@
         {/if}
 
         {foreach $components as $componentNode}
-            {if $componentNode->component->entity->getDepth() >= $depthFrom}
+            {if $componentNode->component->entity->getDepth() > $depthFrom}
                 {if $treeItemContainer}
                     {$treeItemContainer->startTag()|noescape}
                 {/if}

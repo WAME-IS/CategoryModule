@@ -74,6 +74,8 @@ trait CategoryListTrait
 
     protected abstract function getCategoriesIds();
 
+    protected function getSelectedCategory() {}
+    
     /**
      * @param string $statusAlias
      * @param Criteria $categoryCriteria
@@ -81,18 +83,23 @@ trait CategoryListTrait
      */
     protected function setTreeRoot($statusAlias, $categoryCriteria)
     {
-        $depthFrom = $this->getComponentParameter('depthFrom');
-        $depthTo = $this->getComponentParameter('depthTo');
+//        $depthFrom = $this->getComponentParameter('depthFrom');
+//        $depthTo = $this->getComponentParameter('depthTo');
         
-        $category = $this->categoryRepository->get(['depth' => 1, 'type' => $statusAlias]);
+        $category = $this->getSelectedCategory() ?: $this->categoryRepository->get(['depth' => 1, 'type' => $statusAlias]);
+        
+//        \Tracy\Debugger::barDump($category);
+        
         if (!$category) {
             throw new InvalidArgumentException("Category not found");
         }
 
         $categoryCriteria->andWhere(Criteria::expr()->gte('lft', $category->getLeft()));
         $categoryCriteria->andWhere(Criteria::expr()->lte('rgt', $category->getRight()));
-        $categoryCriteria->andWhere(Criteria::expr()->lte('depth', $depthTo));
+//        $categoryCriteria->andWhere(Criteria::expr()->lte('depth', $depthTo));
 //        $categoryCriteria->andWhere(Criteria::expr()->gte('depth', $depthFrom));
+        
+//        $categoryCriteria->andWhere(Criteria::expr()->eq('parent', null));
 
         $this->getTreeBuilder()->setFrom($category);
     }
