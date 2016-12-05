@@ -5,16 +5,13 @@ namespace Wame\CategoryModule\Components;
 use Doctrine\Common\Collections\Criteria;
 use Nette\InvalidArgumentException;
 use Wame\CategoryModule\Entities\CategoryEntity;
-use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\ChameleonComponents\Definition\ControlDataDefinition;
 use Wame\ChameleonComponents\Definition\DataDefinition;
 use Wame\ChameleonComponents\Definition\DataDefinitionTarget;
-use Wame\Core\Registers\StatusTypeRegister;
 
 trait CategoryListTrait
 {
-
     /** @var CategoryRepository */
     protected $categoryRepository;
 
@@ -26,6 +23,7 @@ trait CategoryListTrait
     {
         $this->categoryRepository = $categoryRepository;
     }
+    
 
     public function getListType()
     {
@@ -72,9 +70,11 @@ trait CategoryListTrait
         return $controlDataDefinition;
     }
 
+    
     protected abstract function getCategoriesIds();
 
     protected function getSelectedCategory() {}
+    
     
     /**
      * @param string $statusAlias
@@ -83,12 +83,7 @@ trait CategoryListTrait
      */
     protected function setTreeRoot($statusAlias, $categoryCriteria)
     {
-//        $depthFrom = $this->getComponentParameter('depthFrom');
-//        $depthTo = $this->getComponentParameter('depthTo');
-        
         $category = $this->getSelectedCategory() ?: $this->categoryRepository->get(['depth' => 1, 'type' => $statusAlias]);
-        
-//        \Tracy\Debugger::barDump($category);
         
         if (!$category) {
             throw new InvalidArgumentException("Category not found");
@@ -96,11 +91,7 @@ trait CategoryListTrait
 
         $categoryCriteria->andWhere(Criteria::expr()->gte('lft', $category->getLeft()));
         $categoryCriteria->andWhere(Criteria::expr()->lte('rgt', $category->getRight()));
-//        $categoryCriteria->andWhere(Criteria::expr()->lte('depth', $depthTo));
-//        $categoryCriteria->andWhere(Criteria::expr()->gte('depth', $depthFrom));
         
-//        $categoryCriteria->andWhere(Criteria::expr()->eq('parent', null));
-
         $this->getTreeBuilder()->setFrom($category);
     }
     
@@ -108,4 +99,5 @@ trait CategoryListTrait
     {
         return Criteria::create();
     }
+    
 }
