@@ -8,7 +8,6 @@ use Wame\CategoryModule\Components\ICategoryControlFactory;
 use Wame\ChameleonComponentsListControl\Components\ChameleonTreeListControl;
 use Wame\ListControl\Components\ISimpleEmptyListControlFactory;
 use Wame\TitleControl\Components\TitleControl;
-use Doctrine\Common\Collections\Criteria;
 
 interface ICategoryListControlFactory
 {
@@ -69,7 +68,7 @@ class CategoryListControl extends ChameleonTreeListControl
         $selectedCategory = $this->getSelectedCategory();
         
         if ($selectedCategory) {
-            TitleControl::add($selectedCategory->getTitle());
+            TitleControl::add($this, $selectedCategory->getTitle());
             
             $categories = $this->categoryRepository->getChildren($selectedCategory);
             
