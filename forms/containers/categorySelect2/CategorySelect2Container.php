@@ -4,6 +4,7 @@ namespace Wame\CategoryModule\Forms\Containers;
 
 use Wame\DynamicObject\Forms\Containers\BaseContainer;
 use Wame\DynamicObject\Registers\Types\IBaseContainer;
+use Wame\Utils\Arrays;
 
 interface ICategorySelect2ContainerFactory extends IBaseContainer
 {
@@ -14,7 +15,7 @@ interface ICategorySelect2ContainerFactory extends IBaseContainer
 class CategorySelect2Container extends BaseContainer
 {
     /** @var CategoryEntity[] */
-    private $categories;
+    private $categories = [];
     
     
     public function configure()
@@ -25,6 +26,8 @@ class CategorySelect2Container extends BaseContainer
     public function setItems($items)
     {
         $this->categories = $items;
+        
+        $this['categories']->setItems(Arrays::getPairs($items, 'id', 'title'));
     }
     
 }
