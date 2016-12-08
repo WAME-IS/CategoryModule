@@ -3,13 +3,12 @@ services:
     CategoryGrid:
         class: Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid
         setup:
-            - add(Wame\DataGridControl\Columns\Title(), null, {priority: 99})
-            - add(Wame\DataGridControl\Columns\CreateUser())
+            - setSortable()
+            - add(Wame\DataGridControl\Columns\Title(), null, {priority: 100})
             - add(Wame\DataGridControl\Columns\Status())
-            - add(Wame\DataGridControl\Columns\CreateDate())
-            - add(Wame\DataGridControl\Actions\Edit())
-            - add(Wame\DataGridControl\Actions\Delete())
-            - add(Wame\DataGridControl\ToolbarButtons\Add())
+            - add(Wame\DataGridControl\Actions\EditModal(), null, {priority: 2})
+            - add(Wame\DataGridControl\Actions\Delete(), null, {priority: 1})
+            - add(Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\ToolbarButtons\AddCategory())
 
 
     # Forms
