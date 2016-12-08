@@ -367,6 +367,101 @@ class CategoryRepository extends TranslatableRepository
         return $qb->getQuery()->getResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
     }
     
+//    /**
+//     * Api get count of categories items
+//     * 
+//     * @api {get} /categories-count/ Get count of items in given category ids
+//     * @param int|array $categories
+//     * 
+//     * @return array
+//     */
+//    public function apiGetCount($categories)
+//    {
+//        if(!is_array($categories)) {
+//            $categories = [$categories];
+//        }
+//        
+//        $qb = $this->createQueryBuilder('c');
+//        
+//        $qb2 = $qb;
+//        
+////        $qb2 = $this->createQueryBuilder('x');
+//        
+//        $qb2->select('c.id')
+//            ->where($qb2->expr()->lt('c.rgt', ':koren'))
+//            ->setParameter('koren', 'c.id');
+//        
+//        $qb->select(['c.id', "({$qb->expr()->count('ci.id')}) AS itemCount"])
+//            ->leftJoin(CategoryItemEntity::class, 'ci', Join::WITH, "c.id = ci.category")
+//            ->andWhere($qb->expr()->in('c.id', $qb2->getDQL()))
+//            ->groupBy('c.id');
+//        
+////        return $qb->getQuery()->getDQL();
+//        
+//        return $qb->getQuery()->getResult();
+//    }
+    
+    /**
+     * Api get categories item count
+     * 
+     * @api {get} /categories-item-count/ Get categories item count
+     * @param int|array $categories     categories ids
+     * 
+     * @return array
+     */
+    public function apiGetCategoriesItemCount($categories)
+    {
+        if(!is_array($categories)) {
+            $categories = [$categories];
+        }
+        
+        $arr = [];
+        
+        foreach($categories as $category) {
+            $cid = $this->getChildrenIds($category);
+            
+            if(is_array($cid)) {
+                $arr[$category] = $this->categoryItemRepository->countBy(['item_id IN' => [$category] + $cid]);
+            }
+        }
+        
+        return $arr;
+    }
+    
+    /**
+     * Api get categories child count
+     * 
+     * @api {get} /categories-child-count/ Get categories child count
+     * @param int|array $categories     categories ids
+     * @param bool $direct              is direct descendant
+     * 
+     * @return array
+     */
+    public function apiGetCategoriesChildCount($categories, $direct = true)
+    {
+        if(!is_array($categories)) {
+            $categories = [$categories];
+        }
+        
+        $arr = [];
+        
+        foreach($categories as $category) {
+            $cid;
+            
+            if(filter_var($direct, FILTER_VALIDATE_BOOLEAN)) {
+                $cid = $this->findPairs(['parent' => $category], 'id');
+            } else {
+                $cid = $this->getChildrenIds($category);
+            }
+            
+            if(is_array($cid)) {
+                $arr[$category] = $this->countBy(['id IN' => $cid]);
+            }
+        }
+        
+        return $arr;
+    }
+    
     
     /** implements ************************************************************/
     
@@ -382,6 +477,19 @@ class CategoryRepository extends TranslatableRepository
         } else {
             $this->entityManager->flush($entity);
         }
+    }
+    
+    
+    private function getChildrenIds($category)
+    {
+        $c = $this->get(['id' => $category]);
+        $categories = $this->getChildren($c);
+
+        $children = array_map(function($e) {
+            return $e->getId();
+        }, $categories);
+        
+        return $children;
     }
     
 }
