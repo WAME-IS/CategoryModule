@@ -76,6 +76,7 @@ class CategorySelectedContainer extends BaseContainer
 
         $template->categories = $categories;
         $template->type = $this->type;
+        $template->itemId = $itemId;
     }
 
     /** {@inheritDoc} */
