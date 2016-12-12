@@ -1,0 +1,38 @@
+{var $category = $container['category']}
+{*<div class="form-group">
+    <input class="form-control" n:name="$category">
+    <div class="categoryTree" data-url="/api/v1/category/?type={$type}">{_'Loading ...'}</div>
+</div>*}
+
+{if count($categories) == 0}
+    <div class="empty-block">
+        <p class="text-center">{_'This item does not added any category.'}</p>
+
+        <a class="btn btn-success ajax-modal ajax-modal-fixed" href="{plink :Admin:CategoryItem:create, 'id' => $entity->getId(), 't' => $type}">
+            <i class="material-icons">add_circle_outline</i>
+            {_'Add category'}
+        </a>
+    </div>
+{else}
+    <ul class="collection no-margin striped highlight">
+        <li n:foreach="$categories as $categoryItem" class="collection-item">
+            {$categoryItem->getCategory()->getTitle()}
+
+            <div class="secondary-content">
+                {if $categoryItem->getMain() == 1}
+                    <a class="btn btn-icon btn-xs btn-hover-warning tooltipped" href="#" data-position="left" data-tooltip="{_'This category is main'}">
+                        <i class="material-icons">star</i>
+                    </a>
+                {else}
+                    <a class="btn btn-icon btn-xs btn-hover-warning tooltipped ajax" href="{plink :Admin:CategoryItem:setMain, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Set main category'}">
+                        <i class="material-icons">star_border</i>
+                    </a>
+                {/if}
+
+                <a class="btn btn-icon btn-xs btn-hover-danger tooltipped ajax-modal" href="{plink :Admin:CategoryItem:delete, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Remove category'}">
+                    <i class="material-icons">clear</i>
+                </a>
+            </div>
+        </li>
+    </ul>
+{/if}

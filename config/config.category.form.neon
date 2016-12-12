@@ -15,6 +15,8 @@ services:
     # Containers
     - Wame\CategoryModule\Forms\Containers\ICategoryContainerFactory
     - Wame\CategoryModule\Forms\Containers\ICategoryTreeContainerFactory
+    - Wame\CategoryModule\Forms\Containers\ICategoryTreeModalContainerFactory
+    - Wame\CategoryModule\Forms\Containers\ICategorySelectedContainerFactory
     - Wame\CategoryModule\Forms\Containers\ICategorySelect2ContainerFactory
     - Wame\CategoryModule\Forms\Containers\IParentContainerFactory
 

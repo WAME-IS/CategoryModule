@@ -1,0 +1,8 @@
+services:
+    # Forms
+    Admin.Form.CategoryItem:
+        class: Wame\DynamicObject\Forms\EntityFormBuilder
+        setup:
+            - setRepository(@CategoryItemRepository)
+            - add(@Wame\CategoryModule\Forms\Containers\ICategoryTreeModalContainerFactory, "CategoryTreeContainer", {priority: 50})
+            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 0})
