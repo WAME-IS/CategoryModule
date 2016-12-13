@@ -196,7 +196,7 @@ class CategoryRepository extends TranslatableRepository
      * @param BaseEntity $item Entity
      * @param CategoryEntity $category Category ID	
      */
-    public function attach($item, $category)
+    public function attach($item, $category, $isMain = false)
     {
         $itemCategory = new CategoryItemEntity();
         
@@ -207,6 +207,7 @@ class CategoryRepository extends TranslatableRepository
         }
         
         $itemCategory->item_id = $item->id;
+        $itemCategory->main = $isMain;
 //		$itemCategory->type = $type;
 
         $this->entityManager->persist($itemCategory);
@@ -218,10 +219,11 @@ class CategoryRepository extends TranslatableRepository
      * @param BaseEntity $item Entity
      * @param CategoryEntity[] $categories
      */
-    public function attachAll($item, $categories)
+    public function attachAll($item, $categories, $main = null)
     {
         foreach ($categories as $category) {
-            $this->attach($item, $category);
+            $isMain = ($main !== null && $category->getId() == $main);
+            $this->attach($item, $category, $isMain);
         }
     }
 
@@ -256,23 +258,19 @@ class CategoryRepository extends TranslatableRepository
      * Sync
      * 
      * @param BaseEntity $item Entity
-     * @param CategoryEntity[] $categories Categories
+     * @param CategoryEntity[] $categories  categories
      */
-    public function sync($item, $categories)
+    public function sync($item, $categories, $main = null)
     {
         $attachedCategories = $this->categoryItemRepository->find(['item_id' => $item->id]);
 
         $attached = [];
-
         foreach ($attachedCategories as $ai) {
             $attached[] = $ai->category;
         }
 
-        $toAttach = array_diff($categories, $attached);
-        $toDetach = array_diff($attached, $categories);
-
-        $this->attachAll($item, $toAttach);
-        $this->detachAll($item, $toDetach);
+        $this->attachAll($item, $this->find(['id IN' => array_diff($categories, $attached)]));
+        $this->detachAll($item, $this->find(['id IN' => array_diff($attached, $categories)]));
     }
     
     
