@@ -32,10 +32,10 @@ class CategoryRepository extends TranslatableRepository
     /** @var CategoryItemRepository */
     private $categoryItemRepository;
 
-    
+
     public function __construct(
         EntityManager $entityManager,
-        TraversableManager $traversableManager, 
+        TraversableManager $traversableManager,
         CategoryItemRepository $categoryItemRepository
     ) {
         parent::__construct(CategoryEntity::class, CategoryLangEntity::class);
@@ -47,13 +47,13 @@ class CategoryRepository extends TranslatableRepository
         $this->treeConfigurator->set(Configurator::ENTITY_CLASS, CategoryEntity::class);
         $this->traversableManager->setConfigurator($this->treeConfigurator);
     }
-    
-    
+
+
     /** CREATE ****************************************************************/
 
     /**
      * Create category
-     * 
+     *
      * @param CategoryEntity $categoryEntity	CategoryEntity
      * @return CategoryEntity					CategoryEntity
      * @throws RepositoryException				Exception
@@ -65,13 +65,13 @@ class CategoryRepository extends TranslatableRepository
 
         return $categoryEntity;
     }
-    
-    
+
+
     /** READ ******************************************************************/
 
     /**
      * Get category by item ID
-     * 
+     *
      * @param type $id		item ID
      * @param type $type	type
      * @param type $parent	parent
@@ -150,12 +150,12 @@ class CategoryRepository extends TranslatableRepository
         return $pairs;
     }
 
-    
+
     /** UPDATE ****************************************************************/
-    
+
     /**
      * Update
-     * 
+     *
      * @param CategoryEntity $categoryEntity    category
      * @return CategoryEntity
      */
@@ -163,13 +163,13 @@ class CategoryRepository extends TranslatableRepository
     {
         return $categoryEntity;
     }
-    
-    
+
+
     /** DELETE ****************************************************************/
 
     /**
      * Remove category
-     * 
+     *
      * @param integer $id
      */
     public function delete($id)
@@ -186,26 +186,26 @@ class CategoryRepository extends TranslatableRepository
             }
         }
     }
-    
-    
+
+
     /** RELATION **************************************************************/
 
     /**
      * Attach categories to item
-     * 
+     *
      * @param BaseEntity $item Entity
-     * @param CategoryEntity $category Category ID	
+     * @param CategoryEntity $category Category ID
      */
     public function attach($item, $category, $isMain = false)
     {
         $itemCategory = new CategoryItemEntity();
-        
+
         if($category instanceof CategoryEntity) {
             $itemCategory->category = $category->id;
         } else {
             $itemCategory->category = $category;
         }
-        
+
         $itemCategory->item_id = $item->id;
         $itemCategory->main = $isMain;
 //		$itemCategory->type = $type;
@@ -215,7 +215,7 @@ class CategoryRepository extends TranslatableRepository
 
     /**
      * Attach all
-     * 
+     *
      * @param BaseEntity $item Entity
      * @param CategoryEntity[] $categories
      */
@@ -229,7 +229,7 @@ class CategoryRepository extends TranslatableRepository
 
     /**
      * Detach
-     * 
+     *
      * @param BaseEntity $item Entity
      * @param CategoryEntity $category Category ID
      */
@@ -243,7 +243,7 @@ class CategoryRepository extends TranslatableRepository
 
     /**
      * Detach all
-     * 
+     *
      * @param BaseEntity $item Entity
      * @param CategoryEntity[] $categories Categories
      */
@@ -256,7 +256,7 @@ class CategoryRepository extends TranslatableRepository
 
     /**
      * Sync
-     * 
+     *
      * @param BaseEntity $item Entity
      * @param CategoryEntity[] $categories  categories
      */
@@ -272,13 +272,13 @@ class CategoryRepository extends TranslatableRepository
         $this->attachAll($item, $this->find(['id IN' => array_diff($categories, $attached)]));
         $this->detachAll($item, $this->find(['id IN' => array_diff($attached, $categories)]));
     }
-    
-    
+
+
     /** API *******************************************************************/
 
     /**
      * Get categories
-     * 
+     *
      * @api {get} /categories/:ids Get categories
      * @param string $ids
      */
@@ -300,7 +300,7 @@ class CategoryRepository extends TranslatableRepository
 
     /**
      * Get category descendants
-     * 
+     *
      * @api {get} /category/:type/:node Get category by id
      * @param string $type
      * @param int $node
@@ -310,19 +310,19 @@ class CategoryRepository extends TranslatableRepository
         $criteria = [
             'type' => $type
         ];
-        
+
         if($node) {
             $actual = $this->get(['id' => $node]);
             $criteria['parent'] = $actual;
         } else {
             $criteria['depth'] = 1;
         }
-        
+
         $categories = $this->find($criteria);
-        
+
         $nodes = [];
-        
-        
+
+
         foreach ($categories as $category) {
             $nodes[] = [
                 'label' => $category->title,
@@ -334,43 +334,43 @@ class CategoryRepository extends TranslatableRepository
 
         return $nodes;
     }
-    
-    
+
+
     /**
      * Api get categories
-     * 
+     *
      * @api {get} /categories/ Search categories
-     * @param string $query
-     * 
+     * @param string $phrase
+     *
      * @return CategoryEntity[]
      */
-    public function apiGetCategories($query = null)
+    public function apiGetCategories($phrase = null)
     {
         $separator = ' ';
-        
-        $phrases = explode($separator, $query);
-        
+
+        $phrases = explode($separator, $phrase);
+
         /* @var $qb QueryBuilder */
         $qb = $this->createQueryBuilder('a');
-        
+
         $qb->select('a.id, l0.title');
 
         $likeTitle = $qb->expr()->andx();
         foreach($phrases as $phrase) {
             $likeTitle->add($qb->expr()->like("l0.title", $qb->expr()->literal("%$phrase%")));
         }
-                
+
         $qb->andWhere($likeTitle);
-        
+
         return $qb->getQuery()->getResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
     }
-    
+
 //    /**
 //     * Api get count of categories items
-//     * 
+//     *
 //     * @api {get} /categories-count/ Get count of items in given category ids
 //     * @param int|array $categories
-//     * 
+//     *
 //     * @return array
 //     */
 //    public function apiGetCount($categories)
@@ -378,33 +378,33 @@ class CategoryRepository extends TranslatableRepository
 //        if(!is_array($categories)) {
 //            $categories = [$categories];
 //        }
-//        
+//
 //        $qb = $this->createQueryBuilder('c');
-//        
+//
 //        $qb2 = $qb;
-//        
+//
 ////        $qb2 = $this->createQueryBuilder('x');
-//        
+//
 //        $qb2->select('c.id')
 //            ->where($qb2->expr()->lt('c.rgt', ':koren'))
 //            ->setParameter('koren', 'c.id');
-//        
+//
 //        $qb->select(['c.id', "({$qb->expr()->count('ci.id')}) AS itemCount"])
 //            ->leftJoin(CategoryItemEntity::class, 'ci', Join::WITH, "c.id = ci.category")
 //            ->andWhere($qb->expr()->in('c.id', $qb2->getDQL()))
 //            ->groupBy('c.id');
-//        
+//
 ////        return $qb->getQuery()->getDQL();
-//        
+//
 //        return $qb->getQuery()->getResult();
 //    }
-    
+
     /**
      * Api get categories item count
-     * 
+     *
      * @api {get} /categories-item-count/ Get categories item count
      * @param int|array $categories     categories ids
-     * 
+     *
      * @return array
      */
     public function apiGetCategoriesItemCount($categories)
@@ -412,27 +412,27 @@ class CategoryRepository extends TranslatableRepository
         if(!is_array($categories)) {
             $categories = [$categories];
         }
-        
+
         $arr = [];
-        
+
         foreach($categories as $category) {
             $cid = $this->getChildrenIds($category);
-            
+
             if(is_array($cid)) {
                 $arr[$category] = $this->categoryItemRepository->countBy(['item_id IN' => [$category] + $cid]);
             }
         }
-        
+
         return $arr;
     }
-    
+
     /**
      * Api get categories child count
-     * 
+     *
      * @api {get} /categories-child-count/ Get categories child count
      * @param int|array $categories     categories ids
      * @param bool $direct              is direct descendant
-     * 
+     *
      * @return array
      */
     public function apiGetCategoriesChildCount($categories, $direct = true)
@@ -440,32 +440,32 @@ class CategoryRepository extends TranslatableRepository
         if(!is_array($categories)) {
             $categories = [$categories];
         }
-        
+
         $arr = [];
-        
+
         foreach($categories as $category) {
             $cid;
-            
+
             if(filter_var($direct, FILTER_VALIDATE_BOOLEAN)) {
                 $cid = $this->findPairs(['parent' => $category], 'id');
             } else {
                 $cid = $this->getChildrenIds($category);
             }
-            
+
             if(is_array($cid)) {
                 $arr[$category] = $this->countBy(['id IN' => $cid]);
             }
         }
-        
+
         return $arr;
     }
-    
-    
+
+
     /** implements ************************************************************/
-    
+
     /**
      * Flush
-     * 
+     *
      * @param Entity $entity
      */
     public function flush($entity = null)
@@ -476,8 +476,8 @@ class CategoryRepository extends TranslatableRepository
             $this->entityManager->flush($entity);
         }
     }
-    
-    
+
+
     private function getChildrenIds($category)
     {
         $c = $this->get(['id' => $category]);
@@ -486,8 +486,8 @@ class CategoryRepository extends TranslatableRepository
         $children = array_map(function($e) {
             return $e->getId();
         }, $categories);
-        
+
         return $children;
     }
-    
+
 }

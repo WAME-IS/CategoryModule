@@ -1,0 +1,58 @@
+<div id="search-category" class="modal modal-inline modal-transparent">
+    <div class="modal-header">
+        <div class="text-right">
+            <a class="btn btn-success modal-check" href="{plink CategoryItem:create, 'id' => $itemId, 't' => $type}" data-overlay="[data-overlay-wrapper='{$container->getName()}']">
+                <i class="material-icons">check</i>
+                {_'Add categories'}
+            </a>
+            <a class="btn btn-icon modal-close" href="#">
+                <i class="material-icons">close</i>
+            </a>
+        </div>
+    </div>
+        
+    <div class="modal-content">
+        <input type="hidden" name="{$container->getName()}" class="modal-inline-input" data-input-name="{$container->getName()}[category]">
+        
+        <div class="row">
+            <div class="form-group-transparent group col-xs-12">
+                <fieldset>
+                    <div class="input-field with-loader">
+                        <i class="material-icons prefix showed">search</i>
+                        <span class="prefix loader light small hidden"></span>
+                        <input type="text" name="search-category" data-wame-autocomplete="category">
+                        <label for="search-category">{_'Search category'}</label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="form-group-transparent group col-xs-12">
+                <fieldset class="stack"></fieldset>
+            </div>
+        
+            <div class="group col-xs-12" id="category-tree">
+                <fieldset>
+                    <div class="input-field">
+                        <div class="categoryTree" data-url="/api/v1/category/?type={$type}&node=2" data-input="{$container->getName()}">
+                            <div class="preloader valign-wrapper">
+                                <div class="preloader-wrapper active valign">
+                                    <div class="spinner-layer">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

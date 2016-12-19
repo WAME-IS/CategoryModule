@@ -5,6 +5,7 @@ namespace App\AdminModule\Presenters;
 use Wame\DynamicObject\Vendor\Wame\AdminModule\Presenters\AdminFormPresenter;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
+use Wame\CategoryModule\Repositories\CategoryRepository;
 
 
 class CategoryItemPresenter extends AdminFormPresenter
@@ -12,18 +13,35 @@ class CategoryItemPresenter extends AdminFormPresenter
     /** @var CategoryItemRepository @inject */
     public $repository;
 
+    /** @var CategoryRepository @inject */
+    public $categoryRepository;
+
     /** @var CategoryItemEntity */
     protected $entity;
 
+    /** @var CategoryItemEntity[] */
+    protected $entities;
+
     /** @var string */
     private $type;
+
+    /** @var int */
+    private $itemId;
 
 
     /** actions ***************************************************************/
 
     public function actionCreate()
     {
+        $this->itemId = $this->getParameter('id');
         $this->type = $this->getParameter('t');
+        $categoryIds = explode(',', $this->getParameter('categories'));
+
+        $categories = $this->categoryRepository->find(['id IN' => $categoryIds]);
+
+        $this->repository->setItemToCategory($this->type, $this->itemId, $categories);
+
+        $this->entities = $this->repository->findByType($this->type, $this->itemId);
     }
 
 
@@ -64,7 +82,9 @@ class CategoryItemPresenter extends AdminFormPresenter
     public function renderCreate()
     {
         $this->template->siteTitle = _('Add to category');
+        $this->template->categories = $this->entities;
         $this->template->type = $this->type;
+        $this->template->itemId = $this->itemId;
     }
 
 

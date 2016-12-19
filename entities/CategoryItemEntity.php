@@ -26,10 +26,18 @@ class CategoryItemEntity extends BaseEntity
      */
 	protected $category;
 
-    
+
     public function getItemId()
     {
         return $this->item_id;
+    }
+
+
+    public function setItemId($itemId)
+    {
+        $this->item_id = $itemId;
+        
+        return $this;
     }
 
 }

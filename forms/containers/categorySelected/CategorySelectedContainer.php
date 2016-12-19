@@ -7,6 +7,7 @@ use Wame\DynamicObject\Registers\Types\IBaseContainer;
 use Wame\Core\Registers\StatusTypeRegister;
 use Wame\CategoryModule\Forms\Groups\CategoryGroup;
 use Wame\CategoryModule\Repositories\CategoryRepository;
+use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
 
 
@@ -30,6 +31,9 @@ class CategorySelectedContainer extends BaseContainer
 
     /** @var string */
     protected $type;
+
+    /** @var CategoryItemEntity[] */
+    protected $categories;
 
 
     public function __construct(
@@ -64,42 +68,51 @@ class CategorySelectedContainer extends BaseContainer
         $this->getForm()->addBaseGroup($group, 'CategoryGroup');
 
 		$this->addHidden('category', _('Category'))
-				->setRequired(_('Please select category'));
+                ->setAttribute('data-tree', $this->getName());
     }
+
+
+    /** {@inheritDoc} */
+	public function setDefaultValues($entity, $langEntity = null)
+	{
+        $this->categories = $this->categoryItemRepository->findByType($this->type, $entity->getId());
+
+        $categoryItems = [];
+
+        foreach ($this->categories as $categoryItem) {
+            $categoryItems[] = $categoryItem->getCategory()->getId();
+        }
+
+        $this['category']->setDefaultValue(implode(',', $categoryItems));
+	}
+
 
     /** {@inheritDoc} */
     public function compose($template)
     {
         $itemId = $this->getForm()->getEntity()->getId();
 
-        $categories = $this->categoryItemRepository->findByType($this->type, $itemId);
-
-        $template->categories = $categories;
+        $template->categories = $this->categories;
         $template->type = $this->type;
         $template->itemId = $itemId;
     }
 
-    /** {@inheritDoc} */
-	public function setDefaultValues($entity, $langEntity = null)
-	{
-        // TODO:
-//        $this['category']->setDefaultValue($entity->getTitle());
-	}
 
     /** {@inheritDoc} */
     public function create($form, $values)
     {
-        // TODO:
-//        $entity = method_exists($form, 'getLangEntity') ? $form->getLangEntity(): $form->getEntity();
-//        $entity->setCategory($values['category']);
+
     }
+
 
     /** {@inheritDoc} */
     public function update($form, $values)
     {
-        // TODO:
-//        $entity = method_exists($form, 'getLangEntity') ? $form->getLangEntity(): $form->getEntity();
-//        $entity->setCategory($values['category']);
+        $entity = method_exists($form, 'getLangEntity') ? $form->getLangEntity(): $form->getEntity();
+
+        $categories = $this->categoryRepository->findAssoc(['id IN' => explode(',', $values['category'])], 'id');
+
+        $this->categoryItemRepository->setItemToCategory($this->type, $entity->getId(), $categories);
     }
 
 }
