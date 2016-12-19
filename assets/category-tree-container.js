@@ -1,7 +1,13 @@
 $(function() {
-    var initCategoryTree = function () {
+    var initCategoryTree = function() {
         var $categories;
-        var $tree = $('.categoryTree').tree();
+        var $tree = $('.categoryTree').tree({
+            selectable: true
+        });
+        
+        var selectCheckbox = function() {
+            $tree.tree('setState', {open_nodes: [], selected_node: $categories.attr('value').split(',')});
+        };
 
         $tree
             .bind('tree.init', function() {
@@ -12,18 +18,13 @@ $(function() {
                 }
                 
                 $categories = $('input[name="' + name + '"]');
-            })
-            .bind('tree.select', function() {
                 
+                selectCheckbox();
             })
-            .bind('tree.selectNode', function(e) {
-                console.log('som tutaj');
-            })
-            .bind('tree.open', function(e) {
-                console.log(e.node);
+            .bind('tree.open', function() {
+                selectCheckbox();
             })
             .bind('tree.click', function(e) {
-                // Disable single selection
                 e.preventDefault();
 
                 var selected_node = e.node;
@@ -44,9 +45,6 @@ $(function() {
                 
                 initSelectCategory(selected_node.id, selected_node.name);
             });
-            
-                            
-
     };
     
     initCategoryTree();
@@ -59,7 +57,7 @@ $(function() {
     
     var initSearchCategory = function () {
         $('.modal#search-category input[name="search-category"]').keyup(function() {
-            if ($(this).val() === '') {
+            if ($(this).val().length < 3) {
                 $('.modal#search-category #category-tree').show();
             } else {
                 $('.modal#search-category #category-tree').hide();
@@ -113,10 +111,23 @@ $(function() {
     
     initChipRemove();
     
-//    $('.modal#search-category .ui-autocomplete li').on('click', function() {
-//        console.log('som tu');
-//        initSelectCategory($(this));
-//    });
+    var initSearch = function() {
+        $('.modal#search-category').delegate('.ui-autocomplete li', 'click', function() {
+            var modal = $('.modal#search-category');
+            var input = modal.find('[name="search-category"]');
+            var div = modal.find('.autocomplete-value');
+            var categoryId = input.val();
+            var categoryName = div.text();
+
+            initSelectCategory(categoryId, categoryName);
+
+            input.val('').show();
+            div.remove();
+            $('.modal#search-category #category-tree').show();
+        });
+    };
+    
+    initSearch();
     
     var initSubmitCategory = function() {
         $('.modal#search-category .modal-check').on('click', function(e) {

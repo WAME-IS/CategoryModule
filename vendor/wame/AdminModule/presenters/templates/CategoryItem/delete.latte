@@ -1,5 +1,6 @@
 {block content}
-	<p>{_'Do you want remove category %s?', $subTitle}</p>
-	
-	<a n:href="delete!" class="btn btn-danger">Delete</a>
-	<a n:href="back!" class="btn btn-default">Back</a>
+
+<p>{_'Do you want remove category %s?', $subTitle}</p>
+
+<a class="btn btn-danger" n:href="Delete!" data-disabled="click">{_'Delete'}</a>
+<a class="btn btn-default" n:href="#" data-dismiss="modal">{_'Cancel'}</a>

@@ -12,7 +12,7 @@
     </div>
         
     <div class="modal-content">
-        <input type="hidden" name="{$container->getName()}" class="modal-inline-input" data-input-name="{$container->getName()}[category]">
+        <input type="hidden" name="{$container->getName()}" class="modal-inline-input" data-input-name="{$container->getName()}[category]" value="{implode(',', array_keys($categoryItems))}">
         
         <div class="row">
             <div class="form-group-transparent group col-xs-12">
@@ -27,7 +27,12 @@
             </div>
 
             <div class="form-group-transparent group col-xs-12">
-                <fieldset class="stack"></fieldset>
+                <fieldset class="stack">
+                    <div n:foreach="$categoryItems as $key => $title" class="chip" data-category="{$key}">
+                        {$title}
+                        <i class="close material-icons" data-category="{$key}">close</i>
+                    </div>
+                </fieldset>
             </div>
         
             <div class="group col-xs-12" id="category-tree">

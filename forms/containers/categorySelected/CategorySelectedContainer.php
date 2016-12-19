@@ -35,6 +35,9 @@ class CategorySelectedContainer extends BaseContainer
     /** @var CategoryItemEntity[] */
     protected $categories;
 
+    /** @var array */
+    protected $categoryItems = [];
+
 
     public function __construct(
         \Nette\DI\Container $container,
@@ -77,13 +80,11 @@ class CategorySelectedContainer extends BaseContainer
 	{
         $this->categories = $this->categoryItemRepository->findByType($this->type, $entity->getId());
 
-        $categoryItems = [];
-
         foreach ($this->categories as $categoryItem) {
-            $categoryItems[] = $categoryItem->getCategory()->getId();
+            $this->categoryItems[$categoryItem->getCategory()->getId()] = $categoryItem->getCategory()->getTitle();
         }
 
-        $this['category']->setDefaultValue(implode(',', $categoryItems));
+        $this['category']->setDefaultValue(implode(',', array_keys($this->categoryItems)));
 	}
 
 
@@ -93,6 +94,7 @@ class CategorySelectedContainer extends BaseContainer
         $itemId = $this->getForm()->getEntity()->getId();
 
         $template->categories = $this->categories;
+        $template->categoryItems = $this->categoryItems;
         $template->type = $this->type;
         $template->itemId = $itemId;
     }
