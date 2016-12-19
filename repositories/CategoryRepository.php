@@ -222,8 +222,13 @@ class CategoryRepository extends TranslatableRepository
     public function attachAll($item, $categories, $main = null)
     {
         foreach ($categories as $category) {
-            $isMain = ($main !== null && $category->getId() == $main);
-            $this->attach($item, $category, $isMain);
+            $isMain = ($main !== null && $category == $main);
+            
+            $categoryEntity = $this->get(['id' => $category]);
+            
+            if($categoryEntity) {
+                $this->attach($item, $category, $isMain);
+            }
         }
     }
 
@@ -266,7 +271,7 @@ class CategoryRepository extends TranslatableRepository
 
         $attached = [];
         foreach ($attachedCategories as $ai) {
-            $attached[] = $ai->category;
+            $attached[] = $ai->category->getId();
         }
 
         $this->attachAll($item, $this->find(['id IN' => array_diff($categories, $attached)]));
