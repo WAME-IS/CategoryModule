@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\Presenters;
 
+use Nette\Utils\Strings;
 use Wame\DynamicObject\Vendor\Wame\AdminModule\Presenters\AdminFormPresenter;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
@@ -47,6 +48,7 @@ class CategoryItemPresenter extends AdminFormPresenter
 
     public function actionSetMain()
     {
+        $this->id = $this->getParameter('id');
         $entity = $this->repository->get(['id' => $this->id]);
 
         $items = $this->repository->find(['category.type' => $entity->getCategory()->getType(), 'item_id' => $entity->getItemId()]);
@@ -56,13 +58,11 @@ class CategoryItemPresenter extends AdminFormPresenter
         }
 
         $entity->setMain(true);
+        $this->entityManager->flush();
 
-        if ($this->isAjax()) {
-            $this->redrawControl();
-            $this->sendPayload();
-        } else {
-            $this->redirect('this');
-        }
+        $this->itemId = $entity->getItemId();
+        $this->type = $entity->getCategory()->getType();
+        $this->entities = $this->repository->findByType($this->type, $this->itemId);
     }
 
 
@@ -70,10 +70,11 @@ class CategoryItemPresenter extends AdminFormPresenter
 
     public function handleDelete()
     {
-        $this->repository->delete(['id' => $this->id]);
+        $this->repository->remove(['id' => $this->id]);
 
-        $this->flashMessage(_('Report type has been successfully deleted'), 'success');
-        $this->redirect(':Admin:ReportType:', ['id' => null]);
+        $this->flashMessage(sprintf(_('Category %s has been successfully removed'), $this->entity->getCategory()->getTitle()), 'success');
+
+        $this->redirect(':Admin:' . Strings::firstUpper($this->entity->getCategory()->getType()) . ':edit', ['id' => $this->entity->getItemId()]);
     }
 
 
@@ -91,6 +92,16 @@ class CategoryItemPresenter extends AdminFormPresenter
     public function renderDelete()
     {
         $this->template->siteTitle = _('Remove category');
+        $this->template->subTitle = $this->entity->getCategory()->getTitle();
+    }
+
+
+    public function renderSetMain()
+    {
+        $this->template->setFile(__DIR__ . '/templates/CategoryItem/create.latte');
+        $this->template->categories = $this->entities;
+        $this->template->type = $this->type;
+        $this->template->itemId = $this->itemId;
     }
 
 

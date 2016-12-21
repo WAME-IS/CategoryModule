@@ -28,12 +28,12 @@
                             <i class="material-icons">star</i>
                         </a>
                     {else}
-                        <a class="btn btn-icon btn-xs btn-hover-warning tooltipped ajax" href="{plink :Admin:CategoryItem:setMain, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Set main category'}">
+                        <a class="btn btn-icon btn-xs btn-hover-warning tooltipped ajax-snippet" href="{plink CategoryItem:setMain, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Set main category'}" data-ajax-snippet=".category-list">
                             <i class="material-icons">star_border</i>
                         </a>
                     {/if}
 
-                    <a class="btn btn-icon btn-xs btn-hover-danger tooltipped ajax-modal" href="{plink :Admin:CategoryItem:delete, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Remove category'}">
+                    <a class="btn btn-icon btn-xs btn-hover-danger tooltipped ajax-modal" href="{plink CategoryItem:delete, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Remove category'}">
                         <i class="material-icons">clear</i>
                     </a>
                 </div>
