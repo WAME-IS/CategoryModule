@@ -193,17 +193,18 @@ class CategoryRepository extends TranslatableRepository
     /**
      * Attach categories to item
      *
-     * @param BaseEntity $item Entity
-     * @param CategoryEntity $category Category ID
+     * @param BaseEntity $item          entity
+     * @param CategoryEntity $category  category
      */
     public function attach($item, $category, $isMain = false)
     {
         $itemCategory = new CategoryItemEntity();
 
         if($category instanceof CategoryEntity) {
-            $itemCategory->category = $category->id;
-        } else {
             $itemCategory->category = $category;
+        } else {
+            $categoryEntity = $this->get(['id' => $category]);
+            $itemCategory->category = $categoryEntity;
         }
 
         $itemCategory->item_id = $item->id;
@@ -216,27 +217,27 @@ class CategoryRepository extends TranslatableRepository
     /**
      * Attach all
      *
-     * @param BaseEntity $item Entity
-     * @param CategoryEntity[] $categories
+     * @param BaseEntity $item                      entity
+     * @param CategoryEntity[]|int[] $categories    categories
      */
     public function attachAll($item, $categories, $main = null)
     {
+        // if categories contains ids
+        if($categories === array_filter($categories, 'is_int')) {
+            $categories = $this->find(['id IN' => $categories]);
+        }
+        
         foreach ($categories as $category) {
-            $isMain = ($main !== null && $category == $main);
-            
-            $categoryEntity = $this->get(['id' => $category]);
-            
-            if($categoryEntity) {
-                $this->attach($item, $category, $isMain);
-            }
+            $isMain = ($main !== null && $category->getId() == $main);
+            $this->attach($item, $category, $isMain);
         }
     }
 
     /**
      * Detach
      *
-     * @param BaseEntity $item Entity
-     * @param CategoryEntity $category Category ID
+     * @param BaseEntity $item          entity
+     * @param CategoryEntity $category  category
      */
     public function detach($item, $category)
     {
@@ -249,11 +250,16 @@ class CategoryRepository extends TranslatableRepository
     /**
      * Detach all
      *
-     * @param BaseEntity $item Entity
-     * @param CategoryEntity[] $categories Categories
+     * @param BaseEntity $item                      entity
+     * @param CategoryEntity[]|int[] $categories    categories
      */
     public function detachAll($item, $categories)
     {
+        // if categories contains ids
+        if($categories === array_filter($categories, 'is_int')) {
+            $categories = $this->find(['id IN' => $categories]);
+        }
+        
         foreach ($categories as $category) {
             $this->detach($item, $category);
         }
@@ -262,8 +268,9 @@ class CategoryRepository extends TranslatableRepository
     /**
      * Sync
      *
-     * @param BaseEntity $item Entity
+     * @param BaseEntity $item              entity
      * @param CategoryEntity[] $categories  categories
+     * @param boolean $main                 is main
      */
     public function sync($item, $categories, $main = null)
     {
