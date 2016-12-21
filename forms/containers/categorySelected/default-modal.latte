@@ -1,4 +1,4 @@
-<div id="search-category" class="modal modal-inline modal-transparent">
+<div id="search-category" class="modal modal-lg modal-inline modal-transparent">
     <div class="modal-header">
         <div class="text-right">
             <a class="btn btn-success modal-check" href="{plink CategoryItem:create, 'id' => $itemId, 't' => $type}" data-overlay="[data-overlay-wrapper='{$container->getName()}']">
@@ -11,7 +11,7 @@
         </div>
     </div>
         
-    <div class="modal-content">
+    <div class="modal-content col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
         <input type="hidden" name="{$container->getName()}" class="modal-inline-input" data-input-name="{$container->getName()}[category]" value="{implode(',', array_keys($categoryItems))}">
         
         <div class="row">
@@ -28,7 +28,7 @@
 
             <div class="form-group-transparent group col-xs-12">
                 <fieldset class="stack">
-                    <div n:foreach="$categoryItems as $key => $title" class="chip" data-category="{$key}">
+                    <div n:foreach="$categoryItems as $key => $title" class="chip chip-light" data-category="{$key}">
                         {$title}
                         <i class="close material-icons" data-category="{$key}">close</i>
                     </div>
