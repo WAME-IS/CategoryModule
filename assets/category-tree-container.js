@@ -86,7 +86,7 @@ $(function() {
 
             var chip = $('<div/>', {
                 'data-category' : categoryId,
-                'class' : 'chip',
+                'class' : 'chip chip-light',
                 'html' : categoryName
             }).append(close);
 
@@ -99,7 +99,6 @@ $(function() {
      */
     var initChipRemove = function() {
         $('.modal#search-category .stack').delegate('.chip .close', 'click', function() {
-            
             var categoryId = $(this).data('category');
             var input = $('[name="CategorySelectedContainer"]');
             var categories = input.val().split(',');
@@ -123,6 +122,7 @@ $(function() {
     
     /**
      * Autocomplete search keyup
+     * Hidden category-tree
      */
     var initSearchCategory = function () {
         $('.modal#search-category input[name="search-category"]').keyup(function() {
@@ -138,7 +138,7 @@ $(function() {
         });
     };
     
-    initSearchCategory();
+//    initSearchCategory();
     
     /**
      * Select category from autocomplete list
