@@ -29,16 +29,16 @@ class CategoryControl extends SingleEntityControl
         if ($categoryList instanceof CategoryListControl) {
             /** NEW ***********************************************************/
             if($categoryList->main) {
-                $this->template->categoryLink = $categoryList->getPresenter()->link(':ShopProduct:ShopProduct:default', ['category' => $this->getEntity()->id]);
+                $this->template->categoryLink = $categoryList->getPresenter()->link(':ShopProduct:ShopProduct:default', ['category' => $this->getEntity()->slug ?: $this->getEntity()->id]);
             } else {
-                $this->template->categoryLink = $categoryList->link('this', ['category' => $this->getEntity()->id]);
+                $this->template->categoryLink = $categoryList->link('this', ['category' => $this->getEntity()->slug ?: $this->getEntity()->id]);
             }
             /** /NEW **********************************************************/
             
             // povodne
 //            $this->template->categoryLink = $categoryList->link('this', ['category' => $this->getEntity()->id]);
         } else {
-            $this->template->categoryLink = $categoryList->getPresenter()->link('Category:Category:default', ['category' => $this->getEntity()->id]);
+            $this->template->categoryLink = $categoryList->getPresenter()->link('Category:Category:default', ['category' => $this->getEntity()->slug ?: $this->getEntity()->id]);
         }
     }
 }

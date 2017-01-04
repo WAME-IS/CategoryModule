@@ -3,8 +3,7 @@
 namespace Wame\CategoryModule\Components;
 
 use Nette\DI\Container;
-use Wame\CategoryModule\Components\CategoryListControl;
-use Wame\CategoryModule\Components\ICategoryControlFactory;
+use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\ChameleonComponentsListControl\Components\ChameleonTreeListControl;
 use Wame\ListControl\Components\ISimpleEmptyListControlFactory;
 use Wame\TitleControl\Components\TitleControl;
@@ -47,9 +46,9 @@ class CategoryListControl extends ChameleonTreeListControl
     public function render()
     {
         $depthFrom = $this->getDepth();
-        
+
         $this->template->depthFrom = $depthFrom;
-        
+
         parent::render();
     }
     
@@ -57,7 +56,7 @@ class CategoryListControl extends ChameleonTreeListControl
     public function beforeRender()
     {
         parent::beforeRender();
-        
+
         $this->main = $this->getComponentParameter('main');
     }
 
@@ -66,18 +65,18 @@ class CategoryListControl extends ChameleonTreeListControl
     protected function getCategoriesIds()
     {
         $selectedCategory = $this->getSelectedCategory();
-        
+
         if ($selectedCategory) {
             TitleControl::add($this, $selectedCategory->getTitle());
-            
+
             $categories = $this->categoryRepository->getChildren($selectedCategory);
-            
+
             $categoriesIds = array_map(function($e) {
                 return $e->getId();
             }, $categories);
-            
+
             $categoriesIds[] = $selectedCategory->id;
-            
+
             return $categoriesIds;
         }
     }
@@ -88,11 +87,12 @@ class CategoryListControl extends ChameleonTreeListControl
         if($this->selectedCategory) {
             return $this->selectedCategory;
         }
-        
+
         $category = $this->category ?: ($this->getComponentParameter(self::PARAM_CATEGORY) ?: $this->presenter->getParameter('category'));
-        
+
         if($category) {
-            return $this->categoryRepository->get(['id' => $category]);
+            $this->selectedCategory = $this->categoryRepository->get(['id' => $category]);
+            return $this->selectedCategory;
         }
     }
     
@@ -111,7 +111,7 @@ class CategoryListControl extends ChameleonTreeListControl
     /**
      * Get depth
      * 
-     * @return type
+     * @return int
      */
     private function getDepth()
     {
