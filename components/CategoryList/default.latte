@@ -7,7 +7,7 @@
         {/if}
 
         {foreach $components as $componentNode}
-            {if $componentNode->component->entity->getDepth() > $depthFrom}
+            {if $componentNode->component->getEntity()->getDepth() > $depthFrom}
                 {if $treeItemContainer}
                     {$treeItemContainer->startTag()|noescape}
                 {/if}
