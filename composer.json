@@ -11,10 +11,12 @@
     ],
     "require": {
         "wame/Core": "*",
-        "wame/MenuModule": "*",
         "wame/PermissionModule": "*",
         "wame/UserModule": "*",
         "wame/AutocompleteFormControl": "*"
+    },
+    "softRequire": {
+        "wame/MenuModule": "*"
     },
     "autoload": {
         "classmap": [
