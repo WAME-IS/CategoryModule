@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\Presenters;
 
+use Kdyby\GeneratedProxy\__CG__\Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Vendor\Wame\AdminModule\Grids\CategoryGrid;
 use Wame\MenuModule\Forms\MenuItemForm;
@@ -78,10 +79,6 @@ class CategoryPresenter extends AdminFormPresenter
 
     public function handleSort($item_id, $prev_id, $next_id)
     {
-        \Tracy\Debugger::barDump(
-            $this->getParameters()
-        );
-
         if ($this->isAjax()) {
             $this->redrawControl('flashes');
         } else {

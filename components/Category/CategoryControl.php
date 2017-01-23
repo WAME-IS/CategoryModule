@@ -8,7 +8,6 @@ use Wame\ListControl\Components\IEntityControlFactory;
 
 interface ICategoryControlFactory extends IEntityControlFactory
 {
-
     /** @return CategoryControl */
     public function create($entity = null);
 }

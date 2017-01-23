@@ -39,9 +39,11 @@ services:
         tags: [kdyby.console.command]
 
 
+
 doctrine:
     metadata:
         Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
+
 
 
 webloader:
@@ -70,6 +72,7 @@ webloader:
                 - %appDir%/../vendor/wame/CategoryModule/assets/categoryMenu.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/main.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/category-tree-container.js
+
 
 
 extensions:

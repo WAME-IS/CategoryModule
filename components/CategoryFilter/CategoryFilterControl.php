@@ -3,11 +3,12 @@
 namespace Wame\CategoryModule\Components;
 
 use Doctrine\Common\Collections\Criteria;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Wame\Core\Components\BaseControl;
-//use Wame\CategoryModule\Forms\CategoryFilterFormBuilder;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\ChameleonComponents\IO\DataLoaderControl;
+use Wame\Utils\Doctrine;
 use Wame\Utils\Strings;
 use Wame\Utils\Tree\NestedSetTreeBuilder;
 
@@ -19,12 +20,13 @@ interface ICategoryFilterControlFactory
 
 class CategoryFilterControl extends BaseControl implements DataLoaderControl
 {
-    use \Wame\CategoryModule\Components\CategoryListTrait;
+    use CategoryListTrait;
 
     
     /** @persistent */
     public $categories;
-    
+
+    /** @var CategoryEntity[] */
     public $allowedCategories = [];
 
 //    /** @var CategoryFilterFormBuilder */
@@ -52,7 +54,7 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
     {
         parent::beforeRender();
         
-        $statusName = \Wame\Utils\Strings::plural(\Wame\ShopProductModule\Entities\ShopProductEntity::class);
+        $statusName = Strings::plural(\Wame\ShopProductModule\Entities\ShopProductEntity::class); // TODO: odstranit zavyslost!!
         $statusNameQb = $statusName . '-qb';
         
         /* @var $qb QueryBuilder */
@@ -63,8 +65,8 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
                 ->setFirstResult(null)
                 ->setMaxResults(null);
             
-            \Wame\Utils\Doctrine::removeWherePart($qb, 'c.category', ['c_category']);
-            \Wame\Utils\Doctrine::removeWherePart($qb, 'c.item_id');
+            Doctrine::removeWherePart($qb, 'c.category', ['c_category']);
+            Doctrine::removeWherePart($qb, 'c.item_id');
             
             $foundCategories = $qb->getQuery()->getResult();
             
@@ -125,7 +127,7 @@ class CategoryFilterControl extends BaseControl implements DataLoaderControl
     
     protected function createComponentForm()
     {
-        $presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
+        $presenter = $this->lookup(Presenter::class);
         $form = $presenter->context->getService("CategoryFilterFormBuilder")->build();
         
         if($this->categories) {

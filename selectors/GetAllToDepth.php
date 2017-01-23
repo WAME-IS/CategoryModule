@@ -20,6 +20,7 @@ use Kdyby\Doctrine\QueryObject;
  *
  * @package Wame\CategoryModule\Selectors
  * @author Rene Gmitter
+ * @deprecated 
  */
 class GetAllToDepth extends QueryObject
 {

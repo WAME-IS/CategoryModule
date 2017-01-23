@@ -9,8 +9,11 @@ class CategoryListener extends Object
 {
 	const TAG = 'CategoryListener';
 
+
+	/** @var CategoryRepository */
 	private $categoryRepository;
-	
+
+
 	public function __construct(CategoryRepository $categoryRepository)
 	{
 		$this->categoryRepository = $categoryRepository;

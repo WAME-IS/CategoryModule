@@ -2,7 +2,6 @@
 
 namespace Wame\CategoryModule\Repositories;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Kappa\DoctrineMPTT\Configurator;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
@@ -12,7 +11,6 @@ use Kdyby\Doctrine\EntityManager;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Entities\CategoryItemEntity;
 use Wame\CategoryModule\Entities\CategoryLangEntity;
-use Wame\CategoryModule\Queries\GetChildrenWithLang;
 use Wame\Core\Entities\BaseEntity;
 use Wame\Core\Exception\RepositoryException;
 use Wame\LanguageModule\Repositories\TranslatableRepository;
@@ -22,6 +20,7 @@ class CategoryRepository extends TranslatableRepository
 {
     const STATUS_REMOVE = 0;
     const STATUS_ACTIVE = 1;
+
 
     /** @var Configurator */
     private $treeConfigurator;
@@ -72,15 +71,16 @@ class CategoryRepository extends TranslatableRepository
     /**
      * Get category by item ID
      *
-     * @param type $id		item ID
-     * @param type $type	type
-     * @param type $parent	parent
-     * @return type			category
+     * @param int $id item ID
+     * @param string $type type
+     * @param int $parent parent
+     * @return CategoryEntity
      */
     public function getByItemId($id, $type, $parent = NULL)
     {
         // TODO: tiez tam vyuzit GetAll na stromove vyhladavanie
 
+        /** @var CategoryEntity $category */
         $category = $this->entity->find(['id' => $id, 'type' => $type]);
 
         return $category;
@@ -88,6 +88,7 @@ class CategoryRepository extends TranslatableRepository
 
     public function getTree($criteria = null)
     {
+        /** @var CategoryEntity $actual */
         $actual = $this->get($criteria);
 
         if ($actual) {
@@ -123,6 +124,9 @@ class CategoryRepository extends TranslatableRepository
 
     /**
      * Get all and parse to key/value array
+     *
+     * @param string $type type
+     * @return array
      */
     public function getPairs($type)
     {
@@ -293,6 +297,7 @@ class CategoryRepository extends TranslatableRepository
      *
      * @api {get} /categories/:ids Get categories
      * @param string $ids
+     * @return array
      */
     public function categories($ids)
     {
@@ -316,6 +321,7 @@ class CategoryRepository extends TranslatableRepository
      * @api {get} /category/:type/:node Get category by id
      * @param string $type
      * @param int $node
+     * @return array
      */
     public function categoryDescendant($type, $node = null)
     {

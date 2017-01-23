@@ -70,13 +70,23 @@ trait CategoryListTrait
         return $controlDataDefinition;
     }
 
-    
+
+    /**
+     * Get categories ids
+     *
+     * @return mixed
+     */
     protected abstract function getCategoriesIds();
 
+    /**
+     * Get selected category
+     */
     protected function getSelectedCategory() {}
     
     
     /**
+     * Set tree root
+     *
      * @param string $statusAlias
      * @param Criteria $categoryCriteria
      * @throws InvalidArgumentException

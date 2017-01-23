@@ -1,12 +1,12 @@
 (function($) {
-    $.fn.categoryMenu = function(settings) {
+    $.fn.categoryMenu = function(s) {
         var defaults = {  
             iconClosed: 'fa fa-bars',
             iconOpened: 'fa fa-times'
            // defaults
         };  
 
-        var settings = $.extend(defaults, settings);
+        var settings = $.extend(defaults, s);
 
         return this.each(function() {  
             var $obj = $(this);

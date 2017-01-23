@@ -1,5 +1,7 @@
 # USE
 
+**DEPRECATED**
+
 1. pridat do formulara metodu 'addCategoryPicker'
 	* addCategoryPicker(<name>, <label>)
 	* napojit settery ak je to nutne

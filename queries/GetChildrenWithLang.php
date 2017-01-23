@@ -15,6 +15,7 @@ use Wame\CategoryModule\Entities\CategoryLangEntity;
  *
  * @package Kappa\DoctrineMPTT\Queries\Objects\Selectors
  * @author Rene Gmitter
+ * @deprecated
  */
 class GetChildrenWithLang extends QueryObject
 {
