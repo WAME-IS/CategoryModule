@@ -39,40 +39,34 @@ services:
         tags: [kdyby.console.command]
 
 
-
 doctrine:
     metadata:
         Wame\CategoryModule\Entities: %appDir%/../vendor/wame/CategoryModule/entities
-
 
 
 webloader:
     css:
         default:
             files:
-                - %appDir%/../private/components/jquery-tree-master/jquery.tree.min.css
-                - %appDir%/../private/components/jqTree/jqtree.css
+                - %appDir%/../private/components/jqTree/css/jqtree.css
         admin:
             files:
-                - %appDir%/../private/components/jquery-tree-master/jquery.tree.min.css
-                - %appDir%/../private/components/jqTree/jqtree.css
+                - %appDir%/../private/components/jqTree/css/jqtree.css
 
     js:
         default:
             files:
-                - %appDir%/../private/components/jquery-tree-master/jquery.tree.min.js
-                - %appDir%/../private/components/jqTree/tree.jquery.js
+                - %appDir%/../private/components/jqTree/js/tree.jquery.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/categoryMenu.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/categorySelect2.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/main.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/category-tree-container.js
         admin:
             files:
-                - %appDir%/../private/components/jqTree/tree.jquery.js
+                - %appDir%/../private/components/jqTree/js/tree.jquery.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/categoryMenu.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/main.js
                 - %appDir%/../vendor/wame/CategoryModule/assets/category-tree-container.js
-
 
 
 extensions:
