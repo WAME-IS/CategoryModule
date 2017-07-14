@@ -4,6 +4,7 @@ namespace Wame\CategoryModule\Components;
 
 use Doctrine\Common\Collections\Criteria;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 use Wame\CategoryModule\Entities\CategoryEntity;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\ChameleonComponents\Definition\ControlDataDefinition;
@@ -51,7 +52,15 @@ trait CategoryListTrait
             $statusAlias = $statusType->getAlias();
             $this->categoryType = $statusAlias;
 
-            $this->setTreeRoot($statusAlias, $categoryCriteria);
+            try {
+                $this->setTreeRoot($statusAlias, $categoryCriteria);
+            } catch (\Exception $e) {
+                if ($e instanceof InvalidArgumentException) {
+                    return null;
+                }
+
+                throw $e;
+            }
         };
         
         $categoriesIds = $this->getCategoriesIds();
@@ -101,7 +110,7 @@ trait CategoryListTrait
 
         $categoryCriteria->andWhere(Criteria::expr()->gte('lft', $category->getLeft()));
         $categoryCriteria->andWhere(Criteria::expr()->lte('rgt', $category->getRight()));
-        
+
         $this->getTreeBuilder()->setFrom($category);
     }
     
