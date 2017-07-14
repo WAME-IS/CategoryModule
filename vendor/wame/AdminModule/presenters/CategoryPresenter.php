@@ -33,7 +33,7 @@ class CategoryPresenter extends AdminFormPresenter
 		$this->type = $this->id;
 
         if($this->type) {
-            $this->count = $this->repository->countBy(['type' => $this->type, 'depth >' => 1]);
+            $this->count = $this->repository->countBy(['type' => $this->type, 'depth >=' => 1]);
         } else {
             $this->redirect(':Admin:Dashboard:');
         }
@@ -179,7 +179,7 @@ class CategoryPresenter extends AdminFormPresenter
 	{
         $qb = $this->repository->createQueryBuilder('a');
         $qb->andWhere($qb->expr()->eq('a.type', ':type'))->setParameter('type', $this->type);
-        $qb->andWhere($qb->expr()->eq('a.depth', ':depth'))->setParameter('depth', 2);
+        $qb->andWhere($qb->expr()->eq('a.depth', ':depth'))->setParameter('depth', 1);
 
 		$this->categoryGrid->setDataSource($qb);
 		$this->categoryGrid->setTreeView([$this, 'getChildren'], 'children');
