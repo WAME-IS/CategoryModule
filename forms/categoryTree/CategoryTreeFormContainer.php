@@ -2,9 +2,11 @@
 
 namespace Wame\CategoryModule\Forms;
 
+use Wame\ComponentModule\Entities\ComponentEntity;
 use Wame\DynamicObject\Forms\BaseFormContainer;
 use Wame\CategoryModule\Repositories\CategoryRepository;
 use Wame\CategoryModule\Repositories\CategoryItemRepository;
+use Wame\Utils\HttpRequest;
 
 
 interface ICategoryTreeFormContainerFactory
@@ -29,7 +31,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 	private $id;
 
 
-	public function __construct(CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository, \Wame\Utils\HttpRequest $httpRequest) 
+	public function __construct(CategoryRepository $categoryRepository, CategoryItemRepository $categoryItemRepository, HttpRequest $httpRequest)
 	{
 		parent::__construct();
 		
@@ -52,6 +54,7 @@ class CategoryTreeFormContainer extends BaseFormContainer
 				->setType($this->type)
                 ->setRequired();
     }
+
     
 	public function setDefaultValues($object)
 	{
@@ -64,8 +67,26 @@ class CategoryTreeFormContainer extends BaseFormContainer
 		foreach($itemCategories as $itemCategory) {
 			$pairs[$itemCategory->id] = $itemCategory->title;
 		}
-		
+
+        $pairs = $this->getCategoriesFromComponent($object, $pairs);
+
 		$form["categories"]->setDefaultValue(implode(',', array_keys($pairs)));
 	}
+
+
+	private function getCategoriesFromComponent($object, $pairs)
+    {
+        if (isset($object->componentEntity) && $object->componentEntity instanceof ComponentEntity) {
+            $categories = $object->componentEntity->getParameter('categories');
+
+            if ($categories && is_array($categories)) {
+                foreach ($categories as $category) {
+                    $pairs[$category] = $category;
+                }
+            }
+        }
+
+        return $pairs;
+    }
 
 }

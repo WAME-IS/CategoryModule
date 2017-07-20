@@ -14,6 +14,7 @@ use Wame\CategoryModule\Entities\CategoryLangEntity;
 use Wame\Core\Entities\BaseEntity;
 use Wame\Core\Exception\RepositoryException;
 use Wame\LanguageModule\Repositories\TranslatableRepository;
+use Wame\Utils\Strings;
 use Wame\Utils\Tree\NestedSetTreeBuilder;
 
 class CategoryRepository extends TranslatableRepository
@@ -506,6 +507,21 @@ class CategoryRepository extends TranslatableRepository
         }, $categories);
 
         return $children;
+    }
+
+
+    /**
+     * Get type by entity
+     *
+     * @param $namespace
+     *
+     * @return string
+     */
+    public static function getTypeByEntity($namespace)
+    {
+        $className = Strings::getClassName($namespace);
+
+        return strtolower(str_replace('Entity', '', $className));
     }
 
 }
