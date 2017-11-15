@@ -3,41 +3,30 @@
 
     {include 'default-modal.latte'}
 
-    {if count($categories) == 0}
-        <div class="empty-block">
-            <p class="text-center">{_'This item does not added any category.'}</p>
+    <a class="btn btn-link btn-block margin-bottom" href="#search-category">
+        <i class="material-icons">add_circle_outline</i>
+        {_'Add to category'}
+    </a>
 
-            <a class="btn btn-success" href="#search-category">
-                <i class="material-icons">add_circle_outline</i>
-                {_'Add category'}
-            </a>
-        </div>
-    {else}
-        <a class="btn btn-link btn-block" href="#search-category">
-            <i class="material-icons">add_circle_outline</i>
-            {_'Add category'}
-        </a>
+    <ul n:if="count($categories) > 0" class="collection no-margin striped highlight category-list">
+        <li n:foreach="$categories as $categoryItem" class="collection-item">
+            {$categoryItem->getCategory()->getTitle()}
 
-        <ul class="collection no-margin striped highlight category-list">
-            <li n:foreach="$categories as $categoryItem" class="collection-item">
-                {$categoryItem->getCategory()->getTitle()}
-
-                <div class="secondary-content">
-                    {if $categoryItem->getMain() == 1}
-                        <a class="btn btn-icon btn-xs btn-hover-warning tooltipped" href="#" data-position="left" data-tooltip="{_'This category is main'}">
-                            <i class="material-icons">star</i>
-                        </a>
-                    {else}
-                        <a class="btn btn-icon btn-xs btn-hover-warning tooltipped ajax-snippet" href="{plink CategoryItem:setMain, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Set main category'}" data-ajax-snippet=".category-list">
-                            <i class="material-icons">star_border</i>
-                        </a>
-                    {/if}
-
-                    <a class="btn btn-icon btn-xs btn-hover-danger tooltipped ajax-modal" href="{plink CategoryItem:delete, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Remove category'}">
-                        <i class="material-icons">clear</i>
+            <div class="secondary-content">
+                {if $categoryItem->getMain() == 1}
+                    <a class="btn btn-icon btn-xs btn-hover-warning tooltipped" href="#" data-position="left" data-tooltip="{_'This category is main'}">
+                        <i class="material-icons">star</i>
                     </a>
-                </div>
-            </li>
-        </ul>
-    {/if}
+                {else}
+                    <a class="btn btn-icon btn-xs btn-hover-warning tooltipped ajax-snippet" href="{plink CategoryItem:setMain, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Set main category'}" data-ajax-snippet=".category-list">
+                        <i class="material-icons">star_border</i>
+                    </a>
+                {/if}
+
+                <a class="btn btn-icon btn-xs btn-hover-danger tooltipped ajax-modal" href="{plink CategoryItem:delete, 'id' => $categoryItem->getId()}" data-position="left" data-tooltip="{_'Remove category'}">
+                    <i class="material-icons">clear</i>
+                </a>
+            </div>
+        </li>
+    </ul>
 </div>

@@ -110,11 +110,12 @@ class CategorySelectedContainer extends BaseContainer
     /** {@inheritDoc} */
     public function update($form, $values)
     {
-        $entity = method_exists($form, 'getLangEntity') ? $form->getLangEntity(): $form->getEntity();
-
-        $categories = $this->categoryRepository->findAssoc(['id IN' => explode(',', $values['category'])], 'id');
-
-        $this->categoryItemRepository->setItemToCategory($this->type, $entity->getId(), $categories);
+//        Nieje potreba ukladá sa to cez AJAX
+//        $entity = method_exists($form, 'getLangEntity') ? $form->getLangEntity(): $form->getEntity();
+//
+//        $categories = $this->categoryRepository->findAssoc(['id IN' => explode(',', $values['category'])], 'id');
+//
+//        $this->categoryItemRepository->setItemToCategory($this->type, $entity->getId(), $categories);
     }
 
 }
