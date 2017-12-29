@@ -1,5 +1,5 @@
 {
-    "name": "wame/CategoryModule",
+    "name": "wameis/CategoryModule",
     "version": "0.0.1",
     "description": "CMS WAME admin",
     "homepage": "http://wame.sk/cms-wame-admin",
@@ -10,13 +10,13 @@
         }
     ],
     "require": {
-        "wame/Core": "*",
-        "wame/PermissionModule": "*",
-        "wame/UserModule": "*",
-        "wame/AutocompleteFormControl": "*"
+        "wameis/Core": "*",
+        "wameis/PermissionModule": "*",
+        "wameis/UserModule": "*",
+        "wameis/AutocompleteFormControl": "*"
     },
     "softRequire": {
-        "wame/MenuModule": "*"
+        "wameis/MenuModule": "*"
     },
     "autoload": {
         "classmap": [
