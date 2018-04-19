@@ -2,6 +2,7 @@
 
 namespace Wame\CategoryModule\Repositories;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
 use Kappa\DoctrineMPTT\Configurator;
 use Kappa\DoctrineMPTT\Queries\Objects\Selectors\GetChildren;
@@ -522,6 +523,36 @@ class CategoryRepository extends TranslatableRepository
         $className = Strings::getClassName($namespace);
 
         return strtolower(str_replace('Entity', '', $className));
+    }
+
+
+    /** api *********************************************************** */
+
+    /**
+     * @api {get} /category-search/ Search categories
+     * @param array $columns
+     * @param string $phrase
+     * @param string $select
+     * @return array
+     */
+    public function findLike($columns = [], $phrase = null, $select = '*')
+    {
+        $search = $this->entityManager->createQueryBuilder()
+            ->select($select)
+            ->from(CategoryEntity::class, 'a')
+            ->leftJoin(CategoryLangEntity::class, 'langs', Join::WITH, 'a.id = langs.category')
+            ->andWhere('a.status = :status')
+            ->setParameter('status', self::STATUS_ACTIVE)
+            ->andWhere('langs.lang = :lang')
+            ->setParameter('lang', $this->lang);
+
+        foreach ($columns as $column) {
+            $search->andWhere($column . ' LIKE :phrase');
+        }
+
+        $search->setParameter('phrase', '%' . $phrase . '%');
+
+        return $search->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
 
 }

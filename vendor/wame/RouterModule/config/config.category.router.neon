@@ -11,3 +11,4 @@ router:
         '/[<lang>/]admin/category/create/<id>': 'Admin:Category:create'
         '/[<lang>/]admin/category/edit/<id>': 'Admin:Category:edit'
         '/[<lang>/]admin/category/delete/<id>': 'Admin:Category:delete'
+        '/[<lang>/]admin/category/menuItem/': 'Admin:Category:menuItem'

@@ -61,6 +61,11 @@ class CategoryPresenter extends AdminFormPresenter
 		$this->entity = $this->repository->get(['id' => $this->id]);
 	}
 
+	public function actionMenuItem()
+    {
+        
+    }
+
 
 	/** handles ***************************************************************/
 

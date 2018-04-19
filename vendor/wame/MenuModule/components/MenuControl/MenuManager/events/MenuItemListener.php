@@ -37,13 +37,13 @@ class MenuItemListener extends Object
 	public function onCreate($form, $values, $menuEntity) 
 	{
 		if ($menuEntity->type == self::TYPE) {
-			$category = $this->categoryRepository->find(['id' => $values['value']]);
+            $category = $this->categoryRepository->get(['id' => $values['value']]);
 
-			$menuEntity->setValue($category->id);
+            $menuEntity->setValue($category->id);
 
-			$menuEntity->langs[$this->lang]->setTitle($category->langs[$this->lang]->title);
-			$menuEntity->langs[$this->lang]->setAlternativeTitle($values['alternative_title']);
-			$menuEntity->langs[$this->lang]->setSlug($category->langs[$this->lang]->slug);
+            $menuEntity->langs[$this->lang]->setTitle($category->langs[$this->lang]->title);
+            $menuEntity->langs[$this->lang]->setAlternativeTitle($values['alternative_title']);
+            $menuEntity->langs[$this->lang]->setSlug($category->langs[$this->lang]->slug);
 		}
 	}
 	
@@ -51,13 +51,13 @@ class MenuItemListener extends Object
 	public function onUpdate($form, $values, $menuEntity)
 	{
 		if ($menuEntity->type == self::TYPE) {
-			$category = $this->categoryRepository->find(['id' => $values['value']]);
+			$category = $this->categoryRepository->get(['id' => $values['value']]);
 
 			$menuEntity->setValue($category->id);
 
-			$menuEntity->langs[$this->lang]->setTitle($category->langs[$this->lang]->title);
-			$menuEntity->langs[$this->lang]->setAlternativeTitle($values['alternative_title']);
-			$menuEntity->langs[$this->lang]->setSlug($category->langs[$this->lang]->slug);
+            $menuEntity->langs[$this->lang]->setTitle($category->langs[$this->lang]->title);
+            $menuEntity->langs[$this->lang]->setAlternativeTitle($values['alternative_title']);
+            $menuEntity->langs[$this->lang]->setSlug($category->langs[$this->lang]->slug);
 		}
 	}
 	

@@ -83,7 +83,7 @@ class CategoryMenuItem implements IMenuItem
 	
 	public function getLink($menuEntity)
 	{
-		return $this->linkGenerator->link('Article:Category:show', ['id' => $menuEntity->langs[$this->lang]->slug, 'lang' => $this->lang]);
+		return $this->linkGenerator->link('Category:Category:show', ['id' => $menuEntity->langs[$this->lang]->slug, 'lang' => $this->lang]);
 	}
 	
 }
